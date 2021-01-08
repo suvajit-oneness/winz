@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Session;use URL;use Validator;
 use App\Models\Course;use App\Models\Teacher;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
-use App\Models\User;
+use App\Models\User;use App\Models\SubscribedCourses;
 
 class Apicontroller extends Controller
 {
@@ -52,6 +52,20 @@ class Apicontroller extends Controller
             return errorResponse('password and confirm password should be same');
           }
           return errorResponse('password and confirm password is required');
+        }
+        return errorResponse('userId is required');
+    }
+
+    public function getUserSubscribedCourses(Request $req)
+    {
+        if(!empty($req->userId)){
+          $user = User::where('id',$req->userId)->first();
+          if($user){
+            $subscribedCourse = SubscribedCourses::select('subscribed_courses.*')
+              ->where('subscribed_courses.user_id',$user->id)->with('courses')->with('features')->get();
+            return sendResponse('Subscribed Courses List',$subscribedCourse);
+          }
+          return errorResponse('Invalid User Id');  
         }
         return errorResponse('userId is required');
     }

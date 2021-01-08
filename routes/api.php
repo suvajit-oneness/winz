@@ -26,7 +26,7 @@ Route::group(['prefix'=>'v1'],function(){
 	Route::post('signup','Api\LoginController@userSignUP');
 	Route::post('update_profile','Api\Apicontroller@updateProfile');
 	Route::post('change/password','Api\Apicontroller@changeUserPassword');
-
+	Route::get('subscribed/course','Api\Apicontroller@getUserSubscribedCourses');
 	Route::get('teacher/{teacherId?}','Api\Apicontroller@get_teacher');
 	Route::get('course/{courseId?}','Api\Apicontroller@get_course');
 });
