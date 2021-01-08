@@ -11,9 +11,51 @@ use Illuminate\Support\Facades\DB;
 use Session;use URL;use Validator;
 use App\Models\Course;use App\Models\Teacher;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
+use App\Models\User;
 
 class Apicontroller extends Controller
 {
+
+    public function updateProfile(Request $req)
+    {
+        $rules = [
+          'userId' => 'required|min:1|numeric',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+          $user = User::where('id',$req->userId)->first();
+          if($user){
+            $user->name = ($req->name) ? $req->name : '';
+            $user->address = ($req->address) ? $req->address : '';
+            $user->mobile = ($req->mobile) ? $req->mobile : '';
+            $user->save();
+            return sendResponse('Profile Updated Success',$user);
+          }
+          return errorResponse('Invalid User Id');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function changeUserPassword(Request $req)
+    {
+        if(!empty($req->userId)){
+          if(!empty($req->password) && !empty($req->confirmpassword)){
+            if($req->password == $req->confirmpassword){
+              $user = User::where('id',$req->userId)->first();
+              if($user){
+                $user->password = Hash::make($req->password);
+                $user->save();
+                return sendResponse('Password Updated Success');
+              }
+              return errorResponse('Invalid User id');
+            }
+            return errorResponse('password and confirm password should be same');
+          }
+          return errorResponse('password and confirm password is required');
+        }
+        return errorResponse('userId is required');
+    }
+
 
     public function getHomeContent(Request $req)
     {

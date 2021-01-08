@@ -45,6 +45,7 @@ class LoginController extends Controller
     		$user->name = $req->name;
     		$user->email = $req->email;
     		$user->password = Hash::make($req->password);
+            $user->image = url('assets/img/default_profile.jpg');
     		$user->save();
     		$user->accessToken = 'accessToken';
     		return sendResponse('User Registration Success',$user);
