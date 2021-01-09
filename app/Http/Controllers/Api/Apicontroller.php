@@ -56,18 +56,47 @@ class Apicontroller extends Controller
         return errorResponse('userId is required');
     }
 
-    public function getUserSubscribedCourses(Request $req)
+    public function getUserSubscribedCourses(Request $req,$subscribtionId = 0)
     {
         if(!empty($req->userId)){
           $user = User::where('id',$req->userId)->first();
           if($user){
             $subscribedCourse = SubscribedCourses::select('subscribed_courses.*')
-              ->where('subscribed_courses.user_id',$user->id)->with('courses')->with('features')->get();
+              ->where('subscribed_courses.user_id',$user->id)->with('courses')->with('features');
+            if($subscribtionId > 0){
+              $subscribedCourse = $subscribedCourse->where('subscribed_courses.id',$subscribtionId)->first();
+            }else{
+              $subscribedCourse = $subscribedCourse->get();
+            }
             return sendResponse('Subscribed Courses List',$subscribedCourse);
           }
-          return errorResponse('Invalid User Id');  
+          return errorResponse('Invalid User Id');
         }
         return errorResponse('userId is required');
+    }
+
+    public function saveUserSubscribedCourses(Request $req)
+    {
+        if(!empty($req->userId) && !empty($req->courseId)){
+          $user = User::where('id',$req->userId)->first();
+          if($user){
+            $course = Course::where('id',$req->courseId)->first();
+            if($course){
+                $checkSubscription = SubscribedCourses::where('user_id',$user->id)->where('course_id',$course->id)->first();
+                if(!$checkSubscription){
+                    $newSubscription = new SubscribedCourses();
+                    $newSubscription->user_id = $user->id;
+                    $newSubscription->course_id = $course->id;
+                    $newSubscription->save();
+                    return sendResponse('Course Subscribed Success',$newSubscription);
+                }
+                return errorResponse('This course is already subscribed by you');
+            }
+            return errorResponse('Invalid User Id');
+          }
+          return errorResponse('Invalid User Id');
+        }
+        return errorResponse('userId and courseId is required');
     }
 
 
