@@ -127,11 +127,19 @@ class Apicontroller extends Controller
         $course = Course::get();
       }else{
           $course = Course::where('id',$courseId)->first();
+          $course->isUserSubscribed = false;
+          if(!empty($req->userId) && $req->userId > 0){
+            $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
+            if($checkSubscription){
+              $course->isUserSubscribed = true;
+            }
+          }
           $course->similarCourses = Course::where('id','!=',$courseId)->get();
           $course->features = CourseFeature::where('course_id',$courseId)->get();
           $course->lectures = CourseLecture::where('course_id',$courseId)->get();
       }
       return sendResponse('Course List',$course);
+      // return sendResponse('Course List',$req->all());
     }
 
   	public $successStatus = 200;
