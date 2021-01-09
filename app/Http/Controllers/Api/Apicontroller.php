@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Session;use URL;use Validator;
 use App\Models\Course;use App\Models\Teacher;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
-use App\Models\User;use App\Models\SubscribedCourses;
+use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 
 class Apicontroller extends Controller
 {
@@ -99,7 +99,6 @@ class Apicontroller extends Controller
         return errorResponse('userId and courseId is required');
     }
 
-
     public function getHomeContent(Request $req)
     {
         $HomeContent = HomeContent::get();
@@ -124,9 +123,9 @@ class Apicontroller extends Controller
     public function get_course(Request $req,$courseId = 0)
     {
       if($courseId == 0){
-        $course = Course::get();
+        $course = Course::with('teacher')->get();
       }else{
-          $course = Course::where('id',$courseId)->first();
+          $course = Course::where('id',$courseId)->with('teacher')->first();
           $course->isUserSubscribed = false;
           if(!empty($req->userId) && $req->userId > 0){
             $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
@@ -134,7 +133,7 @@ class Apicontroller extends Controller
               $course->isUserSubscribed = true;
             }
           }
-          $course->similarCourses = Course::where('id','!=',$courseId)->get();
+          $course->similarCourses = Course::where('id','!=',$courseId)->with('teacher')->get();
           $course->features = CourseFeature::where('course_id',$courseId)->get();
           $course->lectures = CourseLecture::where('course_id',$courseId)->get();
       }
