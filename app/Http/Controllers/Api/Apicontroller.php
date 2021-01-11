@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -12,6 +11,9 @@ use Session;use URL;use Validator;
 use App\Models\Course;use App\Models\Teacher;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {

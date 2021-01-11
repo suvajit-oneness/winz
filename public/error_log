@@ -1,3 +1,16 @@
 [24-Nov-2020 16:54:44 UTC] PHP Warning:  require(/home/demo9dtx/public_html/dev/winz/vendor/composer/../pragmarx/ia-arr/src/Support/helpers.php): failed to open stream: No such file or directory in /home/demo9dtx/public_html/dev/winz/vendor/composer/autoload_real.php on line 66
 [24-Nov-2020 16:54:44 UTC] PHP Warning:  require(/home/demo9dtx/public_html/dev/winz/vendor/composer/../pragmarx/ia-arr/src/Support/helpers.php): failed to open stream: No such file or directory in /home/demo9dtx/public_html/dev/winz/vendor/composer/autoload_real.php on line 66
 [24-Nov-2020 16:54:44 UTC] PHP Fatal error:  require(): Failed opening required '/home/demo9dtx/public_html/dev/winz/vendor/composer/../pragmarx/ia-arr/src/Support/helpers.php' (include_path='.:/opt/cpanel/ea-php72/root/usr/share/pear') in /home/demo9dtx/public_html/dev/winz/vendor/composer/autoload_real.php on line 66
+[10-Jan-2021 11:32:34 Asia/Kolkata] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 7
+[10-Jan-2021 06:48:57 UTC] PHP Parse error:  syntax error, unexpected '{', expecting '(' in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 33
+[10-Jan-2021 06:49:34 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 56
+[10-Jan-2021 06:49:34 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 56
+[10-Jan-2021 06:49:34 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 56
+[10-Jan-2021 06:49:34 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 56
+[10-Jan-2021 08:02:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function bycrypt() in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php:144
+Stack trace:
+#0 /home/demo9dtx/public_html/dev/winz-v2/public/Api.php(18): login()
+#1 {main}
+  thrown in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 144
+[10-Jan-2021 10:08:37 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 144
+[10-Jan-2021 10:08:47 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 144
