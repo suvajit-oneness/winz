@@ -30,4 +30,5 @@ Route::group(['prefix'=>'v1'],function(){
 	Route::post('subscribed/course','Api\Apicontroller@saveUserSubscribedCourses');
 	Route::get('teacher/{teacherId?}','Api\Apicontroller@get_teacher');
 	Route::get('course/{courseId?}','Api\Apicontroller@get_course');
+	Route::get('membership','Api\Apicontroller@getMembership');
 });

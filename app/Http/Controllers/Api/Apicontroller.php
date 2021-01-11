@@ -8,14 +8,13 @@ use App\Models\City;
 use Auth;use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Session;use URL;use Validator;
-use App\Models\Course;use App\Models\Teacher;
+use Session;use URL;use Validator;use App\Models\CommonQuestion;
+use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 
 class Apicontroller extends Controller
 {
-
     public function updateProfile(Request $req)
     {
         $rules = [
@@ -122,23 +121,30 @@ class Apicontroller extends Controller
 
     public function get_course(Request $req,$courseId = 0)
     {
-      if($courseId == 0){
-        $course = Course::with('teacher')->get();
-      }else{
-          $course = Course::where('id',$courseId)->with('teacher')->first();
-          $course->isUserSubscribed = false;
-          if(!empty($req->userId) && $req->userId > 0){
-            $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
-            if($checkSubscription){
-              $course->isUserSubscribed = true;
+        if($courseId == 0){
+            $course = Course::with('teacher')->get();
+        }else{
+            $course = Course::where('id',$courseId)->with('teacher')->first();
+            $course->isUserSubscribed = false;
+            if(!empty($req->userId) && $req->userId > 0){
+              $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
+              if($checkSubscription){
+                $course->isUserSubscribed = true;
+              }
             }
-          }
-          $course->similarCourses = Course::where('id','!=',$courseId)->with('teacher')->get();
-          $course->features = CourseFeature::where('course_id',$courseId)->get();
-          $course->lectures = CourseLecture::where('course_id',$courseId)->get();
-      }
-      return sendResponse('Course List',$course);
-      // return sendResponse('Course List',$req->all());
+            $course->similarCourses = Course::where('id','!=',$courseId)->with('teacher')->get();
+            $course->features = CourseFeature::where('course_id',$courseId)->get();
+            $course->lectures = CourseLecture::where('course_id',$courseId)->get();
+        }
+        return sendResponse('Course List',$course);
+        // return sendResponse('Course List',$req->all());
+    }
+
+    public function getMembership(Request $req)
+    {
+        $data['membership'] = Membership::where('is_active',1)->with('question')->get();
+        $data['commonQuestion'] = CommonQuestion::where('membership_id',0)->get();
+        return sendResponse('MemberShip List',$data);
     }
 
   	public $successStatus = 200;
@@ -151,23 +157,17 @@ class Apicontroller extends Controller
             ->json(['message'=>'success','status'=>'1',"city"=>$city], $this->successStatus);
   	}
 
-    public function checkcoupon($couponcode){
-
+    public function checkcoupon($couponcode)
+    {
         $code = $couponcode;
-
         $use_date = date("Y-m-d");
-
         $result = DB::select("select * from coupon_codes where coupon_code='$code'
             and (start_date<='$use_date' and end_date>='$use_date')");
-       
         if (count($result) > 0) {
-
             $offer_type = $result[0]->offer_type;
             $offer_rate = $result[0]->offer_rate;
-
             return response()
           ->json(['message'=>'success','status'=>'1','offer_type'=>$offer_type,'offer_rate'=>$offer_rate], $this->successStatus);
-           
         } else {
             return response()
           ->json(['message'=>'error','status'=>'0'], $this->successStatus);

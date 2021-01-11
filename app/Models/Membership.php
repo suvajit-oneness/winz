@@ -20,4 +20,8 @@ class Membership extends Model
 	public function user(){
 		return $this->hasMany(User::class, 'membership_id', 'id');
 	}
+
+	function question(){
+		return $this->hasMany('App\Models\CommonQuestion','membership_id','id');
+	}
 }
