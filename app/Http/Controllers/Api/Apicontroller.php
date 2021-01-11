@@ -29,6 +29,18 @@ class Apicontroller extends Controller
             $user->name = ($req->name) ? $req->name : '';
             $user->address = ($req->address) ? $req->address : '';
             $user->mobile = ($req->mobile) ? $req->mobile : '';
+            if($req->hasFile('userImage')){
+                $image = $req->file('userImage');
+                // return errorResponse('Invalid User Id',$image);
+                $random = date('Ymdhis').rand(0000,9999);
+                $image->move('upload/profile/',$random.'.'.$image->getClientOriginalExtension());
+                $imageurl = url('upload/profile/'.$random.'.'.$image->getClientOriginalExtension());
+                // $buckturl ='https://'.env('AWS_BUCKET').'.s3.'.env('AWS_REGION').'.amazonaws.com/';
+                // $filePath = 'ewards/'.$random.'.'.$banner->getClientOriginalExtension();
+                // Storage::disk('s3')->put($filePath, file_get_contents($banner), 'public');
+                // $imageurl = $buckturl.$filePath;
+                $user->image = $imageurl;
+            }
             $user->save();
             return sendResponse('Profile Updated Success',$user);
           }
