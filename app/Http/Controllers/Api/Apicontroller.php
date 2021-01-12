@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\City;
 use Auth;use Hash;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;use App\Models\SubjectCategory;
+use Illuminate\Support\Facades\DB;use App\Models\Question;
 use Session;use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
@@ -119,7 +119,21 @@ class Apicontroller extends Controller
         foreach ($HomeContent as $content) {
             $data[$content->key][] = $content;
         }
+        $data['subjectCategory'] = SubjectCategory::get();
         return sendResponse('Home Content',$data);
+    }
+
+    public function getQuestion(Request $req)
+    {
+        $question = Question::select('*');
+        if(!empty($req->subjectCategory)){
+          $question = $question->where('subjectCategoryId',$req->subjectCategory);  
+        }
+        // if(!empty($req->chapter)){
+          // $question = $question->where('chapter',$req->chapter);
+        // }
+        $question = $question->get();
+        return sendResponse('Question list',$question);
     }
 
     public function get_teacher(Request $req,$teacherId = 0)
