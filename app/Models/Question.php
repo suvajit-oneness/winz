@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Question extends Model
 {
     use SoftDeletes;
+
+    function chapter(){
+    	return $this->belongsTo('App\Models\Chapter','chapterId','id');
+    }
 }

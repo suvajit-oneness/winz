@@ -138,7 +138,7 @@ class Apicontroller extends Controller
 
     public function getQuestion(Request $req)
     {
-        $question = Question::select('*');
+        $question = Question::select('*')->with('chapter');
         if(!empty($req->subjectCategoryId)){
           $question = $question->where('subjectCategoryId',$req->subjectCategoryId);  
         }
