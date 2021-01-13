@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\City;
-use Auth;use Hash;
+use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
 use Session;use URL;use Validator;use App\Models\CommonQuestion;
@@ -12,8 +12,8 @@ use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type:application/json');
+// header('Access-Control-Allow-Origin: *');
+// header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {
@@ -123,17 +123,30 @@ class Apicontroller extends Controller
         return sendResponse('Home Content',$data);
     }
 
+    public function getChapter(Request $req)
+    {
+        $chapter = Chapter::select('*');
+        if(!empty($req->chapterId)){
+          $chapter = $chapter->where('id',$req->chapterId);  
+        }
+        if(!empty($req->subjectCategoryId)){
+          $chapter = $chapter->where('subjectCategoryId',$req->subjectCategoryId);  
+        }
+        $chapter = $chapter->get();
+        return sendResponse('Chapter List',$chapter);
+    }
+
     public function getQuestion(Request $req)
     {
         $question = Question::select('*');
-        if(!empty($req->subjectCategory)){
-          $question = $question->where('subjectCategoryId',$req->subjectCategory);  
+        if(!empty($req->subjectCategoryId)){
+          $question = $question->where('subjectCategoryId',$req->subjectCategoryId);  
         }
-        // if(!empty($req->chapter)){
-          // $question = $question->where('chapter',$req->chapter);
-        // }
+        if(!empty($req->chapterId)){
+          $question = $question->where('chapterId',$req->chapterId);
+        }
         $question = $question->get();
-        return sendResponse('Question list',$question);
+        return sendResponse('Question List',$question);
     }
 
     public function get_teacher(Request $req,$teacherId = 0)
