@@ -12,8 +12,8 @@ use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 
-// header('Access-Control-Allow-Origin: *');
-// header('Content-Type:application/json');
+header('Access-Control-Allow-Origin: *');
+header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {
