@@ -125,7 +125,7 @@ class Apicontroller extends Controller
 
     public function getChapter(Request $req)
     {
-        $chapter = Chapter::select('*');
+        $chapter = Chapter::select('*')->with('subjectCategory');
         if(!empty($req->chapterId)){
           $chapter = $chapter->where('id',$req->chapterId);  
         }

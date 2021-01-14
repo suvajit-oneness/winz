@@ -20,6 +20,7 @@ class CreateQuestionsTable extends Migration
             $table->string('question');
             $table->longText('description');
             $table->tinyInteger('difficulty');
+            $table->string('mark_scheme',200);
             $table->string('answer1');
             $table->string('answer2');
             $table->string('answer3');
