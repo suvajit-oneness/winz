@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubjectCategory extends Model
 {
     use SoftDeletes;
+
+    function category()
+    {
+    	return $this->belongsTo('App\Models\Category','categoryId','id');
+    }
 }

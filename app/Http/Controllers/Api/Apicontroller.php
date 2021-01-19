@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\City;
 use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
 use Session;use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
@@ -119,13 +120,26 @@ class Apicontroller extends Controller
         foreach ($HomeContent as $content) {
             $data[$content->key][] = $content;
         }
-        $data['subjectCategory'] = SubjectCategory::get();
+        $data['category'] = Category::get();
         return sendResponse('Home Content',$data);
+    }
+
+    public function getSubjectCategory(Request $req)
+    {
+        $subjectCategory = SubjectCategory::select('*')->with('category');
+        if($req->subjectCategoryId){
+            $subjectCategory = $subjectCategory->where('id',$req->subjectCategoryId);
+        }
+        if($req->categoryId){
+            $subjectCategory = $subjectCategory->where('categoryId',$req->categoryId);
+        }
+        $subjectCategory = $subjectCategory->get();
+        return sendResponse('Subject category',$subjectCategory);
     }
 
     public function getChapter(Request $req)
     {
-        $chapter = Chapter::select('*')->with('subjectCategory');
+        $chapter = Chapter::select('*')->with('category')->with('subjectCategory');
         if(!empty($req->chapterId)){
           $chapter = $chapter->where('id',$req->chapterId);  
         }
