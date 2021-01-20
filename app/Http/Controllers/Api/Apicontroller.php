@@ -127,10 +127,10 @@ class Apicontroller extends Controller
     public function getSubjectCategory(Request $req)
     {
         $subjectCategory = SubjectCategory::select('*')->with('category');
-        if($req->subjectCategoryId){
+        if(!empty($req->subjectCategoryId) && $req->subjectCategoryId > 0){
             $subjectCategory = $subjectCategory->where('id',$req->subjectCategoryId);
         }
-        if($req->categoryId){
+        if(!empty($req->categoryId) && $req->categoryId > 0){
             $subjectCategory = $subjectCategory->where('categoryId',$req->categoryId);
         }
         $subjectCategory = $subjectCategory->get();
@@ -139,7 +139,7 @@ class Apicontroller extends Controller
 
     public function getChapter(Request $req)
     {
-        $chapter = Chapter::select('*')->with('category')->with('subjectCategory');
+        $chapter = Chapter::select('*')->with('category')->with('subjectCategory')->with('subChapter');
         if(!empty($req->chapterId)){
           $chapter = $chapter->where('id',$req->chapterId);  
         }
@@ -163,7 +163,7 @@ class Apicontroller extends Controller
         return sendResponse('Question List',$question);
     }
 
-    public function get_teacher(Request $req,$teacherId = 0)
+        public function get_teacher(Request $req,$teacherId = 0)
     {
         if($teacherId == 0){
           $teacher = Teacher::get();
