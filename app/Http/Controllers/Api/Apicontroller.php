@@ -6,7 +6,7 @@ use App\Models\Booking;
 use App\Models\City;
 use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
-use App\Models\Category;
+use App\Models\Category;use App\Models\Contact;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
 use Session;use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
@@ -200,6 +200,26 @@ class Apicontroller extends Controller
         $data['membership'] = Membership::where('is_active',1)->with('question')->get();
         $data['commonQuestion'] = CommonQuestion::where('membership_id',0)->get();
         return sendResponse('MemberShip List',$data);
+    }
+
+    public function contactUsFormSubmit(Request $req)
+    {
+        $rules = [
+          'name' => 'required|string|max:200',
+          'email' => 'required|email|string',
+          'message' => 'required|string|max:255'
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $contact = new Contact();
+            $contact->name = $req->name;
+            $contact->email = $req->email;
+            $contact->mobile = ($req->mobile) ? $req->mobile : '';
+            $contact->message = $req->message;
+            $contact->save();
+            return sendResponse('Thankyou for contact with us we will contact you soon!');
+        }
+        return errorResponse($validator->errors()->first());
     }
 
   	public $successStatus = 200;

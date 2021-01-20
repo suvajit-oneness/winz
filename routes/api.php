@@ -37,4 +37,6 @@ Route::group(['prefix'=>'v1'],function(){
 
 	Route::get('chapter','Api\Apicontroller@getChapter');
 	Route::get('question','Api\Apicontroller@getQuestion');
+
+	Route::post('contact-us','Api\Apicontroller@contactUsFormSubmit');
 });
