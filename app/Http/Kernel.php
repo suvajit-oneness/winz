@@ -64,7 +64,8 @@ class Kernel extends HttpKernel
         'hasInvitation' => \App\Http\Middleware\HasInvitation::class,
         'userStatus' => \App\Http\Middleware\UserStatus::class,
         'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
-        'cors' => \App\Http\Middleware\Cors::class,
+        "cors" => \App\Http\Middleware\Cors::class,
+        // 'cors' => \App\Http\Middleware\Cors::class,
     ];
 
     /**
