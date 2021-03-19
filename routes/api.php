@@ -32,11 +32,11 @@ Route::group(['prefix'=>'v1'],function(){
 	Route::get('teacher/{teacherId?}','Api\Apicontroller@get_teacher');
 	Route::get('course/{courseId?}','Api\Apicontroller@get_course');
 	Route::get('membership','Api\Apicontroller@getMembership');
-
 	Route::get('subject-category','Api\Apicontroller@getSubjectCategory');
-
 	Route::get('chapter','Api\Apicontroller@getChapter');
 	Route::get('question','Api\Apicontroller@getQuestion');
-
+	Route::get('scheduled-user-data','Api\Apicontroller@getScheduledData');
+	Route::post('scheduled-user-data/save','Api\Apicontroller@saveUserSchedule');
+	
 	Route::post('contact-us','Api\Apicontroller@contactUsFormSubmit');
 });
