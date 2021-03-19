@@ -2,17 +2,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Booking;
-use App\Models\City;
-use Auth;use Hash;use App\Models\Chapter;
+use App\Models\Booking;use App\Models\Schedule;
+use App\Models\City;use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
-use App\Models\Category;use App\Models\Contact;
+use App\Models\Category;use App\Models\Contact;use Session;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
-use Session;use URL;use Validator;use App\Models\CommonQuestion;
+use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 
+// header('Access-Control-Allow-Origin: *');
+// header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {
@@ -44,6 +45,50 @@ class Apicontroller extends Controller
             return sendResponse('Profile Updated Success',$user);
           }
           return errorResponse('Invalid User Id');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function getScheduledData(Request $req)
+    {
+        $rules = [
+          'userId' => 'required|min:1|numeric',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $schedule = Schedule::where('userId',$req->userId)->get();
+            return sendResponse('User Scheduled Data',$schedule);
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function saveUserSchedule(Request $req)
+    {
+        $rules = [
+            'userId' => 'required|min:1|numeric',
+            'date' => 'required',
+            'time' => 'required',
+            'event' => 'required',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            Schedule::where('userId',$req->userId)->delete();
+            $date = explode('@rajeev@', $req->date);
+            $time = explode('@rajeev@', $req->time);
+            $event = explode('@rajeev@', $req->event);
+            foreach($date as $key => $eventData){
+                if($eventData != ''){
+                    $newSchedule = new Schedule();
+                    $newSchedule->userId = $req->userId;
+                    $newSchedule->date = date('Y-m-d',strtotime($date[$key]));
+                    $newSchedule->time = date('H:i',strtotime($time[$key]));
+                    $newSchedule->event = $event[$key];
+                    $newSchedule->save();
+                }
+            }
+            return sendResponse('Scheduled Data Saved Success');
+            // $schedule = Schedule::where('userId',$req->userId)->get();
+            // return sendResponse('User Scheduled Data',$schedule);
         }
         return errorResponse($validator->errors()->first());
     }
