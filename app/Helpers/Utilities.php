@@ -49,6 +49,24 @@ if(!function_exists('activeclass')){
     }
 }
 
+function booleanorNumberToNumber($value)
+{
+    $return = 0;
+    switch ($value) {
+        case 1:
+            $return = 1;break;
+        case true:
+            $return = 1;break;
+        case 0:
+            $return = 0;break;
+        case false:
+            $return = 0;break;
+        default:
+            $return = 0;break;
+    }
+    return $return;
+}
+
 if (!function_exists('imageResizeAndSave')) {
     function imageResizeAndSave($imageUrl, $type = 'categories', $filename)
     {

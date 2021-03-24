@@ -52,43 +52,60 @@ class Apicontroller extends Controller
     public function getScheduledData(Request $req)
     {
         $rules = [
-          'userId' => 'required|min:1|numeric',
+          'teacherId' => 'required|min:1|numeric',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $schedule = Schedule::where('userId',$req->userId)->get();
-            return sendResponse('User Scheduled Data',$schedule);
+            $schedule = Schedule::where('teacherId',$req->teacherId)->get();
+            return sendResponse('Teacher Scheduled Data',$schedule);
         }
         return errorResponse($validator->errors()->first());
     }
 
-    public function saveUserSchedule(Request $req)
+    public function saveTeacherSchedule(Request $req)
     {
         $rules = [
-            'userId' => 'required|min:1|numeric',
+            'teacherId' => 'required|min:1|numeric',
             'date' => 'required',
             'time' => 'required',
-            'event' => 'required',
+            'monday' => 'required',
+            'tuesday' => 'required',
+            'wednesday' => 'required',
+            'thurusday' => 'required',
+            'friday' => 'required',
+            'saturday' => 'required',
+            'sunday' => 'required',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            Schedule::where('userId',$req->userId)->delete();
+            Schedule::where('teacherId',$req->teacherId)->delete();
             $date = explode('@rajeev@', $req->date);
             $time = explode('@rajeev@', $req->time);
-            $event = explode('@rajeev@', $req->event);
+            $monday = explode('@rajeev@', $req->monday);
+            $tuesday = explode('@rajeev@', $req->tuesday);
+            $wednesday = explode('@rajeev@', $req->wednesday);
+            $thurusday = explode('@rajeev@', $req->thurusday);
+            $friday = explode('@rajeev@', $req->friday);
+            $saturday = explode('@rajeev@', $req->saturday);
+            $sunday = explode('@rajeev@', $req->sunday);
+            
             foreach($date as $key => $eventData){
                 if($eventData != ''){
                     $newSchedule = new Schedule();
-                    $newSchedule->userId = $req->userId;
+                    $newSchedule->teacherId = $req->teacherId;
                     $newSchedule->date = date('Y-m-d',strtotime($date[$key]));
                     $newSchedule->time = date('H:i',strtotime($time[$key]));
-                    $newSchedule->event = $event[$key];
+                    $newSchedule->mon = ($monday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->tue = ($tuesday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->wed = ($wednesday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->thu = ($thurusday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->fri = ($friday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->sat = ($saturday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->sun = ($sunday[$key] == 'true') ? 1 : 0;
                     $newSchedule->save();
                 }
             }
             return sendResponse('Scheduled Data Saved Success');
-            // $schedule = Schedule::where('userId',$req->userId)->get();
-            // return sendResponse('User Scheduled Data',$schedule);
         }
         return errorResponse($validator->errors()->first());
     }

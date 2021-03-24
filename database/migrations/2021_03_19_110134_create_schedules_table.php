@@ -15,11 +15,18 @@ class CreateSchedulesTable extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('userId');
+            $table->bigInteger('teacherId');
             $table->date('date');
             $table->time('time');
-            $table->string('event',200);
-            $table->longText('description');
+            $table->tinyInteger('mon');
+            $table->tinyInteger('tue');
+            $table->tinyInteger('wed');
+            $table->tinyInteger('thu');
+            $table->tinyInteger('fri');
+            $table->tinyInteger('sat');
+            $table->tinyInteger('sun');
+            // $table->string('event',200);
+            // $table->longText('description');
             $table->softDeletes();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));

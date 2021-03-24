@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Cors::class,
     ];
 
     /**
@@ -65,7 +66,6 @@ class Kernel extends HttpKernel
         'userStatus' => \App\Http\Middleware\UserStatus::class,
         'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
         "cors" => \App\Http\Middleware\Cors::class,
-        // 'cors' => \App\Http\Middleware\Cors::class,
     ];
 
     /**
