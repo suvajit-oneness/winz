@@ -39,7 +39,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('question','Api\Apicontroller@getQuestion');
 		Route::get('scheduled-teacher-data','Api\Apicontroller@getScheduledData');
 		Route::post('scheduled-teacher-data/save','Api\Apicontroller@saveTeacherSchedule');
-
+		Route::get('teacher-slots','Api\Apicontroller@getTeacherSlots');
 		Route::post('contact-us','Api\Apicontroller@contactUsFormSubmit');
 	});
 	

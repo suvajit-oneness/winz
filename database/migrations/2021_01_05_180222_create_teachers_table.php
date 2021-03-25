@@ -16,6 +16,12 @@ class CreateTeachersTable extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',200);
+            $table->string('email');
+            $table->string('password');
+            $table->string('gender',20);
+            $table->date('dob');
+            $table->date('anniversary');
+            $table->string('otp',10);
             $table->string('image',200);
             $table->string('subject',200);
             $table->longText('description');

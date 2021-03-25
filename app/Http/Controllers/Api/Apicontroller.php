@@ -31,14 +31,9 @@ class Apicontroller extends Controller
             $user->mobile = ($req->mobile) ? $req->mobile : '';
             if($req->hasFile('userImage')){
                 $image = $req->file('userImage');
-                // return errorResponse('Invalid User Id',$image);
                 $random = date('Ymdhis').rand(0000,9999);
                 $image->move('upload/profile/',$random.'.'.$image->getClientOriginalExtension());
                 $imageurl = url('upload/profile/'.$random.'.'.$image->getClientOriginalExtension());
-                // $buckturl ='https://'.env('AWS_BUCKET').'.s3.'.env('AWS_REGION').'.amazonaws.com/';
-                // $filePath = 'ewards/'.$random.'.'.$banner->getClientOriginalExtension();
-                // Storage::disk('s3')->put($filePath, file_get_contents($banner), 'public');
-                // $imageurl = $buckturl.$filePath;
                 $user->image = $imageurl;
             }
             $user->save();
@@ -62,32 +57,49 @@ class Apicontroller extends Controller
         return errorResponse($validator->errors()->first());
     }
 
+    public function getTeacherSlots(Request $req)
+    {
+        $rules = [
+          'teacherId' => 'required|min:1|numeric',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $date = date('Y-m-d');
+            if(!empty($req->date)){
+                $date = date('Y-m-d',strtotime($req->date));
+            }
+            $originalDate = date('Y-m-d',strtotime($date));$originalDay = date('D',strtotime($date));
+            $daysData = [];
+            for($i = 0; $i < 7;$i++){
+                $date = date('Y-m-d',strtotime($originalDate.'+'.$i.' days'));
+                $day = date('D',strtotime($originalDay.'+'.$i.' days'));
+                $getSlots = Schedule::where('teacherId',$req->teacherId)->where('date',$date)->where('available',1)->get();
+                $daysData[] = [
+                    'date' => $date,
+                    'day' => $day,
+                    'short_date' => date('d',strtotime($date)),
+                    'available' => $getSlots,
+                ];
+            }
+            return sendResponse('Available Slots',$daysData);
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
     public function saveTeacherSchedule(Request $req)
     {
         $rules = [
             'teacherId' => 'required|min:1|numeric',
             'date' => 'required',
             'time' => 'required',
-            'monday' => 'required',
-            'tuesday' => 'required',
-            'wednesday' => 'required',
-            'thurusday' => 'required',
-            'friday' => 'required',
-            'saturday' => 'required',
-            'sunday' => 'required',
+            'available' => 'required',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
             Schedule::where('teacherId',$req->teacherId)->delete();
             $date = explode('@rajeev@', $req->date);
             $time = explode('@rajeev@', $req->time);
-            $monday = explode('@rajeev@', $req->monday);
-            $tuesday = explode('@rajeev@', $req->tuesday);
-            $wednesday = explode('@rajeev@', $req->wednesday);
-            $thurusday = explode('@rajeev@', $req->thurusday);
-            $friday = explode('@rajeev@', $req->friday);
-            $saturday = explode('@rajeev@', $req->saturday);
-            $sunday = explode('@rajeev@', $req->sunday);
+            $available = explode('@rajeev@', $req->available);
             
             foreach($date as $key => $eventData){
                 if($eventData != ''){
@@ -95,13 +107,7 @@ class Apicontroller extends Controller
                     $newSchedule->teacherId = $req->teacherId;
                     $newSchedule->date = date('Y-m-d',strtotime($date[$key]));
                     $newSchedule->time = date('H:i',strtotime($time[$key]));
-                    $newSchedule->mon = ($monday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->tue = ($tuesday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->wed = ($wednesday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->thu = ($thurusday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->fri = ($friday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->sat = ($saturday[$key] == 'true') ? 1 : 0;
-                    $newSchedule->sun = ($sunday[$key] == 'true') ? 1 : 0;
+                    $newSchedule->available = ($available[$key] == 'true') ? 1 : 0;
                     $newSchedule->save();
                 }
             }
@@ -223,7 +229,7 @@ class Apicontroller extends Controller
         return sendResponse('Question List',$question);
     }
 
-        public function get_teacher(Request $req,$teacherId = 0)
+    public function get_teacher(Request $req,$teacherId = 0)
     {
         if($teacherId == 0){
           $teacher = Teacher::get();
@@ -232,6 +238,17 @@ class Apicontroller extends Controller
             $teacher->teacherCourses = Course::get();
         }
         return sendResponse('Teacher List',$teacher);
+    }
+
+    public function getTeacherAvailableSlots(Request $req)
+    {
+        $rules = ['teacherId' => 'required|min:1|numeric'];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+
+            $slots = '';
+        }
+        return errorResponse($validator->errors()->first());
     }
 
     public function get_course(Request $req,$courseId = 0)
