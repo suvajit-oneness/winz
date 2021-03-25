@@ -41,7 +41,13 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::post('scheduled-teacher-data/save','Api\Apicontroller@saveTeacherSchedule');
 		Route::get('teacher-slots','Api\Apicontroller@getTeacherSlots');
 		Route::post('contact-us','Api\Apicontroller@contactUsFormSubmit');
+		Route::post('create-stripe-charge/by-token','Api\Apicontroller@createStripeCharge');
 	});
+
+	// stripePayment
+	// Route::get('stripe/{amount?}', 'StripePaymentController@stripe');
+	// Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post');
+	// Route::get('stripe/{Id}/success','StripePaymentController@successTransaction')->name('stripe.success');
 	
 });
 

@@ -11,6 +11,7 @@ use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
+use Stripe;use Session;use App\Models\StripeTransaction;
 
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
@@ -324,5 +325,43 @@ class Apicontroller extends Controller
             return response()
           ->json(['message'=>'error','status'=>'0'], $this->successStatus);
         }
+    }
+
+    public function createStripeCharge(Request $req)
+    {
+        $rules = [
+            'stripeToken' => 'required',
+            'amount' => 'required',
+            'slotId' => 'required|min:1|numeric',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $payment = \Stripe\Charge::create ([
+                "amount" => 100 * $req->amount,
+                "currency" => "usd",
+                "source" => $req->stripeToken,
+                "description" => "Test payment from itsolutionstuff.com." 
+            ]);
+            // if($payment->status == 'succeeded'){
+            //     $stripe = new StripeTransaction;
+            //     $stripe->userId = 0;
+            //     $stripe->guestName = 'web';
+            //     $stripe->transactionId = $payment->id;
+            //     $stripe->balance_transaction = $payment->balance_transaction;
+            //     $stripe->amount = $payment->amount;
+            //     $stripe->description = $payment->description;
+            //     $stripe->payment_method = $payment->payment_method;
+            //     $stripe->card_type = $payment->payment_method_details->type;
+            //     $stripe->exp_month = $payment->payment_method_details->card->exp_month;
+            //     $stripe->exp_year = $payment->payment_method_details->card->exp_year;
+            //     $stripe->last4 = $payment->payment_method_details->card->last4;
+            //     $stripe->save();
+            //     return redirect(route('stripe.success',base64_encode($stripe->id)));
+            // }
+            return response()->json(['error'=>false,'data'=>$payment]);
+        }
+        return errorResponse($validator->errors()->first());
+        // return back();
     }
 }
