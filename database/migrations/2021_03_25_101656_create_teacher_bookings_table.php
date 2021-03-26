@@ -15,6 +15,7 @@ class CreateTeacherBookingsTable extends Migration
     {
         Schema::create('teacher_bookings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('stripeTransactionId');
             $table->bigInteger('userId');
             $table->bigInteger('teacherId');
             $table->bigInteger('scheduleId');

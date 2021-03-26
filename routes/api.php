@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 |
 */
 
+// header('Access-Control-Allow-Origin: *');
+// header( 'Access-Control-Allow-Headers: Authorization, Content-Type' );
+
 Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 
 	Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -42,6 +45,11 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('teacher-slots','Api\Apicontroller@getTeacherSlots');
 		Route::post('contact-us','Api\Apicontroller@contactUsFormSubmit');
 		Route::post('create-stripe-charge/by-token','Api\Apicontroller@createStripeCharge');
+		Route::post('purchaseBookingSlot-mentor','Api\Apicontroller@bookTheSlot');
+
+		Route::get('booking-history','Api\Apicontroller@getBookingHistory');
+		Route::get('payment-history','Api\Apicontroller@getPaymentHistory');
+
 	});
 
 	// stripePayment

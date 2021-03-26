@@ -11,7 +11,7 @@ use URL;use Validator;use App\Models\CommonQuestion;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
-use Stripe;use Session;use App\Models\StripeTransaction;
+use Stripe;use App\Models\StripeTransaction;use App\Models\TeacherBooking;
 
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
@@ -25,22 +25,39 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-          $user = User::where('id',$req->userId)->first();
-          if($user){
-            $user->name = ($req->name) ? $req->name : '';
-            $user->address = ($req->address) ? $req->address : '';
-            $user->mobile = ($req->mobile) ? $req->mobile : '';
-            if($req->hasFile('userImage')){
-                $image = $req->file('userImage');
-                $random = date('Ymdhis').rand(0000,9999);
-                $image->move('upload/profile/',$random.'.'.$image->getClientOriginalExtension());
-                $imageurl = url('upload/profile/'.$random.'.'.$image->getClientOriginalExtension());
-                $user->image = $imageurl;
+            DB::beginTransaction();
+            try{
+                $user = User::where('id',$req->userId)->first();
+                if($user){
+                    $user->name = ($req->name) ? $req->name : '';
+                    $user->address = ($req->address) ? $req->address : '';
+                    $user->mobile = ($req->mobile) ? $req->mobile : '';
+                    if($req->hasFile('userImage')){
+                        $image = $req->file('userImage');
+                        $random = date('Ymdhis').rand(0000,9999);
+                        $image->move('upload/profile/',$random.'.'.$image->getClientOriginalExtension());
+                        $imageurl = url('upload/profile/'.$random.'.'.$image->getClientOriginalExtension());
+                        $user->image = $imageurl;
+                    }
+                    $user->save();
+                    if($user->userType == 'teacher'){
+                        $teacher = Teacher::where('userId',$user->id)->first();
+                        $teacher->name = $user->name;
+                        $teacher->email = $user->email;
+                        $teacher->image = $user->image;
+                        $teacher->subject = ($req->subject) ? $req->subject : '';
+                        $teacher->save();
+                        $user->teacherData = $teacher;
+                    }
+                    $user->accessToken = 'accessToken';
+                    DB::commit();
+                    return sendResponse('Profile Updated Success',$user);
+                }
+                return errorResponse('Invalid User Id');
+            }catch(Exception $e){
+                DB::rollback();
+                return errorResponse('Something went wrong please try after some time');
             }
-            $user->save();
-            return sendResponse('Profile Updated Success',$user);
-          }
-          return errorResponse('Invalid User Id');
         }
         return errorResponse($validator->errors()->first());
     }
@@ -52,7 +69,7 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $schedule = Schedule::where('teacherId',$req->teacherId)->get();
+            $schedule = Schedule::where('teacherId',$req->teacherId)->where('available','!=',2)->get();
             return sendResponse('Teacher Scheduled Data',$schedule);
         }
         return errorResponse($validator->errors()->first());
@@ -97,7 +114,7 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            Schedule::where('teacherId',$req->teacherId)->delete();
+            Schedule::where('teacherId',$req->teacherId)->where('available','!=',2)->delete();
             $date = explode('@rajeev@', $req->date);
             $time = explode('@rajeev@', $req->time);
             $available = explode('@rajeev@', $req->available);
@@ -332,7 +349,6 @@ class Apicontroller extends Controller
         $rules = [
             'stripeToken' => 'required',
             'amount' => 'required',
-            'slotId' => 'required|min:1|numeric',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
@@ -343,25 +359,73 @@ class Apicontroller extends Controller
                 "source" => $req->stripeToken,
                 "description" => "Test payment from itsolutionstuff.com." 
             ]);
-            // if($payment->status == 'succeeded'){
-            //     $stripe = new StripeTransaction;
-            //     $stripe->userId = 0;
-            //     $stripe->guestName = 'web';
-            //     $stripe->transactionId = $payment->id;
-            //     $stripe->balance_transaction = $payment->balance_transaction;
-            //     $stripe->amount = $payment->amount;
-            //     $stripe->description = $payment->description;
-            //     $stripe->payment_method = $payment->payment_method;
-            //     $stripe->card_type = $payment->payment_method_details->type;
-            //     $stripe->exp_month = $payment->payment_method_details->card->exp_month;
-            //     $stripe->exp_year = $payment->payment_method_details->card->exp_year;
-            //     $stripe->last4 = $payment->payment_method_details->card->last4;
-            //     $stripe->save();
-            //     return redirect(route('stripe.success',base64_encode($stripe->id)));
-            // }
-            return response()->json(['error'=>false,'data'=>$payment]);
+            if($payment->status == 'succeeded'){
+                $stripe = new StripeTransaction;
+                $stripe->transactionId = $payment->id;
+                $stripe->balance_transaction = $payment->balance_transaction;
+                $stripe->amount = $payment->amount;
+                $stripe->description = $payment->description;
+                $stripe->payment_method = $payment->payment_method;
+                $stripe->card_type = $payment->payment_method_details->type;
+                $stripe->exp_month = $payment->payment_method_details->card->exp_month;
+                $stripe->exp_year = $payment->payment_method_details->card->exp_year;
+                $stripe->last4 = $payment->payment_method_details->card->last4;
+                $stripe->save();
+                return response()->json(['error'=>false,'data'=>$stripe]);
+            }
+            return errorResponse('Payment Failed Please try again');
         }
         return errorResponse($validator->errors()->first());
         // return back();
+    }
+
+    public function bookTheSlot(Request $req)
+    {
+        $rules = [
+            'stripeTransactionId' => 'required|numeric|min:1',
+            'slotId' => 'required|numeric|min:1',
+            'userId' => 'required|numeric|min:1'
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
+            $slot = Schedule::where('id',$req->slotId)->first();
+            $booking = new TeacherBooking();
+            $booking->stripeTransactionId = $stripe->id;
+            $booking->userId = $req->userId;
+            $booking->teacherId = $slot->teacherId;
+            $booking->scheduleId = $slot->id;
+            $booking->price = $stripe->amount;
+            $booking->save();
+            $slot->available = 2;
+            $slot->save();
+            $data = [
+                'stripe' => $stripe,
+                'Schedule' => $slot,
+                'booking' => $booking,
+            ];
+            return response()->json(['error'=>false,'data'=>$data]);
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function getBookingHistory(Request $req)
+    {
+        $data = TeacherBooking::select('*')->with('userInfo')->with('slotInfo');
+        if(!empty($req->teacherId)){
+            $data = $data->where('teacherId',$req->teacherId);
+        }
+        $data = $data->orderBy('id','desc')->get();
+        return response()->json(['error'=>false,'data'=>$data]);
+    }
+
+    public function getPaymentHistory(Request $req)
+    {
+        $data = TeacherBooking::select('*')->with('teacherInfo')->with('slotInfo');
+        if(!empty($req->userId)){
+            $data = $data->where('userId',$req->userId);
+        }
+        $data = $data->orderBy('id','desc')->get();
+        return response()->json(['error'=>false,'data'=>$data]);
     }
 }
