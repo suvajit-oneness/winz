@@ -352,6 +352,7 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
+            // \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             \Stripe\Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
             $payment = \Stripe\Charge::create ([
                 "amount" => 100 * $req->amount,
