@@ -69,7 +69,7 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $schedule = Schedule::where('teacherId',$req->teacherId)->where('available','!=',2)->get();
+            $schedule = Schedule::where('teacherId',$req->teacherId)->get();
             return sendResponse('Teacher Scheduled Data',$schedule);
         }
         return errorResponse($validator->errors()->first());
@@ -91,7 +91,7 @@ class Apicontroller extends Controller
             for($i = 0; $i < 7;$i++){
                 $date = date('Y-m-d',strtotime($originalDate.'+'.$i.' days'));
                 $day = date('D',strtotime($originalDay.'+'.$i.' days'));
-                $getSlots = Schedule::where('teacherId',$req->teacherId)->where('date',$date)->where('available',1)->get();
+                $getSlots = Schedule::where('teacherId',$req->teacherId)->where('date',$date)/*->where('available',1)*/->get();
                 $daysData[] = [
                     'date' => $date,
                     'day' => $day,
@@ -99,7 +99,14 @@ class Apicontroller extends Controller
                     'available' => $getSlots,
                 ];
             }
-            return sendResponse('Available Slots',$daysData);
+            $response = [
+                'from_date' => date('M, d Y',strtotime($originalDate)),
+                'to_date' => date('M, d Y',strtotime($date)),
+                'next_date' => '',
+                'previous_date' => '',
+                'slots' => $daysData,
+            ];
+            return sendResponse('Available Slots',$response);
         }
         return errorResponse($validator->errors()->first());
     }
@@ -118,7 +125,6 @@ class Apicontroller extends Controller
             $date = explode('@rajeev@', $req->date);
             $time = explode('@rajeev@', $req->time);
             $available = explode('@rajeev@', $req->available);
-            
             foreach($date as $key => $eventData){
                 if($eventData != ''){
                     $newSchedule = new Schedule();
