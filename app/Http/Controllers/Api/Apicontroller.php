@@ -469,19 +469,6 @@ class Apicontroller extends Controller
         return sendResponse('Zoom Meeting Created Success',$newMeeting);
     }
 
-    public function generateToken()
-    {
-        // $key = 'yXj_ljMrR9mBMXUnpoWEBw';
-        // $secret = '4ILce1QmfZgKwLjIIr4ljMuLIDGPeI2FGzOy';
-        $key = env('ZOOM_API_KEY');
-        $secret = env('ZOOM_API_SECRET');
-        $payload = [
-            'iss' => $key,
-            'exp' => strtotime('+1 minute'),
-        ];
-        return \Firebase\JWT\JWT::encode($payload, $secret, 'HS256');
-    }
-
     public function getMeetings(Request $req)
     {
         // return errorResponse('',$req->all());
