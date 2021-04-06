@@ -51,9 +51,9 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 
 		// Zoom Meeting
 		Route::group(['prefix' => 'zoom'],function(){
-			Route::get('meetings','Api\ZoomMeetingController@getMeetings')->name('zoom.meetings');
-			Route::post('meeting','Api\ZoomMeetingController@createMeeting')->name('zoom.meeting.save');
-			Route::post('meeting/delete','Api\ZoomMeetingController@deleteZoomMeeting')->name('zoom.meeting.delete');
+			Route::get('meetings','Api\Apicontroller@getMeetings')->name('zoom.meetings');
+			// Route::post('meeting','Api\ZoomMeetingController@createMeeting')->name('zoom.meeting.save');
+			// Route::post('meeting/delete','Api\ZoomMeetingController@deleteZoomMeeting')->name('zoom.meeting.delete');
 		});
 
 	});

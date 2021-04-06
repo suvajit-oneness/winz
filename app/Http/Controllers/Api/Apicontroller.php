@@ -424,7 +424,6 @@ class Apicontroller extends Controller
         return errorResponse($validator->errors()->first());
     }
 
-
     // Zoom Meeting Integration
     public function createZoomMeeting($bookingData,$slotData,$userType)
     {
@@ -481,6 +480,28 @@ class Apicontroller extends Controller
             'exp' => strtotime('+1 minute'),
         ];
         return \Firebase\JWT\JWT::encode($payload, $secret, 'HS256');
+    }
+
+    public function getMeetings(Request $req)
+    {
+        // return errorResponse('',$req->all());
+        $rules = [
+            'userId' => 'required|min:1|numeric',
+            'userType' => 'required|in:user,teacher|string',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $zoom = ZoomMeeting::select('*')->with('userData')->with('teacherData');
+            if($req->userType == 'teacher'){
+                $teacher = Teacher::where('userId',$req->userId)->first();
+                $zoom = $zoom->where('teacherId',$teacher->id);
+            }elseif($req->userType == 'user'){
+                $zoom = $zoom->where('userId',$req->userId);
+            }
+            $zoom = $zoom->orderBy('id')->get();
+            return sendResponse('Zoom Meeting Data',$zoom);
+        }
+        return errorResponse($validator->errors()->first());
     }
 
     public function getBookingHistory(Request $req)
