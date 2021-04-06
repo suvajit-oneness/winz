@@ -7,7 +7,7 @@ use App\Models\City;use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
 use App\Models\Category;use App\Models\Contact;use Session;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
-use URL;use Validator;use App\Models\CommonQuestion;use DB;
+use URL;use Validator;use App\Models\CommonQuestion;use App\Models\ZoomMeeting;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
@@ -428,7 +428,7 @@ class Apicontroller extends Controller
     // Zoom Meeting Integration
     public function createZoomMeeting($bookingData,$slotData,$userType)
     {
-        $getTeacherDetails = Teacher::where('id',$booking->teacherId)->first();
+        $getTeacherDetails = Teacher::where('id',$bookingData->teacherId)->first();
         $topic = 'Meeting with '.$getTeacherDetails->name.' at '.$slotData->date. ' '.$slotData->time;
         $startTime = date('Y-m-d',strtotime($slotData->date)).' '.date('h:i:s',strtotime($slotData->time));
 
