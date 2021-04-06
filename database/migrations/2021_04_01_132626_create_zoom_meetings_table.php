@@ -15,6 +15,7 @@ class CreateZoomMeetingsTable extends Migration
     {
         Schema::create('zoom_meetings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('teacherId');
             $table->bigInteger('userId');
             $table->enum('userType',['user','teacher']);
             $table->string('uuid');

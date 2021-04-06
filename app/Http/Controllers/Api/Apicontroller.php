@@ -7,7 +7,7 @@ use App\Models\City;use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
 use App\Models\Category;use App\Models\Contact;use Session;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
-use URL;use Validator;use App\Models\CommonQuestion;
+use URL;use Validator;use App\Models\CommonQuestion;use DB;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
@@ -383,7 +383,6 @@ class Apicontroller extends Controller
             return errorResponse('Payment Failed Please try again');
         }
         return errorResponse($validator->errors()->first());
-        // return back();
     }
 
     public function bookTheSlot(Request $req)
@@ -391,29 +390,97 @@ class Apicontroller extends Controller
         $rules = [
             'stripeTransactionId' => 'required|numeric|min:1',
             'slotId' => 'required|numeric|min:1',
-            'userId' => 'required|numeric|min:1'
+            'userId' => 'required|numeric|min:1',
+            'userType' => 'required|string|in:user,teacher',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
-            $slot = Schedule::where('id',$req->slotId)->first();
-            $booking = new TeacherBooking();
-            $booking->stripeTransactionId = $stripe->id;
-            $booking->userId = $req->userId;
-            $booking->teacherId = $slot->teacherId;
-            $booking->scheduleId = $slot->id;
-            $booking->price = $stripe->amount;
-            $booking->save();
-            $slot->available = 2;
-            $slot->save();
-            $data = [
-                'stripe' => $stripe,
-                'Schedule' => $slot,
-                'booking' => $booking,
-            ];
-            return response()->json(['error'=>false,'data'=>$data]);
+            DB::beginTransaction();
+            try {
+                $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
+                $slot = Schedule::where('id',$req->slotId)->first();
+                $booking = new TeacherBooking();
+                $booking->stripeTransactionId = $stripe->id;
+                $booking->userId = $req->userId;
+                $booking->teacherId = $slot->teacherId;
+                $booking->scheduleId = $slot->id;
+                $booking->price = $stripe->amount;
+                $booking->save();
+                $slot->available = 2;
+                $slot->save();
+                $data = [
+                    'stripe' => $stripe,
+                    'Schedule' => $slot,
+                    'booking' => $booking,
+                ];
+                $this->createZoomMeeting($booking,$slot,$req->userType);
+                DB::commit();
+                return sendResponse('Slot Booked Success',$data);
+            }catch (Exception $e) {
+                DB::rollback();
+                return errorResponse('Something went wring please try after some time');
+            }
         }
         return errorResponse($validator->errors()->first());
+    }
+
+
+    // Zoom Meeting Integration
+    public function createZoomMeeting($bookingData,$slotData,$userType)
+    {
+        $getTeacherDetails = Teacher::where('id',$booking->teacherId)->first();
+        $topic = 'Meeting with '.$getTeacherDetails->name.' at '.$slotData->date. ' '.$slotData->time;
+        $startTime = date('Y-m-d',strtotime($slotData->date)).' '.date('h:i:s',strtotime($slotData->time));
+
+        $client = new \GuzzleHttp\Client(['base_uri' => 'https://api.zoom.us']);
+        $response = $client->request('POST', '/v2/users/me/meetings', [
+            "headers" => [
+                "Authorization" => "Bearer " . $this->generateToken(),
+            ],
+            'json' => [
+                "topic" => $topic,
+                "type" => 2,
+                "start_time" => $startTime,
+                "duration" => "30", // 30 mins
+                "password" => "123456",
+                "agenda" => 'Scheduled Class',
+            ],
+        ]);
+        $data = json_decode($response->getBody());
+        if($data){
+            $newMeeting = new ZoomMeeting;
+            $newMeeting->teacherId = $bookingData->teacherId;
+            $newMeeting->userType = $userType;
+            $newMeeting->userId = $bookingData->userId;
+            $newMeeting->uuid = $data->uuid;
+            $newMeeting->meetingId = $data->id;
+            $newMeeting->host_id = $data->host_id;
+            $newMeeting->host_email = $data->host_email;
+            $newMeeting->topic = $data->topic;
+            $newMeeting->start_time = $data->start_time;
+            $newMeeting->agenda = !empty($data->agenda) ? $data->agenda : '';
+            $newMeeting->join_url = $data->join_url;
+            $newMeeting->password = !empty($data->password) ? $data->password : '';
+            $newMeeting->encrypted_password = !empty($data->encrypted_password) ? $data->encrypted_password : '';
+            $newMeeting->status = $data->status;
+            $newMeeting->type = $data->type;
+            $newMeeting->start_url = !empty($data->start_url) ? $data->start_url : '';
+            $newMeeting->save();
+        }
+        return sendResponse('Zoom Meeting Created Success',$newMeeting);
+    }
+
+    public function generateToken()
+    {
+        // $key = 'yXj_ljMrR9mBMXUnpoWEBw';
+        // $secret = '4ILce1QmfZgKwLjIIr4ljMuLIDGPeI2FGzOy';
+        $key = env('ZOOM_API_KEY');
+        $secret = env('ZOOM_API_SECRET');
+        $payload = [
+            'iss' => $key,
+            'exp' => strtotime('+1 minute'),
+        ];
+        return \Firebase\JWT\JWT::encode($payload, $secret, 'HS256');
     }
 
     public function getBookingHistory(Request $req)
