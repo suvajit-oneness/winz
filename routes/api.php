@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 // header('Access-Control-Allow-Origin: *');
 // header( 'Access-Control-Allow-Headers: Authorization, Content-Type' );
 
-// Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
+Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 
 	Route::middleware('auth:api')->get('/user', function (Request $request) {
 	    return $request->user();
@@ -63,5 +63,5 @@ use Illuminate\Http\Request;
 	// Route::post('stripe', 'StripePaymentController@stripePost')->name('stripe.post');
 	// Route::get('stripe/{Id}/success','StripePaymentController@successTransaction')->name('stripe.success');
 	
-// });
+});
 
