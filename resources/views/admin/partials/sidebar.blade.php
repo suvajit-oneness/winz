@@ -168,6 +168,14 @@
                 <span class="app-menu__label">Testimonials Management</span>
             </a>
         </li>
+
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.zoom.*']) }}"
+                href="{{ route('admin.zoom.index') }}">
+                <!--<i class="app-menu__icon fa fa-cogs"></i>-->
+                <span class="app-menu__label">Zoom Meeting</span>
+            </a>
+        </li>
         <!--<li class="treeview">-->
         <!--    <a class="app-menu__item" href="#" data-toggle="treeview">-->
         <!--        <i class="app-menu__icon fa fa-group"></i>-->

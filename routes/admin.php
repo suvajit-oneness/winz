@@ -281,6 +281,13 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/invoice', 'Admin\OrderController@invoice')->name('admin.orders.invoice');
 			Route::get('/{id}/makepdf', 'Admin\OrderController@makepdf')->name('admin.orders.makepdf');
 		});
+
+		Route::group(['prefix' => 'zoom'],function(){
+			Route::get('meeting','Admin\ZoomController@index')->name('admin.zoom.index');
+			Route::get('meeting/create','Admin\ZoomController@createMeeting')->name('admin.zoom.create');
+			Route::post('meeting/create','Admin\ZoomController@saveMeeting')->name('admin.zoom.save');
+			Route::post('meeting/delete','Admin\ZoomController@deleteZoomMeeting')->name('admin.zoom.delete');
+		});
 	});
 
 });

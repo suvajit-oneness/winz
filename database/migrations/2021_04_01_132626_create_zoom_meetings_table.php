@@ -31,6 +31,7 @@ class CreateZoomMeetingsTable extends Migration
             $table->string('status');
             $table->string('type');
             $table->longText('start_url');
+            $table->enum('created_by',['admin','user','teacher']);
             $table->softDeletes();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
