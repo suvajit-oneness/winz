@@ -12,6 +12,7 @@ use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 use Stripe;use App\Models\StripeTransaction;use App\Models\TeacherBooking;
+use App\Models\BuyMemberShip;
 
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
@@ -298,9 +299,27 @@ class Apicontroller extends Controller
 
     public function getMembership(Request $req)
     {
-        $data['membership'] = Membership::where('is_active',1)->with('question')->get();
         $data['commonQuestion'] = CommonQuestion::where('membership_id',0)->get();
+        $data['membership'] = Membership::where('is_active',1)->with('question')->get();
+        if((!empty($req->userId) && $req->userId > 0) && !empty($req->userType)){
+            foreach ($data['membership'] as $key => $getMembership) {
+                $getMembership->enrolledment = BuyMemberShip::where('membershipId',$getMembership->id)->where('userId',$req->userId)->where('userType',$req->userType)->first();
+            }
+        }
         return sendResponse('MemberShip List',$data);
+    }
+
+    public function getUserMemberShip(Request $req)
+    {
+        $memberShip = BuyMemberShip::select('*')->with('membership')->with('transactionDetails');
+        if(!empty($req->userId)){
+            $memberShip = $memberShip->where('userId',$req->userId);
+        }
+        if(!empty($req->userType)){
+            $memberShip = $memberShip->where('userType',$req->userType);
+        }
+        $memberShip = $memberShip->get();
+        return sendResponse('MemberShip List of The User',$memberShip);
     }
 
     public function contactUsFormSubmit(Request $req)
@@ -509,5 +528,35 @@ class Apicontroller extends Controller
         }
         $data = $data->orderBy('id','desc')->get();
         return response()->json(['error'=>false,'data'=>$data]);
+    }
+
+    public function bookMembership(Request $req)
+    {
+        $rules = [
+            'stripeTransactionId' => 'required|min:1|numeric',
+            'membershipId' => 'required|min:1|numeric',
+            'userId' => 'required|min:1|numeric',
+            'userType' => 'required|string|in:user,teacher',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
+            $membership = Membership::where('id',$req->membershipId)->first();
+            $buyMemberShip = new BuyMemberShip();
+            $buyMemberShip->stripeTransactionId = $req->stripeTransactionId;
+            $buyMemberShip->membershipId = $req->membershipId;
+            $buyMemberShip->userId = $req->userId;
+            $buyMemberShip->userType = $req->userType;
+            $buyMemberShip->price = $stripe->amount;
+            $buyMemberShip->save();
+            $data = [
+                'purchase' => $buyMemberShip,
+                'membership' => $membership,
+                'stripe' => $stripe,
+            ];
+            return sendResponse('Booking Success',$data);
+        }
+        return errorResponse($validator->errors()->first());
+        
     }
 }
