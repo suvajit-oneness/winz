@@ -28,6 +28,7 @@
                                 <th> Email</th>
                                 <th> Phone</th>
                                 <th> Gender</th>
+                                <th> Price per hour</th>
                                 <th> Status</th>
                                 <th class=""> Action</th>
                             </tr>
@@ -76,6 +77,11 @@
                             }else if(data == 2){
                                 return 'Female';
                             }else{return 'Not Specified';}
+                        }
+                    },
+                    {data: 'price', name: 'teacher.price_per_hour',
+                        render: function( data, type, full, meta ) {
+                            return full.teacher.price_per_hour;
                         }
                     },
                     {data: 'id', name: 'id',

@@ -13,7 +13,7 @@ class TeacherManagementController extends Controller
     public function index(Request $req)
     {
     	if($req->ajax()){
-            $users = User::select('*')->where('userType','teacher')->orderBy('id','desc');
+            $users = User::select('*')->where('userType','teacher')->with('teacher')->orderBy('id','desc');
             return Datatables::of($users)->make();
         }
     	return view('admin.teacher.index');
