@@ -63,7 +63,7 @@
                     {data: 'email', name: 'email'},
                     {data: 'id', name: 'id',
                         render: function( data, type, full, meta ) {
-                            if(full.mobile.length > 0){
+                            if(full.mobile){
                                 return full.mobile;
                             }else{
                                 return 'N/A';
