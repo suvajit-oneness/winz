@@ -47,6 +47,7 @@ class Apicontroller extends Controller
                         $teacher->email = $user->email;
                         $teacher->image = $user->image;
                         $teacher->subject = ($req->subject) ? $req->subject : '';
+                        $teacher->price_per_hour = ($req->price) ? $req->price : 50;
                         $teacher->save();
                         $user->teacherData = $teacher;
                     }
@@ -257,7 +258,7 @@ class Apicontroller extends Controller
     public function get_teacher(Request $req,$teacherId = 0)
     {
         if($teacherId == 0){
-          $teacher = Teacher::get();
+          $teacher = Teacher::select('*')->get();
         }else{
             $teacher = Teacher::where('id',$teacherId)->first();
             $teacher->teacherCourses = Course::get();

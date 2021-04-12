@@ -63,6 +63,7 @@ class LoginController extends Controller
                     $teacher->password = $user->password;
                     $teacher->image = $user->image;
                     $teacher->subject = '';
+                    $teacher->price_per_hour = ($req->price) ? $req->price : 50;
                     $teacher->save();
                     $user->teacherData = $teacher;
                 }
