@@ -43,4 +43,9 @@ class User extends Authenticatable
     public function creditlist(){
         return $this->hasMany(Creditlist::class);
     }
+
+    public function teacher()
+    {
+        return $this->hasOne('App\Models\Teacher','userId','id');
+    }
 }

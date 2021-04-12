@@ -261,6 +261,15 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/view', 'Admin\UserManagementController@viewDetail')->name('admin.users.detail');
 			Route::post('updateStatus', 'Admin\UserManagementController@updateStatus')->name('admin.users.updateStatus');
 		});
+
+		Route::group(['prefix'  =>   'teacher'], function() {
+			Route::get('/', 'Admin\TeacherManagementController@index')->name('admin.teacher.index');
+			Route::get('/crate', 'Admin\TeacherManagementController@create')->name('admin.teacher.create');
+			Route::post('/crate', 'Admin\TeacherManagementController@saveTeacher')->name('admin.teacher.store');
+			Route::get('/{id}/edit', 'Admin\TeacherManagementController@editTeacher')->name('admin.teacher.edit');
+			Route::post('/{id}/update', 'Admin\TeacherManagementController@updateTeacher')->name('admin.teacher.update');
+			Route::get('/{id}/delete', 'Admin\TeacherManagementController@deleteTeacher')->name('admin.teacher.delete');
+		});
 		
 		Route::group(['prefix'  =>   'packages'], function() {
 			Route::get('/', 'Admin\PackageController@index')->name('admin.packages.index');

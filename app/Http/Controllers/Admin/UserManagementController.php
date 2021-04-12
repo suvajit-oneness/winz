@@ -136,7 +136,12 @@ class UserManagementController extends BaseController
         $user = $this->UserRepository->updateUserStatus($params);
 
         if ($user) {
-            return response()->json(array('message'=>'User status successfully updated'));
+            if($user->userType == 'user'){
+                return response()->json(array('message'=>'User status successfully updated'));
+            }else{
+                return response()->json(array('message'=>'Teacher status successfully updated'));
+            }
+            
         }
     }
 
@@ -147,11 +152,15 @@ class UserManagementController extends BaseController
     public function delete($id)
     {
         $user = $this->UserRepository->deleteUser($id);
-
         if (!$user) {
             return $this->responseRedirectBack('Error occurred while deleting user.', 'error', true, true);
+        }else{
+            if($user->userType == 'teacher'){
+                return $this->responseRedirect('admin.teacher.index', 'Teacher deleted successfully' ,'success',false, false);
+            }
+            return $this->responseRedirect('admin.users.index', 'User deleted successfully' ,'success',false, false);
         }
-        return $this->responseRedirect('admin.users.index', 'User deleted successfully' ,'success',false, false);
+        
     }
 
     /**

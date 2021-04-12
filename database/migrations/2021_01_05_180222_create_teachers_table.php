@@ -22,6 +22,7 @@ class CreateTeachersTable extends Migration
             $table->string('gender',20);
             $table->date('dob');
             $table->date('anniversary');
+            $table->float('price_per_hour',8,2);
             $table->string('otp',10);
             $table->string('image',200);
             $table->string('subject',200);

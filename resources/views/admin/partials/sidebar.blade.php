@@ -44,6 +44,15 @@
                 <span class="app-menu__label">Users Management</span>
             </a>
         </li>
+
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.teacher.*']) }}"
+                href="{{ route('admin.teacher.index') }}">
+                <!--<i class="app-menu__icon fa fa-group"></i>-->
+                <span class="app-menu__label">Teacher Management</span>
+            </a>
+        </li>
+
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.tutor.*']) }}"
                 href="{{ route('admin.tutor.index') }}">

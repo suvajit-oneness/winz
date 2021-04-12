@@ -8,7 +8,7 @@ use App\Contracts\UserContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
-use Hash;
+use Hash;use App\Models\Teacher;
 /**
  * Class UserRepository
  *
@@ -84,20 +84,16 @@ class UserRepository extends BaseRepository implements UserContract
     public function createUser(array $params)
     {
         try {
-
             $collection = collect($params);
-
             $user = new User;
             $user->name = $collection['name'];
             $user->email = $collection['email'];
             $user->mobile = $collection['mobile'];
             $user->membership_id = $collection['membership_id'];
             $user->password = hash::make($collection['password']);
-
+            $user->userType = 'user';
             $user->save();
-
             return $user;
-            
         } catch (QueryException $exception) {
             throw new InvalidArgumentException($exception->getMessage());
         }
@@ -111,13 +107,11 @@ class UserRepository extends BaseRepository implements UserContract
     {
         $user = $this->findOneOrFail($params['id']); 
         $collection = collect($params)->except('_token'); 
-
         $user->name = $collection['name'];
         $user->email = $collection['email'];
         $user->mobile = $collection['mobile'];
         $user->membership_id = $collection['membership_id'];
         $user->save();
-
         return $user;
     }
 
@@ -129,7 +123,6 @@ class UserRepository extends BaseRepository implements UserContract
         $user = $this->findUserById($id);
         $user->is_block = $is_block;
         $user->save();
-
         return $user;
     }
     /**
@@ -140,7 +133,6 @@ class UserRepository extends BaseRepository implements UserContract
         $user = $this->findUserById($id);
         $user->is_verified = $is_verified;
         $user->save();
-
         return $user;
     }
 
@@ -153,7 +145,6 @@ class UserRepository extends BaseRepository implements UserContract
         $collection = collect($params)->except('_token');
         $user->is_active = $collection['is_active'];
         $user->save();
-
         return $user;
     }
 
@@ -164,6 +155,9 @@ class UserRepository extends BaseRepository implements UserContract
     public function deleteUser($id)
     {
         $user = $this->findOneOrFail($id);
+        if($user->userType == 'teacher'){
+            Teacher::where('userId',$user->id)->delete();
+        }
         $user->delete();
         return $user;
     }
