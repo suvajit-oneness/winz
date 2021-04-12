@@ -37,8 +37,8 @@
                                     <td>{{$meeting->meetingId}}</td>
                                     <td>@if($meeting->userData){{$meeting->userData->name}}@else{{('N/A')}}@endif</td>
                                     <td>@if($meeting->userData){{$meeting->userData->email}}@else{{('N/A')}}@endif</td>
-                                    <td>{{$meeting->teacherData->name}}</td>
-                                    <td>{{$meeting->teacherData->email}}</td>
+                                    <td>@if($meeting->teacherData){{$meeting->teacherData->name}}@else{{('N/A')}}@endif</td>
+                                    <td>@if($meeting->teacherData){{$meeting->teacherData->email}}@else{{('N/A')}}@endif</td>
                                     <td>{{$meeting->topic}}</td>
                                     <td>{{$meeting->start_time}}</td>
                                     <td>{{$meeting->agenda}}</td>
