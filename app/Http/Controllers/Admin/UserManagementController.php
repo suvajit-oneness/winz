@@ -32,7 +32,7 @@ class UserManagementController extends BaseController
     public function index(Request $req)
     {
         if($req->ajax()){
-            $users = User::select('*')->with('membership');
+            $users = User::select('*')->where('userType','user')->with('membership');
             return Datatables::of($users)->make();
         }
     	$this->setPageTitle('Users', 'List of all users');
