@@ -35,8 +35,8 @@
                                 <tr>
                                     <td>{{$meeting->uuid}}</td>
                                     <td>{{$meeting->meetingId}}</td>
-                                    <td>{{$meeting->userData->name}}</td>
-                                    <td>{{$meeting->userData->email}}</td>
+                                    <td>@if($meeting->userData){{$meeting->userData->name}}@else{{('N/A')}}@endif</td>
+                                    <td>@if($meeting->userData){{$meeting->userData->email}}@else{{('N/A')}}@endif</td>
                                     <td>{{$meeting->teacherData->name}}</td>
                                     <td>{{$meeting->teacherData->email}}</td>
                                     <td>{{$meeting->topic}}</td>
