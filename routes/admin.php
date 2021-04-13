@@ -297,6 +297,12 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::post('meeting/create','Admin\ZoomController@saveMeeting')->name('admin.zoom.save');
 			Route::post('meeting/delete','Admin\ZoomController@deleteZoomMeeting')->name('admin.zoom.delete');
 		});
+
+		Route::group(['prefix'=>'contactus'],function(){
+			Route::get('/','Admin\SettingController@contact_us')->name('admin.contactus');
+			Route::get('/list','Admin\SettingController@contactUsList')->name('admin.contactus.list');
+			Route::post('/save','Admin\SettingController@saveContactUs')->name('admin.contact.save');
+		});
 	});
 
 });

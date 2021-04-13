@@ -163,6 +163,23 @@
                 <span class="app-menu__label">Site Settings</span>
             </a>
         </li>
+
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.contactus']) }}"
+                href="{{ route('admin.contactus') }}">
+                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
+                <span class="app-menu__label">Contact us Setting</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.contactus.list']) }}"
+                href="{{ route('admin.contactus.list') }}">
+                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
+                <span class="app-menu__label">Contact us List</span>
+            </a>
+        </li>
+
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.blog.*']) }}"
                 href="{{ route('admin.blog.index') }}">
