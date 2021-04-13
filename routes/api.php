@@ -57,6 +57,8 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 			// Route::post('meeting/delete','Api\ZoomMeetingController@deleteZoomMeeting')->name('zoom.meeting.delete');
 		});
 
+		Route::get('contact-us-data','Api\Apicontroller@getContactDataToShow');
+
 	});
 
 	// stripePayment

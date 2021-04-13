@@ -5,14 +5,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;use App\Models\Schedule;
 use App\Models\City;use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
-use App\Models\Category;use App\Models\Contact;use Session;
+use App\Models\Category;use Session;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
 use URL;use Validator;use App\Models\CommonQuestion;use App\Models\ZoomMeeting;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 use Stripe;use App\Models\StripeTransaction;use App\Models\TeacherBooking;
-use App\Models\BuyMemberShip;
+use App\Models\BuyMemberShip;use App\Models\ContactUs;
 
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
@@ -323,19 +323,28 @@ class Apicontroller extends Controller
         return sendResponse('MemberShip List of The User',$memberShip);
     }
 
+    public function getContactDataToShow(Request $req)
+    {
+        $contact = ContactUs::where('type',1)->first();
+        return sendResponse('Contact Data',$contact);
+    }
+
     public function contactUsFormSubmit(Request $req)
     {
         $rules = [
           'name' => 'required|string|max:200',
           'email' => 'required|email|string',
+          'subject' => 'required|string|max:200',
           'message' => 'required|string|max:255'
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $contact = new Contact();
+            $contact = new ContactUs();
             $contact->name = $req->name;
+            $contact->type = 2;
             $contact->email = $req->email;
             $contact->mobile = ($req->mobile) ? $req->mobile : '';
+            $contact->subject = $req->subject;
             $contact->message = $req->message;
             $contact->save();
             return sendResponse('Thankyou for contact with us we will contact you soon!');
@@ -558,6 +567,5 @@ class Apicontroller extends Controller
             return sendResponse('Booking Success',$data);
         }
         return errorResponse($validator->errors()->first());
-        
     }
 }
