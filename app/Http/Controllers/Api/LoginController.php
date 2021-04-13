@@ -42,7 +42,7 @@ class LoginController extends Controller
         	'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:5', 'confirmed'],
-            'user_role' => ['required','in:user,teacher',],
+            'user_role' => ['required','in:user,teacher'],
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
