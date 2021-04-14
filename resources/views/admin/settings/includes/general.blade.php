@@ -78,7 +78,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label" for="currency_symbol">Cancellation policy</label>
-                <textarea class="form-control" name="ancellation" id="ancellation">{{ $setting::get('ancellation') }}</textarea>
+                <textarea class="form-control" name="cancellation" id="cancellation">{{ $setting::get('cancellation') }}</textarea>
             </div>
         </div>
     </form>

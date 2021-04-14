@@ -29,7 +29,7 @@
             
             <div class="form-group">
                 <label class="control-label" for="meta_description">Meta Description</label>
-                <textarea class="form-control" name="meta_description" id="meta_description">{{ $setting::get('meta_description') }}</textarea>
+                <textarea class="form-control ckeditor" name="meta_description" id="meta_description">{{ $setting::get('meta_description') }}</textarea>
             </div>
             
         </div>

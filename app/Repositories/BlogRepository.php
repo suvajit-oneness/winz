@@ -72,7 +72,7 @@ class BlogRepository extends BaseRepository implements BlogContract
             
             
             $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
+            $imageName = time().".".$profile_image->getClientOriginalExtension();
             $profile_image->move("Blog/",$imageName);
             $uploadedImage = $imageName;
             $Blog->image = $uploadedImage;

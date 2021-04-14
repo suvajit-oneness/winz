@@ -12,13 +12,44 @@ use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
 use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFeature;
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 use Stripe;use App\Models\StripeTransaction;use App\Models\TeacherBooking;
-use App\Models\BuyMemberShip;use App\Models\ContactUs;
-
+use App\Models\BuyMemberShip;use App\Models\ContactUs;use App\Models\Testimonial;
+use App\Models\Blog;use App\Models\Setting;
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {
+
+    public function getTestimonials(Request $req)
+    {
+        $testimonials = Testimonial::where('is_active',1);
+        if(!empty($req->id)){
+            $testimonials = $testimonials->where('id',$req->id);
+        }
+        $testimonials = $testimonials->orderBy('id','DESC')->get();
+        return sendResponse('Testimonials List',$testimonials);
+    }
+
+    public function getBlogs(Request $req)
+    {
+        $blogs = Blog::where('is_active',1);
+        if(!empty($req->id)){
+            $blogs = $blogs->where('id',$req->id);
+        }
+        $blogs = $blogs->orderBy('id','DESC')->get();
+        return sendResponse('Blogs List',$blogs);
+    }
+
+    public function getSettings(Request $req)
+    {
+        $setting = Setting::select('*');
+        if(!empty($req->key)){
+            $setting = $setting->where('key',$req->key);
+        }
+        $setting = $setting->orderBy('id','DESC')->get();
+        return sendResponse('Setting',$setting);
+    }
+
     public function updateProfile(Request $req)
     {
         $rules = [

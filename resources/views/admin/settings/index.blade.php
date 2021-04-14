@@ -21,12 +21,12 @@
                         
                         <li class="nav-item"><a class="nav-link" href="#home-seo" data-toggle="tab">Home SEO</a></li>
                         <li class="nav-item"><a class="nav-link" href="#about-seo" data-toggle="tab">About SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#contact-seo" data-toggle="tab">Contact SEO</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link" href="#contact-seo" data-toggle="tab">Contact SEO</a></li> -->
                         <li class="nav-item"><a class="nav-link" href="#faq-seo" data-toggle="tab">Faq SEO</a></li>
                         <li class="nav-item"><a class="nav-link" href="#terms-seo" data-toggle="tab">Terms & Conditions SEO</a></li>
                         <li class="nav-item"><a class="nav-link" href="#shipping-seo" data-toggle="tab">Privacy Policy SEO</a></li>
-                        
-                        <li class="nav-item"><a class="nav-link" href="#replacement-seo" data-toggle="tab">Cancellation Policy SEO</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#cancellation-seo" data-toggle="tab">Cancellation Policy SEO</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#replacement-seo" data-toggle="tab">Replacement Policy SEO</a></li>
                         {{-- <li class="nav-item"><a class="nav-link" href="#social-links" data-toggle="tab">Social Links</a></li> --}}
                     </ul>
                 </div>
@@ -46,9 +46,9 @@
                 <div class="tab-pane fade" id="about-seo">
                     @include('admin.settings.includes.about')
                 </div>
-                <div class="tab-pane fade" id="contact-seo">
+                <!-- <div class="tab-pane fade" id="contact-seo">
                     @include('admin.settings.includes.contact')
-                </div>
+                </div> -->
                 <div class="tab-pane fade" id="faq-seo">
                     @include('admin.settings.includes.faq')
                 </div>
@@ -61,6 +61,11 @@
                 <div class="tab-pane fade" id="replacement-seo">
                     @include('admin.settings.includes.replacement')
                 </div>
+
+                <div class="tab-pane fade" id="cancellation-seo">
+                    @include('admin.settings.includes.cancellation')
+                </div>
+                
                 <div class="tab-pane fade" id="ourcustomer-seo">
                     @include('admin.settings.includes.ourcustomer')
                 </div>
@@ -76,6 +81,7 @@
 @endsection
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="{{ asset('backend/js/plugins/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
 $(function(){
     var hash = $('.nav-tabs a.active').attr('href');

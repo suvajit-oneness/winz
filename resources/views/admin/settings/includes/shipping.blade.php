@@ -15,6 +15,7 @@
                     value="{{ $setting::get('shipping_meta_title') }}"
                 />
             </div>
+            
             <div class="form-group">
                 <label class="control-label" for="shipping_meta_keywords">India Meta Keywords</label>
                 <input
@@ -29,7 +30,7 @@
             
             <div class="form-group">
                 <label class="control-label" for="faq_shipping_description">India Meta Description</label>
-                <textarea class="form-control" name="faq_shipping_description" id="faq_shipping_description">{{ $setting::get('faq_shipping_description') }}</textarea>
+                <textarea class="form-control ckeditor" name="faq_shipping_description" id="faq_shipping_description">{{ $setting::get('faq_shipping_description') }}</textarea>
             </div>
             
         </div>

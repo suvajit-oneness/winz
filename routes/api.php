@@ -2,18 +2,6 @@
 
 use Illuminate\Http\Request;
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 // header('Access-Control-Allow-Origin: *');
 // header( 'Access-Control-Allow-Headers: Authorization, Content-Type' );
 
@@ -58,6 +46,10 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		});
 
 		Route::get('contact-us-data','Api\Apicontroller@getContactDataToShow');
+
+		Route::get('testimonials','Api\Apicontroller@getTestimonials');
+		Route::get('blogs','Api\Apicontroller@getBlogs');
+		Route::get('settings','Api\Apicontroller@getSettings');
 
 	});
 

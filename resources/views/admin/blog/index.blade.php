@@ -50,7 +50,7 @@
                     {data: 'image', name: 'image',
                         render: function( data, type, full, meta ) {
                             if(data.length > 0){
-                                return '<img style="width: 150px;height: 100px;" src="{{URL::to('/').'/blogs'}}/'+data+'">';
+                                return '<img style="width: 150px;height: 100px;" src="{{URL::to('/').'/Blog'}}/'+data+'">';
                             }else{
                                 return 'N/A';
                             }

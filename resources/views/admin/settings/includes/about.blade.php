@@ -29,7 +29,7 @@
             
             <div class="form-group">
                 <label class="control-label" for="about_meta_description">India Meta Description</label>
-                <textarea class="form-control" name="about_meta_description" id="about_meta_description">{{ $setting::get('about_meta_description') }}</textarea>
+                <textarea class="form-control ckeditor" name="about_meta_description" id="about_meta_description">{{ $setting::get('about_meta_description') }}</textarea>
             </div>
             
         </div>

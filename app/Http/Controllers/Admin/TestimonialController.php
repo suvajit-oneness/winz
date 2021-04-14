@@ -58,7 +58,7 @@ class TestimonialController extends BaseController
         $valid_images = array("png","jpg","jpeg","gif");
         if($request->hasFile("image") && in_array($request->image->extension(),$valid_images)){
             $profile_image = $request->image;
-            $imageName = time().".".$profile_image->getClientOriginalName();
+            $imageName = time().".".$profile_image->getClientOriginalExtension();
             $profile_image->move("testimonials/",$imageName);
             $uploadedImage = $imageName;
             $Testimonial['image'] = $uploadedImage;
