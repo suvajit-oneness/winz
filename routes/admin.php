@@ -298,6 +298,29 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::post('meeting/delete','Admin\ZoomController@deleteZoomMeeting')->name('admin.zoom.delete');
 		});
 
+		Route::group(['prefix' => 'course'],function(){
+			Route::get('/','Admin\CourseManagementController@index')->name('admin.course');
+			Route::get('/create','Admin\CourseManagementController@createCourse')->name('admin.course.create');
+			Route::post('/create','Admin\CourseManagementController@saveCourse')->name('admin.course.store');
+			Route::get('/edit/{id}','Admin\CourseManagementController@editCourse')->name('admin.course.edit');
+			Route::post('/update/{id}','Admin\CourseManagementController@updateCourse')->name('admin.course.update');
+			Route::post('/delete','Admin\CourseManagementController@deleteCourse')->name('admin.course.delete');
+
+			// Lectures
+			Route::group(['prefix' => 'lecture'],function(){
+				Route::get('/{courseId}','Admin\CourseManagementController@lectures')->name('admin.course.lecture');
+				Route::post('/delete','Admin\CourseManagementController@deleteLectures')->name('admin.course.lecture.delete');
+			});
+
+			// Features
+			Route::group(['prefix' => 'feature'],function(){
+				Route::get('/{courseId}','Admin\CourseManagementController@features')->name('admin.course.feature');
+				Route::post('/delete','Admin\CourseManagementController@deleteFeatures')->name('admin.course.feature.delete');
+			});
+		});
+
+		
+
 		Route::group(['prefix'=>'contactus'],function(){
 			Route::get('/','Admin\SettingController@contact_us')->name('admin.contactus');
 			Route::get('/list','Admin\SettingController@contactUsList')->name('admin.contactus.list');

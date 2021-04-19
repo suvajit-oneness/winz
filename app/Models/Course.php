@@ -14,4 +14,14 @@ class Course extends Model
     	return $this->hasMany('App\Models\TeacherCourse','course_id','id')
     		->leftjoin('teachers','teacher_courses.teacher_id','teachers.id');
     }
+
+    public function lecture()
+    {
+    	return $this->hasMany('App\Models\CourseLecture','course_id','id')->withTrashed();
+    }
+
+    public function feature()
+    {
+    	return $this->hasMany('App\Models\CourseFeature','course_id','id')->withTrashed();
+    }
 }

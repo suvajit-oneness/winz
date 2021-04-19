@@ -165,6 +165,14 @@
         </li>
 
         <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
+                href="{{ route('admin.course') }}">
+                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
+                <span class="app-menu__label">Course Management</span>
+            </a>
+        </li>
+
+        <li>
             <a class="app-menu__item {{ sidebar_open(['admin.contactus']) }}"
                 href="{{ route('admin.contactus') }}">
                 <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
