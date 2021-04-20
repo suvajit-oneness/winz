@@ -7,6 +7,7 @@
             <h1><i class="fa fa-file-text"></i> {{ 'Lectures' }}</h1>
             <p>{{ 'list of Course Lecture' }}</p>
         </div>
+        <a href="{{route('admin.course')}}" class="pull-right">Back to Course</a>
         <a href="javascript:void(0)" class="btn btn-primary pull-right createLecture">Add New</a>
     </div>
     </div>
