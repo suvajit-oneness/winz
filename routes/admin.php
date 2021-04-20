@@ -309,12 +309,16 @@ Route::group(['prefix' => 'admin'], function () {
 			// Lectures
 			Route::group(['prefix' => 'lecture'],function(){
 				Route::get('/{courseId}','Admin\CourseManagementController@lectures')->name('admin.course.lecture');
+				Route::post('save/{courseId}','Admin\CourseManagementController@saveLecture')->name('admin.course.lecture.save');
+				Route::post('update/{courseId}','Admin\CourseManagementController@updateLecture')->name('admin.course.lecture.update');
 				Route::post('/delete','Admin\CourseManagementController@deleteLectures')->name('admin.course.lecture.delete');
 			});
 
 			// Features
 			Route::group(['prefix' => 'feature'],function(){
 				Route::get('/{courseId}','Admin\CourseManagementController@features')->name('admin.course.feature');
+				Route::post('save/{courseId}','Admin\CourseManagementController@saveFeature')->name('admin.feature.save');
+				Route::post('update/{courseId}','Admin\CourseManagementController@updateFeature')->name('admin.feature.update');
 				Route::post('/delete','Admin\CourseManagementController@deleteFeatures')->name('admin.course.feature.delete');
 			});
 		});

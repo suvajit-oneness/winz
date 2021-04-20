@@ -7,7 +7,7 @@
             <h1><i class="fa fa-file-text"></i> {{ 'Features' }}</h1>
             <p>{{ 'list of Course Features' }}</p>
         </div>
-        <!-- <a href="{{ route('admin.course.create') }}" class="btn btn-primary pull-right">Add New</a> -->
+        <a href="javascript:void(0)" class="btn btn-primary pull-right createFeature">Add New</a>
     </div>
     </div>
     @include('admin.partials.flash')
@@ -47,7 +47,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <!-- <a href="{{route('admin.course.edit',$feat->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a> -->
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-primary edit-btn" data-id="{{$feat->id}}" data-feature="{{$feat->feature}}"><i class="fa fa-pencil"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -57,6 +57,66 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Feature Modal -->
+    <div class="modal fade" id="addFeatureModal" tabindex="-1" role="dialog" aria-labelledby="addFeatureModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFeatureModalLabel">Add Feature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{route('admin.feature.save',$course->id)}}">
+                    @csrf
+                    <input type="hidden" name="form" value="add">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label" for="feature"> Feature <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control @error('feature') is-invalid @enderror" type="text" name="feature" id="feature" value="{{ old('feature') }}" placeholder="Feature Name">
+                            @error('feature') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary reset" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Feature Modal -->
+    <div class="modal fade" id="editFeatureModal" tabindex="-1" role="dialog" aria-labelledby="editFeatureModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editFeatureModalLabel">Edit Feature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{route('admin.feature.update',$course->id)}}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" name="form" value="update">
+                            <input type="hidden" name="featureId" value="">
+                            <label class="control-label" for="feature_name"> Feature <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control @error('feature_name') is-invalid @enderror" type="text" name="feature_name" id="feature_name" value="{{ old('feature_name') }}" placeholder="Feature Name">
+                            @error('feature_name') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary reset" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @push('styles')
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -69,14 +129,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
     <script type="text/javascript">
         $('#sampleTable').DataTable({"ordering": false});
+        $(document).on('click','.createFeature',function(){
+            $('.form-control').removeClass('is-invalid');
+            $('.text-danger').remove();
+            $('#addFeatureModal input[name=feature]').val('');
+            $('#addFeatureModal').modal('show');
+        });
+
+        $(document).on('click','.edit-btn',function(){
+            var id = $(this).attr('data-id'),feature = $(this).attr('data-feature');
+            $('.form-control').removeClass('is-invalid');
+            $('.text-danger').remove();
+            $('#editFeatureModal input[name=featureId]').val(id);
+            $('#editFeatureModal input[name=feature_name]').val(feature);
+            $('#editFeatureModal').modal('show');
+        });
+
+        @if(old('form') == 'add')$('#addFeatureModal').modal('show');@endif
+        @if(old('form') == 'update')$('#editFeatureModal').modal('show');@endif
+
         $(document).on('change','input[id="toggle-block"]',function(){
             var featureId = $(this).data('feature_id');
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-            var is_active = 0;
+            var is_active = 2;
             if($(this).is(":checked")){
                 is_active = 1;
-            }else{
-                is_active = 2;
             }
             $.ajax({
                 type:'POST',

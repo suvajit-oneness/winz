@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;use App\Models\Course;
 use App\Models\CourseLecture;use App\Models\CourseFeature;
+use DB;
 
 class CourseManagementController extends BaseController
 {
@@ -52,11 +53,14 @@ class CourseManagementController extends BaseController
     	];
     	$validate = validator()->make($req->all(),$rules);
     	if(!$validate->fails()){
-    		$deleted_at = date('Y-m-d h:i:s');
-    		if($req->status == 1){
-    			$deleted_at = null;
+    		$deleted_at = null;
+    		if($req->status != 1){
+    			$deleted_at = date('Y-m-d h:i:s');
+    			CourseLecture::where('course_id',$req->id)->withTrashed()->update(['deleted_at'=>$deleted_at]);
+				CourseFeature::where('course_id',$req->id)->withTrashed()->update(['deleted_at'=>$deleted_at]);
     		}
     		Course::where('id',$req->id)->withTrashed()->update(['deleted_at'=>$deleted_at]);
+    		
     		return response()->json(['error'=>false,'message'=>'Course Status Updated successfully']);
     	}
     	return response()->json(['error'=>true,'message'=>$validate->errors()->first()]);
@@ -102,6 +106,58 @@ class CourseManagementController extends BaseController
     	return view('admin.course.lecture.index',compact('course'));
     }
 
+    public function saveLecture(Request $req,$courseId)
+    {
+    	$req->validate([
+    		'form' => 'required|in:add', // just for Showing Modal not need in entire logic
+    		'title' => 'required|string|max:200',
+    		'media' => 'required|string',
+    		'description' => 'required|string|max:200',
+    	]);
+    	DB::beginTransaction();
+		try {
+			$course = Course::where('id',$courseId)->withTrashed()->first();
+	    	$lecture = new CourseLecture();
+	    	$lecture->course_id = $course->id;
+	    	$lecture->title = $req->title;
+	    	$lecture->description = $req->description;
+	    	$lecture->media = $req->media;
+	    	$lecture->deleted_at = $course->deleted_at;
+	    	$lecture->save();
+	    	DB::commit();
+    		return $this->responseRedirectBack('Lecture added successfully' ,'success',false, false);
+    	} catch (Exception $e) {
+			DB::rollback();
+			$error['description'] = 'Somethig went wrong please try after some time';
+			return back()->withErrors($error)->withInput($req->all());
+    	}
+    }
+
+    public function updateLecture(Request $req,$courseId)
+    {
+    	$req->validate([
+    		'form' => 'required|in:update', // just for Showing Modal not need in entire logic
+    		'lectureId' => 'required|min:1|numeric',
+    		'title' => 'required|string|max:200',
+    		'media' => 'required|string',
+    		'description' => 'required|string|max:200',
+    	]);
+    	DB::beginTransaction();
+		try {
+	    	$lecture = CourseLecture::where('id',$req->lectureId)->where('course_id',$courseId)->withTrashed()->first();
+	    	$lecture->title = $req->title;
+	    	$lecture->description = $req->description;
+	    	$lecture->media = $req->media;
+	    	$lecture->save();
+	    	DB::commit();
+    		return $this->responseRedirectBack('Lecture updated successfully' ,'success',false, false);
+    	} catch (Exception $e) {
+			DB::rollback();
+			$error['description'] = 'Somethig went wrong please try after some time';
+			return back()->withErrors($error)->withInput($req->all());
+    	}
+    }
+
     public function deleteLectures(Request $req)
     {
     	$rules = [
@@ -114,6 +170,7 @@ class CourseManagementController extends BaseController
     		$deleted_at = date('Y-m-d h:i:s');
     		if($req->status == 1){
     			$deleted_at = null;
+    			Course::where('id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
     		}
     		CourseLecture::where('id',$req->id)->where('course_id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
     		return response()->json(['error'=>false,'message'=>'Lecture Status Updated successfully']);
@@ -128,6 +185,60 @@ class CourseManagementController extends BaseController
     	return view('admin.course.feature.index',compact('course'));
     }
 
+    public function saveFeature(Request $req,$courseId)
+    {
+    	$req->validate([
+    		'form' => 'required|in:add', // just for Showing Modal not need in entire logic
+    		'feature' => 'required|max:200',
+    	]);
+    	$check = CourseFeature::where('course_id',$courseId)->where('feature',$req->feature)->withTrashed()->first();
+    	if(!$check){
+    		DB::beginTransaction();
+    		try {
+    			$course = Course::where('id',$courseId)->withTrashed()->first();
+    			$feature = new CourseFeature();
+	    		$feature->course_id = $courseId;
+	    		$feature->feature = $req->feature;
+	    		$feature->deleted_at = $course->deleted_at;
+	    		$feature->save();
+    			DB::commit();
+    			return $this->responseRedirectBack('Feature added successfully' ,'success',false, false);
+    		} catch (Exception $e) {
+    			DB::rollback();
+    			$error['feature'] = 'Somethig went wrong please try after some time';
+    			return back()->withErrors($error)->withInput($req->all());
+    		}
+    	}
+    	$error['feature'] = 'This feature is already exists';
+    	return back()->withErrors($error)->withInput($req->all());
+    }
+
+    public function updateFeature(Request $req,$courseId)
+    {
+    	$req->validate([
+    		'form' => 'required|in:update', // just for Showing Modal not need in entire logic
+    		'featureId' => 'required|min:1|numeric',
+    		'feature_name' => 'required|max:200',
+    	]);
+    	$check = CourseFeature::where('course_id',$courseId)->where('id','!=',$req->featureId)->where('feature',$req->feature_name)->withTrashed()->first();
+    	if(!$check){
+    		DB::beginTransaction();
+    		try {
+    			$feature = CourseFeature::where('id',$req->featureId)->withTrashed()->first();
+	    		$feature->feature = $req->feature_name;
+	    		$feature->save();
+    			DB::commit();
+    			return $this->responseRedirectBack('Feature updated successfully' ,'success',false, false);
+    		} catch (Exception $e) {
+    			DB::rollback();
+    			$error['feature_name'] = 'Somethig went wrong please try after some time';
+    			return back()->withErrors($error)->withInput($req->all());
+    		}	
+    	}
+    	$error['feature_name'] = 'This feature is already exists';
+    	return back()->withErrors($error)->withInput($req->all());
+    }
+
     public function deleteFeatures(Request $req)
     {
     	$rules = [
@@ -140,6 +251,7 @@ class CourseManagementController extends BaseController
     		$deleted_at = date('Y-m-d h:i:s');
     		if($req->status == 1){
     			$deleted_at = null;
+    			Course::where('id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
     		}
     		CourseFeature::where('id',$req->id)->where('course_id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
     		return response()->json(['error'=>false,'message'=>'Feature Status Updated successfully']);
