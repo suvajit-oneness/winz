@@ -328,6 +328,13 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/list','Admin\SettingController@contactUsList')->name('admin.contactus.list');
 			Route::post('/save','Admin\SettingController@saveContactUs')->name('admin.contact.save');
 		});
+
+		//question module - categories
+		Route::group(['prefix'  =>   'categories'], function() {
+			Route::get('/', 'Admin\CategoryController@index')->name('admin.category.index');
+			Route::get('/{id}/edit', 'Admin\CategoryController@edit')->name('admin.category.edit');
+			Route::post('/update', 'Admin\CategoryController@update')->name('admin.category.update');
+		});
 	});
 
 });

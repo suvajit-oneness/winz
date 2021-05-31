@@ -21,6 +21,40 @@
             </a>
         </li>
 
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <!--<i class="app-menu__icon fa fa-buffer"></i>-->
+                <span class="app-menu__label">Question Module</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.category.*']) }}"
+                    href="{{ route('admin.category.index') }}">
+                    Categories
+                    </a>
+                </li>
+                <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.class.*']) }}"
+                    href="{{ route('admin.class.index') }}">
+                    Subject Categories
+                    </a>
+                </li>
+                <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.subject.*']) }}"
+                    href="{{ route('admin.subject.index') }}">
+                    Chapters
+                    </a>
+                </li>
+                <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.topic.*']) }}"
+                    href="{{ route('admin.topic.index') }}">
+                    Questions
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
                 href="{{ route('admin.course') }}">
@@ -111,13 +145,13 @@
                 <span class="app-menu__label">Question Papers</span>
             </a>
         </li>
-        <li>
+        {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.keyconcept.*']) }}"
                 href="{{ route('admin.keyconcept.index') }}">
                 <!--<i class="app-menu__icon fa fa-keycdn"></i>-->
                 <span class="app-menu__label">Key Concepts</span>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.quiz.*']) }}"
                 href="{{ route('admin.quiz.index') }}">
