@@ -335,6 +335,16 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/edit', 'Admin\CategoryController@edit')->name('admin.category.edit');
 			Route::post('/update', 'Admin\CategoryController@update')->name('admin.category.update');
 		});
+		
+		//question module - categories
+		Route::group(['prefix'  =>   'subject/categories'], function() {
+			Route::get('/', 'Admin\SubjectCategoryController@index')->name('admin.subject.category.index');
+			Route::get('/create', 'Admin\SubjectCategoryController@create')->name('admin.subject.category.create');
+			Route::post('/store', 'Admin\SubjectCategoryController@store')->name('admin.subject.category.store');
+			Route::get('/{id}/edit', 'Admin\SubjectCategoryController@edit')->name('admin.subject.category.edit');
+			Route::post('/update', 'Admin\SubjectCategoryController@update')->name('admin.subject.category.update');
+			Route::get('/{id}/delete', 'Admin\SubjectCategoryController@delete')->name('admin.subject.category.delete');
+		});
 	});
 
 });
