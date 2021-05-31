@@ -24,6 +24,7 @@
                             <td>Id</td>
                             <td>Title</td>
                             <td>Full Name</td>
+                            <td>Subject Category</td>
                             <td>Action</td>
                         </tr>
                         </thead>
@@ -33,6 +34,7 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$category->title}}</td>
                                     <td>{{$category->full_name}}</td>
+                                    <td><a href="{{route('admin.subject.category.index', $category->id)}}">{{count($category->subjectCategories)}}</a></td>
                                     <th><a href="{{route('admin.category.edit',$category->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a></th>
                                 </tr>
                             @endforeach

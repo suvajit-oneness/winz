@@ -338,12 +338,23 @@ Route::group(['prefix' => 'admin'], function () {
 		
 		//question module - categories
 		Route::group(['prefix'  =>   'subject/categories'], function() {
-			Route::get('/', 'Admin\SubjectCategoryController@index')->name('admin.subject.category.index');
+			Route::get('/{categoryId?}', 'Admin\SubjectCategoryController@index')->name('admin.subject.category.index');
 			Route::get('/create', 'Admin\SubjectCategoryController@create')->name('admin.subject.category.create');
 			Route::post('/store', 'Admin\SubjectCategoryController@store')->name('admin.subject.category.store');
 			Route::get('/{id}/edit', 'Admin\SubjectCategoryController@edit')->name('admin.subject.category.edit');
 			Route::post('/update', 'Admin\SubjectCategoryController@update')->name('admin.subject.category.update');
 			Route::get('/{id}/delete', 'Admin\SubjectCategoryController@delete')->name('admin.subject.category.delete');
+			Route::post('/get-subject-categories-data', 'Admin\SubjectCategoryController@getCategoryData')->name('get.subject.categories.data');
+		});
+		
+		//question module - categories
+		Route::group(['prefix'  =>   'chapters'], function() {
+			Route::get('/', 'Admin\ChaptersController@index')->name('admin.chapters.index');
+			Route::get('/create', 'Admin\ChaptersController@create')->name('admin.chapters.create');
+			Route::post('/store', 'Admin\ChaptersController@store')->name('admin.chapters.store');
+			Route::get('/{id}/edit', 'Admin\ChaptersController@edit')->name('admin.chapters.edit');
+			Route::post('/update', 'Admin\ChaptersController@update')->name('admin.chapters.update');
+			Route::get('/{id}/delete', 'Admin\ChaptersController@delete')->name('admin.chapters.delete');
 		});
 	});
 

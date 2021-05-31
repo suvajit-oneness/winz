@@ -16,7 +16,7 @@ class Chapter extends Model
 
     function category()
     {
-    	return $this->belongsTo('App\Models\Category','subjectCategoryId','id');
+    	return $this->belongsTo('App\Models\Category','categoryId','id');
     }
 
     function subChapter()

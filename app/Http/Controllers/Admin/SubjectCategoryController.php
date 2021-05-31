@@ -9,9 +9,13 @@ use App\Models\Category;use App\Models\SubjectCategory;
 
 class SubjectCategoryController extends BaseController
 {
-    public function index()
+    public function index($categoryId = 0)
     {
-        $sub_categories = SubjectCategory::orderBy('id')->get();
+        $sub_categories = SubjectCategory::select('*');
+        if($categoryId > 0){
+            $sub_categories = $sub_categories->where('categoryId',$categoryId);
+        }
+        $sub_categories = $sub_categories->orderBy('id')->get();
         return view('admin.subject-category.index', compact('sub_categories'));
     }
     public function create()
@@ -71,5 +75,10 @@ class SubjectCategoryController extends BaseController
             return $this->responseRedirectBack('Error occurred while deleting.', 'error', true, true);
         }
         return $this->responseRedirect('admin.subject.category.index', 'Subject Category deleted successfully' ,'success',false, false);
+    }
+    public function getCategoryData(Request $req)
+    {
+        $categories = SubjectCategory::where('categoryId', $req->categoryId)->get();
+        return response()->json(['error' => false, 'message' => 'Subject Categories Data', 'data' => $categories]);
     }
 }
