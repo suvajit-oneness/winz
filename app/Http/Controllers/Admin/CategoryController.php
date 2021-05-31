@@ -22,11 +22,11 @@ class CategoryController extends BaseController
     public function update(Request $req)
     {
         $req->validate([
+            'category_id' => 'required|numeric|min:1',
     		'title' => 'required|max:200|string',
     		'full_name' => 'required|max:200|string',
     	]);
     	$check = Category::where('id','!=',$req->category_id)->where('title',$req->title)->withTrashed()->first();
-        // dd($check);
     	if(!$check){
             $category = Category::where('id',$req->category_id)->withTrashed()->first();
 	    	$category->title = $req->title;
