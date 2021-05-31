@@ -1,15 +1,15 @@
 @extends('admin.app')
 @section('title') {{ 'Features' }} @endsection
 @section('content')
-   <div class="fixed-row">
-    <div class="app-title">
-        <div>
-            <h1><i class="fa fa-file-text"></i> {{ 'Features' }}</h1>
-            <p>{{ 'list of Course Features' }}</p>
+    <div class="fixed-row">
+        <div class="app-title">
+            <div>
+                <h1><i class="fa fa-file-text"></i> {{ 'Features' }}</h1>
+                <p>{{ 'list of Course Features' }}</p>
+            </div>
+            <a href="{{route('admin.course')}}" class="pull-right">Back to Course</a>
+            <a href="javascript:void(0)" class="btn btn-primary pull-right createFeature">Add New</a>
         </div>
-        <a href="{{route('admin.course')}}" class="pull-right">Back to Course</a>
-        <a href="javascript:void(0)" class="btn btn-primary pull-right createFeature">Add New</a>
-    </div>
     </div>
     @include('admin.partials.flash')
     <div class="alert alert-success" id="success-msg" style="display: none;">
@@ -18,6 +18,7 @@
     <div class="alert alert-danger" id="error-msg" style="display: none;">
         <span id="error-text"></span>
     </div>
+
     <div class="row section-mg row-md-body no-nav">
         <div class="col-md-12">
             <div class="tile">

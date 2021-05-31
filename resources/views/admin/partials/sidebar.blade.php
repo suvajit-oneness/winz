@@ -3,44 +3,12 @@
     <ul class="app-menu">
         <li>
             <a class="app-menu__item  {{ Route::currentRouteName() == 'admin.dashboard' ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                <!--<i class="app-menu__icon fa fa-dashboard"></i>-->
                 <span class="app-menu__label">Dashboard</span>
             </a>
         </li>
-        <!--<li class="treeview">-->
-        <!--    <a class="app-menu__item" href="#" data-toggle="treeview">-->
-        <!--        <i class="app-menu__icon fa fa-group"></i>-->
-        <!--        <span class="app-menu__label">User</span>-->
-        <!--        <i class="treeview-indicator fa fa-angle-right"></i>-->
-        <!--    </a>-->
-        <!--    <ul class="treeview-menu">-->
-        <!--        <li>-->
-        <!--            <a class="app-menu__item {{ sidebar_open(['admin.users.index']) }}"-->
-        <!--            href="{{ route('admin.users.index') }}">-->
-        <!--            <i class="icon fa fa-circle-o"></i>All User-->
-        <!--            </a>-->
-        <!--        </li>-->
-        <!--    </ul>-->
-        <!--</li>-->
-        <!--<li class="treeview">-->
-        <!--    <a class="app-menu__item" href="#" data-toggle="treeview">-->
-        <!--        <i class="app-menu__icon fa fa-group"></i>-->
-        <!--        <span class="app-menu__label">Tutor</span>-->
-        <!--        <i class="treeview-indicator fa fa-angle-right"></i>-->
-        <!--    </a>-->
-        <!--    <ul class="treeview-menu">-->
-        <!--        <li>-->
-        <!--            <a class="treeview-item {{ sidebar_open(['admin.tutor.*']) }}"-->
-        <!--            href="{{ route('admin.tutor.index') }}">-->
-        <!--            <i class="icon fa fa-circle-o"></i>All Tutors-->
-        <!--            </a>-->
-        <!--        </li>-->
-        <!--    </ul>-->
-        <!--</li>-->
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.users.*']) }}"
                 href="{{ route('admin.users.index') }}">
-                <!--<i class="app-menu__icon fa fa-group"></i>-->
                 <span class="app-menu__label">Users Management</span>
             </a>
         </li>
@@ -50,6 +18,14 @@
                 href="{{ route('admin.teacher.index') }}">
                 <!--<i class="app-menu__icon fa fa-group"></i>-->
                 <span class="app-menu__label">Teacher Management</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
+                href="{{ route('admin.course') }}">
+                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
+                <span class="app-menu__label">Course Management</span>
             </a>
         </li>
 
@@ -164,13 +140,7 @@
             </a>
         </li>
 
-        <li>
-            <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
-                href="{{ route('admin.course') }}">
-                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
-                <span class="app-menu__label">Course Management</span>
-            </a>
-        </li>
+        
 
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.contactus']) }}"

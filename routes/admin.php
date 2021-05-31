@@ -14,10 +14,6 @@ Route::group(['prefix' => 'admin'], function () {
 
     	Route::get('/dashboard', 'Admin\LoginController@index')->name('admin.dashboard');
 
-	    // Route::get('/', function () {
-	    //     return view('admin.dashboard.index');
-	    // })->name('admin.dashboard');
-
 		Route::get('/invite_list', 'Admin\InvitationController@index')->name('admin.invite');
 	    Route::get('/invitation', 'Admin\InvitationController@create')->name('admin.invite.create');
 		Route::post('/invitation', 'Admin\InvitationController@store')->name('admin.invitation.store');
@@ -250,26 +246,6 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/delete', 'Admin\QuestionpaperController@delete')->name('admin.questionpaper.delete');
 			Route::post('updateStatus', 'Admin\QuestionpaperController@updateStatus')->name('admin.questionpaper.updateStatus');
 		});
-
-		Route::group(['prefix'  =>   'users'], function() {
-			Route::get('/', 'Admin\UserManagementController@index')->name('admin.users.index');
-			Route::get('/create', 'Admin\UserManagementController@create')->name('admin.users.create');
-			Route::post('/store', 'Admin\UserManagementController@store')->name('admin.users.store');
-			Route::get('/{id}/edit', 'Admin\UserManagementController@edit')->name('admin.users.edit');
-			Route::post('/update', 'Admin\UserManagementController@update')->name('admin.users.update');
-			Route::get('/{id}/delete', 'Admin\UserManagementController@delete')->name('admin.users.delete');
-			Route::get('/{id}/view', 'Admin\UserManagementController@viewDetail')->name('admin.users.detail');
-			Route::post('updateStatus', 'Admin\UserManagementController@updateStatus')->name('admin.users.updateStatus');
-		});
-
-		Route::group(['prefix'  =>   'teacher'], function() {
-			Route::get('/', 'Admin\TeacherManagementController@index')->name('admin.teacher.index');
-			Route::get('/crate', 'Admin\TeacherManagementController@create')->name('admin.teacher.create');
-			Route::post('/crate', 'Admin\TeacherManagementController@saveTeacher')->name('admin.teacher.store');
-			Route::get('/{id}/edit', 'Admin\TeacherManagementController@editTeacher')->name('admin.teacher.edit');
-			Route::post('/{id}/update', 'Admin\TeacherManagementController@updateTeacher')->name('admin.teacher.update');
-			Route::get('/{id}/delete', 'Admin\TeacherManagementController@deleteTeacher')->name('admin.teacher.delete');
-		});
 		
 		Route::group(['prefix'  =>   'packages'], function() {
 			Route::get('/', 'Admin\PackageController@index')->name('admin.packages.index');
@@ -291,13 +267,29 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/makepdf', 'Admin\OrderController@makepdf')->name('admin.orders.makepdf');
 		});
 
-		Route::group(['prefix' => 'zoom'],function(){
-			Route::get('meeting','Admin\ZoomController@index')->name('admin.zoom.index');
-			Route::get('meeting/create','Admin\ZoomController@createMeeting')->name('admin.zoom.create');
-			Route::post('meeting/create','Admin\ZoomController@saveMeeting')->name('admin.zoom.save');
-			Route::post('meeting/delete','Admin\ZoomController@deleteZoomMeeting')->name('admin.zoom.delete');
+		// Users
+		Route::group(['prefix'  =>   'users'], function() {
+			Route::get('/', 'Admin\UserManagementController@index')->name('admin.users.index');
+			Route::get('/create', 'Admin\UserManagementController@create')->name('admin.users.create');
+			Route::post('/store', 'Admin\UserManagementController@store')->name('admin.users.store');
+			Route::get('/{id}/edit', 'Admin\UserManagementController@edit')->name('admin.users.edit');
+			Route::post('/update', 'Admin\UserManagementController@update')->name('admin.users.update');
+			Route::get('/{id}/delete', 'Admin\UserManagementController@delete')->name('admin.users.delete');
+			Route::get('/{id}/view', 'Admin\UserManagementController@viewDetail')->name('admin.users.detail');
+			Route::post('updateStatus', 'Admin\UserManagementController@updateStatus')->name('admin.users.updateStatus');
 		});
 
+		// Teachers
+		Route::group(['prefix'  =>   'teacher'], function() {
+			Route::get('/', 'Admin\TeacherManagementController@index')->name('admin.teacher.index');
+			Route::get('/crate', 'Admin\TeacherManagementController@create')->name('admin.teacher.create');
+			Route::post('/crate', 'Admin\TeacherManagementController@saveTeacher')->name('admin.teacher.store');
+			Route::get('/{id}/edit', 'Admin\TeacherManagementController@editTeacher')->name('admin.teacher.edit');
+			Route::post('/{id}/update', 'Admin\TeacherManagementController@updateTeacher')->name('admin.teacher.update');
+			Route::get('/{id}/delete', 'Admin\TeacherManagementController@deleteTeacher')->name('admin.teacher.delete');
+		});
+
+		// Course
 		Route::group(['prefix' => 'course'],function(){
 			Route::get('/','Admin\CourseManagementController@index')->name('admin.course');
 			Route::get('/create','Admin\CourseManagementController@createCourse')->name('admin.course.create');
@@ -323,7 +315,13 @@ Route::group(['prefix' => 'admin'], function () {
 			});
 		});
 
-		
+		// Zoom Meetings
+		Route::group(['prefix' => 'zoom'],function(){
+			Route::get('meeting','Admin\ZoomController@index')->name('admin.zoom.index');
+			Route::get('meeting/create','Admin\ZoomController@createMeeting')->name('admin.zoom.create');
+			Route::post('meeting/create','Admin\ZoomController@saveMeeting')->name('admin.zoom.save');
+			Route::post('meeting/delete','Admin\ZoomController@deleteZoomMeeting')->name('admin.zoom.delete');
+		});
 
 		Route::group(['prefix'=>'contactus'],function(){
 			Route::get('/','Admin\SettingController@contact_us')->name('admin.contactus');
