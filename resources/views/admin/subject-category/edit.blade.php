@@ -21,19 +21,6 @@
                     <input type="hidden" name="sub_category_id" value="{{$sub_category->id}}">
                     <div class="tile-body">
 
-                        <img src="{{asset($sub_category->image)}}" height="200" width="200">
-                        <div class="form-group">
-                            <label class="control-label" for="image"> Image <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="file" name="image" id="image">
-                            @error('image') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="title"> Title <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="title" id="title" placeholder="Subject Category Title" value="{{(old('title')) ? old('title') : $sub_category->title }}">
-                            @error('title') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
-                        </div>
-
                         <div class="form-group">
                             <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
                             <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
@@ -43,6 +30,19 @@
                                 @endforeach
                             </select>
                             @error('categoryId') {{ $message }} @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="title"> Title <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="text" name="title" id="title" placeholder="Subject Category Title" value="{{(old('title')) ? old('title') : $sub_category->title }}">
+                            @error('title') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
+
+                        <img src="{{asset($sub_category->image)}}" height="200" width="200">
+                        <div class="form-group">
+                            <label class="control-label" for="image"> Image <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="file" name="image" id="image">
+                            @error('image') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                     </div>

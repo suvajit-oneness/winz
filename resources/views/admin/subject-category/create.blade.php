@@ -21,9 +21,14 @@
                     <div class="tile-body">
 
                         <div class="form-group">
-                            <label class="control-label" for="image"> Image <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="file" name="image" id="image">
-                            @error('image') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                            <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
+                            <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
+                                <option value="">-- Select Category --</option>
+                                @foreach($category as $item)
+                                <option value="{{$item->id}}" >{{$item->title}}</option>
+                                @endforeach
+                            </select>
+                            @error('categoryId') {{ $message }} @enderror
                         </div>
 
                         <div class="form-group">
@@ -33,14 +38,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
-                                <option value="">-- Select Category --</option>
-                                @foreach($category as $item)
-                                <option value="{{$item->id}}" >{{$item->title}}</option>
-                                @endforeach
-                            </select>
-                            @error('categoryId') {{ $message }} @enderror
+                            <label class="control-label" for="image"> Image <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="file" name="image" id="image">
+                            @error('image') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                     </div>

@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="tile">
-                <h3 class="tile-title">{{ 'Update Chapter' }}
+                <h3 class="tile-title">{{ 'Create Chapter' }}
                     <span class="top-form-btn">
                         <a class="btn btn-secondary" href="{{ route('admin.chapters.index') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                     </span>
@@ -19,12 +19,6 @@
                 <form action="{{ route('admin.chapters.store') }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
                     <div class="tile-body">
-
-                        <div class="form-group">
-                            <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter'))}}">
-                            @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
-                        </div>
 
                         <div class="form-group">
                             <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
@@ -43,6 +37,12 @@
                                 <option value="">-- Select Subject Category --</option>
                             </select>
                             @error('subjectCategoryId') {{ $message }} @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter'))}}">
+                            @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                     </div>

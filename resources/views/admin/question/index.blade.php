@@ -27,6 +27,7 @@
                             <td width="15%">Question</td>
                             <td>Subject Category</td>
                             <td>Chapter</td>
+                            <td>Answers</td>
                             <td>Action</td>
                         </tr>
                         </thead>
@@ -36,6 +37,14 @@
                                     <td><img src="{{asset($question->question)}}" height="100" width="200"></td>
                                     <td>{{$question->subjectCategory->categoryId}} - {{$question->subjectCategory->title}}</td>
                                     <td>{{$question->chapter->chapter}}</td>
+                                    <td>
+                                        <ul>
+                                            <li><a href="{{($question->answer1 != '')? $question->answer1 : 'javascript:void(0);'}}" >Answer 1</a></li>
+                                            <li><a href="{{($question->answer2 != '')? $question->answer2 : 'javascript:void(0);'}}" >Answer 2</a></li>
+                                            <li><a href="{{($question->answer3 != '')? $question->answer3 : 'javascript:void(0);'}}" >Answer 3</a></li>
+                                            <li><a href="{{($question->answer4 != '')? $question->answer4 : 'javascript:void(0);'}}" >Answer 4</a></li>
+                                        </ul>
+                                    </td>
                                     <th><a href="{{route('admin.question.edit',$question->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$question->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
                                 </tr>
                             @endforeach

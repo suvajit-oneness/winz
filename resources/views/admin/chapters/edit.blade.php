@@ -23,12 +23,6 @@
                     <div class="tile-body">
 
                         <div class="form-group">
-                            <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter')) ? old('chapter') : $chapter->chapter }}">
-                            @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
-                        </div>
-
-                        <div class="form-group">
                             <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
                             <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
                                 <option value="">-- Select Category --</option>
@@ -45,6 +39,12 @@
                                 <option value="">-- Select Subject Category --</option>
                             </select>
                             @error('subjectCategoryId') {{ $message }} @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter')) ? old('chapter') : $chapter->chapter }}">
+                            @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                     </div>
