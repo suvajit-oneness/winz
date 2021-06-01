@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubChapter extends Model
 {
     use SoftDeletes;
+
+    function chapter()
+    {
+    	return $this->hasOne('App\Models\Chapter','id','chapterId');
+    }
 }

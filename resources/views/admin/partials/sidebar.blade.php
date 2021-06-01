@@ -41,7 +41,7 @@
                     </a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.chapters.*']) }}"
+                    <a class="treeview-item {{ sidebar_open(['admin.chapters.*', 'admin.subject.chapter.*']) }}"
                     href="{{ route('admin.chapters.index') }}">
                     Chapters
                     </a>
