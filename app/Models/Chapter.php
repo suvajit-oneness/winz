@@ -23,4 +23,9 @@ class Chapter extends Model
     {
     	return $this->hasMany('App\Models\SubChapter','chapterId','id');
     }
+
+    function questions()
+    {
+    	return $this->hasMany('App\Models\Question','chapterId','id');
+    }
 }

@@ -12,4 +12,8 @@ class Question extends Model
     function chapter(){
     	return $this->belongsTo('App\Models\Chapter','chapterId','id');
     }
+    
+    function subjectCategory(){
+    	return $this->belongsTo('App\Models\SubjectCategory','subjectCategoryId','id');
+    }
 }

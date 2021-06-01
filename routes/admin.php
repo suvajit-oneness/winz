@@ -355,6 +355,7 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/{id}/edit', 'Admin\ChaptersController@edit')->name('admin.chapters.edit');
 			Route::post('/update', 'Admin\ChaptersController@update')->name('admin.chapters.update');
 			Route::get('/{id}/delete', 'Admin\ChaptersController@delete')->name('admin.chapters.delete');
+			Route::post('/get-chapters-data', 'Admin\ChaptersController@getChapterData')->name('get.chapters.data');
 		});
 
 		//question module - subject chapters

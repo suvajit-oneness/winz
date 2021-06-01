@@ -64,4 +64,9 @@ class ChaptersController extends BaseController
         }
         return $this->responseRedirect('admin.chapters.index', 'Chapter deleted successfully' ,'success',false, false);
     }
+    public function getChapterData(Request $req)
+    {
+        $chapters = Chapter::where('subjectCategoryId', $req->subjectCategoryId)->get();
+        return response()->json(['error' => false, 'message' => 'Chapters Data', 'data' => $chapters]);
+    }
 }

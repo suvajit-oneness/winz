@@ -47,8 +47,8 @@
                     </a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.topic.*']) }}"
-                    href="{{ route('admin.topic.index') }}">
+                    <a class="treeview-item {{ sidebar_open(['admin.question.*']) }}"
+                    href="{{ route('admin.question.index') }}">
                     Questions
                     </a>
                 </li>
@@ -205,6 +205,21 @@
                 <!--<i class="app-menu__icon fa fa-cogs"></i>-->
                 <span class="app-menu__label">Testimonials Management</span>
             </a>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <!--<i class="app-menu__icon fa fa-buffer"></i>-->
+                <span class="app-menu__label">Report</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li style="padding-left: 20px;">
+                    <a class="app-menu__item {{ sidebar_open(['admin.contactus.list']) }}" href="{{ route('admin.contactus.list') }}">
+                    Contact Us
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <li>

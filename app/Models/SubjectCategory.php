@@ -13,4 +13,9 @@ class SubjectCategory extends Model
     {
     	return $this->belongsTo('App\Models\Category','categoryId','id');
     }
+    
+    function chapter()
+    {
+    	return $this->hasMany('App\Models\Chapter','subjectCategoryId','id');
+    }
 }
