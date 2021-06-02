@@ -123,8 +123,8 @@ class Apicontroller extends Controller
             try{
                 $chapter = Chapter::where('id',$req->chapterId)->first();
                 if($chapter){
-                    // SubChapter::where('chapterId',$chapter->id)->delete();
-                    // $chaper->delete();
+                    SubChapter::where('chapterId',$chapter->id)->delete();
+                    $chaper->delete();
                     DB::commit();
                     return sendResponse('Chapter Deleted Success');
                 }
