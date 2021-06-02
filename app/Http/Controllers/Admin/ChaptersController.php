@@ -24,11 +24,13 @@ class ChaptersController extends BaseController
     {
         $req->validate([
     		'chapter' => 'required|max:200|string',
+    		'price' => 'required|numeric',
     		'categoryId' => 'required|numeric|min:1',
     		'subjectCategoryId' => 'required|numeric|min:1',
     	]);
         $chapter = new Chapter();
         $chapter->chapter = $req->chapter;
+        $chapter->price = $req->price;
         $chapter->categoryId = $req->categoryId;
         $chapter->subjectCategoryId = $req->subjectCategoryId;
         $chapter->save();
@@ -46,11 +48,13 @@ class ChaptersController extends BaseController
         $req->validate([
             'chapter_id' => 'required|numeric|min:1',
     		'chapter' => 'required|max:200|string',
+    		'price' => 'required|numeric',
     		'categoryId' => 'required|numeric|min:1',
     		'subjectCategoryId' => 'required|numeric|min:1',
     	]);
         $chapter = Chapter::find($req->chapter_id);
         $chapter->chapter = $req->chapter;
+        $chapter->price = $req->price;
         $chapter->categoryId = $req->categoryId;
         $chapter->subjectCategoryId = $req->subjectCategoryId;
         $chapter->save();

@@ -46,6 +46,12 @@
                             <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter')) ? old('chapter') : $chapter->chapter }}">
                             @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label" for="price"> Price <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="number" name="price" id="price" placeholder="Chapter Price" value="{{(old('price')) ? old('price') : $chapter->price }}">
+                            @error('price') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
 
                     </div>
                     <div class="tile-footer">

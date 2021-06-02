@@ -45,6 +45,12 @@
                             @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label" for="price"> Price <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control" type="number" name="price" id="price" placeholder="Chapter Price" value="{{(old('price'))}}">
+                            @error('price') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
+
                     </div>
                     <div class="tile-footer">
                         <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update Chapter</button>
