@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;use App\Models\Schedule;
 use App\Models\City;use Auth;use Hash;use App\Models\Chapter;
 use Illuminate\Http\Request;use App\Models\SubjectCategory;
-use App\Models\Category;use Session;
+use App\Models\Category;use Session;use App\Models\SubChapter;
 use Illuminate\Support\Facades\DB;use App\Models\Question;
 use URL;use Validator;use App\Models\CommonQuestion;use App\Models\ZoomMeeting;
 use App\Models\Course;use App\Models\Teacher;use App\Models\Membership;
@@ -19,6 +19,123 @@ use App\Models\Blog;use App\Models\Setting;
 
 class Apicontroller extends Controller
 {
+
+    public function getCategoryAndSubjectCategory(Request $req)
+    {
+        $data['category'] = Category::get();
+        $data['subjectCategory'] = SubjectCategory::get();
+        return sendResponse('Category and Subject Category',$data);
+    }
+
+    public function createNewChapter(Request $req)
+    {
+        $rules = [
+            'teacherId' => 'nullable|numeric|min:1',
+            'category' => 'required|min:1|numeric',
+            'subcategory' => 'required|min:1|numeric',
+            'chapter' => 'required|string|max:200',
+            'price' => 'required|numeric|max:99999',
+            'title' => 'required|array',
+            'title.*' => 'required|string|max:200',
+            'topic' => 'required|array',
+            'topic.*' => 'required|string|max:200',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            DB::beginTransaction();
+            try{
+                $newChapter = new Chapter();
+                    $newChapter->categoryId = $req->category;
+                    $newChapter->subjectCategoryId = $req->subcategory;
+                    $newChapter->chapter = $req->chapter;
+                    $newChapter->price = $req->price;
+                $newChapter->save();
+                foreach($req->title as $key => $title){
+                    $newSubTopic = new SubChapter();
+                        $newSubTopic->chapterId = $newChapter->id;                        
+                        $newSubTopic->name = $title;                        
+                        $newSubTopic->topics = $req->topic[$key];
+                    $newSubTopic->save();
+                }
+                DB::commit();
+                return sendResponse('Chapter Saved Success');
+            }catch(Exception $e){
+                DB::rollback();
+                return errorResponse('Something Went Wrong Please try after Some time');
+            }
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function updateChapter(Request $req)
+    {
+        $rules = [
+            'teacherId' => 'nullable|numeric|min:1',
+            'chapterId' => 'required|numeric|min:1',
+            'category' => 'required|min:1|numeric',
+            'subcategory' => 'required|min:1|numeric',
+            'chapter' => 'required|string|max:200',
+            'price' => 'required|numeric|max:99999',
+            'title' => 'required|array',
+            'title.*' => 'required|string|max:200',
+            'topic' => 'required|array',
+            'topic.*' => 'required|string|max:200',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            DB::beginTransaction();
+            try{
+                $chapter = Chapter::where('id',$req->chapterId)->first();
+                if($chapter){
+                    $chapter->categoryId = $req->category;
+                    $chapter->subjectCategoryId = $req->subcategory;
+                    $chapter->chapter = $req->chapter;
+                    $chapter->price = $req->price;
+                    $chapter->save();
+                    SubChapter::where('chapterId',$chapter->id)->delete();
+                    foreach($req->title as $key => $title){
+                        $SubTopic = new SubChapter();
+                            $SubTopic->chapterId = $chapter->id;
+                            $SubTopic->name = $title;
+                            $SubTopic->topics = $req->topic[$key];
+                        $SubTopic->save();
+                    }
+                    DB::commit();
+                    return sendResponse('Chapter Updated Success');
+                }
+            }catch(Exception $e){
+                DB::rollback();
+            }
+            return errorResponse('Something Went Wrong Please try after Some time');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function deleteChapter(Request $req)
+    {
+        $rules = [
+            'teacherId' => 'nullable|numeric|min:1',
+            'chapterId' => 'required|numeric|min:1',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            DB::beginTransaction();
+            try{
+                $chapter = Chapter::where('id',$req->chapterId)->first();
+                if($chapter){
+                    // SubChapter::where('chapterId',$chapter->id)->delete();
+                    // $chaper->delete();
+                    DB::commit();
+                    return sendResponse('Chapter Deleted Success');
+                }
+            }catch(Exception $e){
+                DB::rollback();
+            }
+            return errorResponse('Something Went Wrong Please try after Some time');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
 
     public function getTestimonials(Request $req)
     {
@@ -268,6 +385,9 @@ class Apicontroller extends Controller
         }
         if(!empty($req->subjectCategoryId)){
           $chapter = $chapter->where('subjectCategoryId',$req->subjectCategoryId);  
+        }
+        if(!empty($req->teacherId)){
+
         }
         $chapter = $chapter->get();
         return sendResponse('Chapter List',$chapter);

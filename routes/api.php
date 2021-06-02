@@ -44,6 +44,10 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 			// Route::post('meeting','Api\ZoomMeetingController@createMeeting')->name('zoom.meeting.save');
 			// Route::post('meeting/delete','Api\ZoomMeetingController@deleteZoomMeeting')->name('zoom.meeting.delete');
 		});
+		Route::get('category_and_subjectCategory','Api\Apicontroller@getCategoryAndSubjectCategory')->name('api.category_and_subjectcategory');
+		Route::post('chapter/create','Api\Apicontroller@createNewChapter')->name('chapter.create');
+		Route::post('chapter/update','Api\Apicontroller@updateChapter')->name('chapter.update');
+		Route::post('chapter/delete','Api\Apicontroller@deleteChapter')->name('chapter.delete');
 
 		Route::get('contact-us-data','Api\Apicontroller@getContactDataToShow');
 
