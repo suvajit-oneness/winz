@@ -75,11 +75,11 @@ class TutorRepository extends BaseRepository implements TutorContract
             $Tutor->topic_id = $collection['topic_id'];
 
             if($collection->has('image')){
-            $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("tutor/",$imageName);
-            $uploadedImage = $imageName;
-            $Tutor->image = $uploadedImage;
+                $profile_image = $collection['image'];
+                $imageName = time().".".$profile_image->getClientOriginalName();
+                $profile_image->move("upload/tutor/",$imageName);
+                // $uploadedImage = $imageName;
+                $Tutor->image = url('upload/tutor/'.$imageName);
             }
             $Tutor->save();
 
@@ -107,15 +107,13 @@ class TutorRepository extends BaseRepository implements TutorContract
         $Tutor->topic_id = $collection['topic_id'];
 
         if($collection->has('image')){
-        $profile_image = $collection['image'];
-        $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("tutor/",$imageName);
-        $uploadedImage = $imageName;
-        $Tutor->image = $uploadedImage;
+            $profile_image = $collection['image'];
+            $imageName = time().".".$profile_image->getClientOriginalName();
+            $profile_image->move("upload/tutor/",$imageName);
+            // $uploadedImage = $imageName;
+            $Tutor->image = url('upload/tutor/'.$imageName);
         }
-
         $Tutor->save();
-
         return $Tutor; 
     }
 

@@ -73,10 +73,9 @@ class BlogRepository extends BaseRepository implements BlogContract
             
             $profile_image = $collection['image'];
             $imageName = time().".".$profile_image->getClientOriginalExtension();
-            $profile_image->move("Blog/",$imageName);
-            $uploadedImage = $imageName;
-            $Blog->image = $uploadedImage;
-            
+            $profile_image->move("upload/blog/",$imageName);
+            // $uploadedImage = $imageName;
+            $Blog->image = url('upload/blog/'.$imageName);
             $Blog->save();
 
             return $Blog;
@@ -94,19 +93,14 @@ class BlogRepository extends BaseRepository implements BlogContract
     {
         $Blog = $this->findOneOrFail($params['id']); 
         $collection = collect($params)->except('_token'); 
-
         $Blog->title = $collection['title'];
-         $Blog->content = $collection['content'];
-        
-
+        $Blog->content = $collection['content'];
         $profile_image = $collection['image'];
         $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("blogs/",$imageName);
-        $uploadedImage = $imageName;
-        $Blog->image = $uploadedImage;
-
+        $profile_image->move("upload/blog/",$imageName);
+        // $uploadedImage = $imageName;
+        $Blog->image = url('upload/blog/'.$imageName);
         $Blog->save();
-
         return $Blog;
     }
 

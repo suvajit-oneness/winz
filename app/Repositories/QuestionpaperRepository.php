@@ -75,18 +75,16 @@ class QuestionpaperRepository extends BaseRepository implements QuestionpaperCon
             $Questionpaper->video_solution2 = $collection['video_solution2'];
             $Questionpaper->video_solution3 = $collection['video_solution3'];
 
-
-
             $Questionpaper->board_id = $collection['board_id'];
             $Questionpaper->subject_id = $collection['subject_id'];
             $Questionpaper->class_id = $collection['class_id'];
 
             if($collection->has('image')){
-            $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("questionpaper/",$imageName);
-            $uploadedImage = $imageName;
-            $Questionpaper->image = $uploadedImage;
+                $profile_image = $collection['image'];
+                $imageName = time().".".$profile_image->getClientOriginalName();
+                $profile_image->move("upload/questionpaper/",$imageName);
+                // $uploadedImage = $imageName;
+                $Questionpaper->image = url('upload/questionpaper/'.$imageName);
             }
             $Questionpaper->save();
 
@@ -121,16 +119,13 @@ class QuestionpaperRepository extends BaseRepository implements QuestionpaperCon
         $Questionpaper->class_id = $collection['class_id'];
 
         if($collection->has('image')){
-        $profile_image = $collection['image'];
-        $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("questionpaper/",$imageName);
-        $uploadedImage = $imageName;
-        $Questionpaper->image = $uploadedImage;
+            $profile_image = $collection['image'];
+            $imageName = time().".".$profile_image->getClientOriginalName();
+            $profile_image->move("upload/questionpaper/",$imageName);
+            // $uploadedImage = $imageName;
+            $Questionpaper->image = url('upload/questionpaper/'.$imageName);
         }
-
         $Questionpaper->save();
-
-
         return $Questionpaper; 
     }
 

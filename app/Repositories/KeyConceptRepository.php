@@ -63,7 +63,6 @@ class KeyConceptRepository extends BaseRepository implements KeyConceptContract
     {
         try {
             $collection = collect($params);
-
             $Keyconcept = new Keyconcept;
             $Keyconcept->title = $collection['title'];
             $Keyconcept->description = $collection['description'];
@@ -71,18 +70,15 @@ class KeyConceptRepository extends BaseRepository implements KeyConceptContract
             $Keyconcept->board_id = $collection['board_id'];
             $Keyconcept->subject_id = $collection['subject_id'];
             $Keyconcept->class_id = $collection['class_id'];
-
             if($collection->has('image')){
-            $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("keyconcept/",$imageName);
-            $uploadedImage = $imageName;
-            $Keyconcept->image = $uploadedImage;
+                $profile_image = $collection['image'];
+                $imageName = time().".".$profile_image->getClientOriginalName();
+                $profile_image->move("upload/keyconcept/",$imageName);
+                // $uploadedImage = $imageName;
+                $Keyconcept->image = url('upload/keyconcept/'.$imageName);
             }
             $Keyconcept->save();
-
             return $Keyconcept;
-
         } catch (QueryException $exception) {
             throw new InvalidArgumentException($exception->getMessage());
         }
@@ -96,25 +92,20 @@ class KeyConceptRepository extends BaseRepository implements KeyConceptContract
     {
         $Keyconcept = $this->findKeyconceptById($params['id']); 
         $collection = collect($params)->except('_token'); 
-
         $Keyconcept->title = $collection['title'];
         $Keyconcept->description = $collection['description'];
         $Keyconcept->video_link = $collection['video_link'];
         $Keyconcept->board_id = $collection['board_id'];
         $Keyconcept->subject_id = $collection['subject_id'];
         $Keyconcept->class_id = $collection['class_id'];
-
         if($collection->has('image')){
-        $profile_image = $collection['image'];
-        $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("keyconcept/",$imageName);
-        $uploadedImage = $imageName;
-        $Keyconcept->image = $uploadedImage;
+            $profile_image = $collection['image'];
+            $imageName = time().".".$profile_image->getClientOriginalName();
+            $profile_image->move("upload/keyconcept/",$imageName);
+            // $uploadedImage = $imageName;
+            $Keyconcept->image = url('upload/keyconcept/'.$imageName);
         }
-
         $Keyconcept->save();
-
-
         return $Keyconcept; 
     }
 
@@ -126,7 +117,6 @@ class KeyConceptRepository extends BaseRepository implements KeyConceptContract
     {
         $Keyconcept = $this->findKeyconceptById($id);
         $Keyconcept->delete();
-
         return $Keyconcept;
     }
 
@@ -139,7 +129,6 @@ class KeyConceptRepository extends BaseRepository implements KeyConceptContract
         $collection = collect($params)->except('_token');
         $Keyconcept->is_active = $collection['check_status'];
         $Keyconcept->save();
-
         return $Keyconcept;
     }
 }

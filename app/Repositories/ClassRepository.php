@@ -71,11 +71,11 @@ class ClassRepository extends BaseRepository implements ClassContract
             
             if($collection->has('image')){
 
-            $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("class/",$imageName);
-            $uploadedImage = $imageName;
-            $Class->image = $uploadedImage;
+                $profile_image = $collection['image'];
+                $imageName = time().".".$profile_image->getClientOriginalName();
+                $profile_image->move("upload/class/",$imageName);
+                // $uploadedImage = $imageName;
+                $Class->image = url('upload/class/'.$imageName);
             }
 
             $Class->save();
@@ -95,19 +95,16 @@ class ClassRepository extends BaseRepository implements ClassContract
     {
         $Class = $this->findOneOrFail($params['id']); 
         $collection = collect($params)->except('_token'); 
-
         $Class->name = $collection['name'];
         $Class->parent_id = $collection['parent_id'];
-        
         if($collection->has('image')){
-        $profile_image = $collection['image'];
-        $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("class/",$imageName);
-        $uploadedImage = $imageName;
-        $Class->image = $uploadedImage;
+            $profile_image = $collection['image'];
+            $imageName = time().".".$profile_image->getClientOriginalName();
+            $profile_image->move("upload/class/",$imageName);
+            // $uploadedImage = $imageName;
+            $Class->image = url('upload/class/'.$imageName);
         }
         $Class->save();
-
         return $Class;
     }
 

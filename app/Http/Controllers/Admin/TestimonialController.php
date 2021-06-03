@@ -50,23 +50,18 @@ class TestimonialController extends BaseController
             'designation'      =>  'required',
             'image'     =>  'required'
         ]);
-
         $Testimonial =  $request->all();
-       
         $Testimonial['post_date'] = \Carbon\Carbon::now();
-
         $valid_images = array("png","jpg","jpeg","gif");
         if($request->hasFile("image") && in_array($request->image->extension(),$valid_images)){
             $profile_image = $request->image;
             $imageName = time().".".$profile_image->getClientOriginalExtension();
-            $profile_image->move("testimonials/",$imageName);
-            $uploadedImage = $imageName;
-            $Testimonial['image'] = $uploadedImage;
+            $profile_image->move("upload/testimonials/",$imageName);
+            // $uploadedImage = $imageName;
+            $Testimonial['image'] = url('upload/testimonials/'.$imageName);
         }
         $Testimonial['is_active'] = 1;
-
         $status = Testimonial::create($Testimonial);
-
         if (!$status) {
             return $this->responseRedirectBack('Error occurred while creating Testimonial.', 'error', true, true);
         }
@@ -106,12 +101,11 @@ class TestimonialController extends BaseController
         $valid_images = array("png","jpg","jpeg","gif");
             
         if($request->hasFile("image") && in_array($request->image->extension(),$valid_images)){
-            
             $profile_image = $request->image;
             $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("testimonials/",$imageName);
-            $uploadedImage = $imageName;
-            $data['image'] = $uploadedImage;
+            $profile_image->move("upload/testimonials/",$imageName);
+            // $uploadedImage = $imageName;
+            $data['image'] = url('upload/testimonials/'.$imageName);
         }
 
         $status = $targetTestimonial->update($data);

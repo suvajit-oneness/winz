@@ -67,11 +67,11 @@ class BoardRepository extends BaseRepository implements BoardContract
             $board = new Board;
             $board->name = $collection['name'];
             if($collection->has('image')){
-            $profile_image = $collection['image'];
-            $imageName = time().".".$profile_image->getClientOriginalName();
-            $profile_image->move("board/",$imageName);
-            $uploadedImage = $imageName;
-            $board->image = $uploadedImage;
+                $profile_image = $collection['image'];
+                $imageName = time().".".$profile_image->getClientOriginalName();
+                $profile_image->move("upload/board/",$imageName);
+                // $uploadedImage = $imageName;
+                $board->image = url('upload/board/'.$imageName);
             }
             $board->save();
 
@@ -90,17 +90,13 @@ class BoardRepository extends BaseRepository implements BoardContract
     {
         $board = $this->findBoardById($params['id']); 
         $collection = collect($params)->except('_token'); 
-
         $board->name = $collection['name'];
-
         $profile_image = $collection['image'];
         $imageName = time().".".$profile_image->getClientOriginalName();
-        $profile_image->move("board/",$imageName);
-        $uploadedImage = $imageName;
-        $board->image = $uploadedImage;
-
+        $profile_image->move("upload/board/",$imageName);
+        // $uploadedImage = $imageName;
+        $board->image = url('upload/board/'.$imageName);
         $board->save();
-
         return $board; 
     }
 
