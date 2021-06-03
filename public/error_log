@@ -17,3 +17,17 @@ Stack trace:
 [26-Jan-2021 05:16:18 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 260
 [26-Jan-2021 05:18:52 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 260
 [26-Jan-2021 05:19:07 UTC] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, bool given in /home/demo9dtx/public_html/dev/winz-v2/public/Api.php on line 260
+[06-Apr-2021 18:03:30 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:03:30 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:03:31 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:03:31 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:04:02 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:04:02 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:04:02 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:04:02 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:17 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:17 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:17 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:18 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:18 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
+[06-Apr-2021 18:06:18 Asia/Kolkata] PHP Fatal error:  Cannot use DB as DB because the name is already in use in /home/demo9dtx/public_html/dev/winz-v2/app/Http/Controllers/Api/Apicontroller.php on line 10
