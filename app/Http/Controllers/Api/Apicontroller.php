@@ -31,7 +31,7 @@ class Apicontroller extends Controller
         if(!$validator->fails()){
             DB::beginTransaction();
             try{
-                $chapter = Chapter::where('id',$req->chapterId)->first();
+                $chapter = Chapter::where('id',$req->chapterId)->with('subChapter')->first();
                 if($chapter){
                     $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
                     if($stripe){
@@ -47,7 +47,6 @@ class Apicontroller extends Controller
                                 'purchase' => $purchase,
                                 'chapter' => $chapter,
                                 'stripe' => $stripe,
-                                'subchapter' => $chapter->subChapter(),
                             ];
                             return sendResponse('Chapter Purchased Successfully',$data);
                         }
@@ -433,6 +432,13 @@ class Apicontroller extends Controller
 
         }
         $chapter = $chapter->get();
+        foreach ($chapter as $key => $chap) {
+            $chap->userChapterPurchased = false;
+            if(!empty($req->userId)){
+                $purchaseChapter = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chap->id)->first();
+                if($purchaseChapter){$chap->userChapterPurchased = true;}
+            }
+        }
         return sendResponse('Chapter List',$chapter);
     }
 
