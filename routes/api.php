@@ -48,6 +48,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::post('chapter/create','Api\Apicontroller@createNewChapter')->name('chapter.create');
 		Route::post('chapter/update','Api\Apicontroller@updateChapter')->name('chapter.update');
 		Route::post('chapter/delete','Api\Apicontroller@deleteChapter')->name('chapter.delete');
+		Route::post('chapter/purchase/success','Api\Apicontroller@chapterPurchaseSuccess')->name('chapter.purchase.success');
 
 		Route::get('contact-us-data','Api\Apicontroller@getContactDataToShow');
 

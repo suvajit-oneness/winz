@@ -13,12 +13,55 @@ use App\Models\HomeContent;use App\Models\CourseLecture;use App\Models\CourseFea
 use App\Models\User;use App\Models\SubscribedCourses;use App\Models\TeacherCourse;
 use Stripe;use App\Models\StripeTransaction;use App\Models\TeacherBooking;
 use App\Models\BuyMemberShip;use App\Models\ContactUs;use App\Models\Testimonial;
-use App\Models\Blog;use App\Models\Setting;
+use App\Models\Blog;use App\Models\Setting;use App\Models\ChapterPurchase;
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
 
 class Apicontroller extends Controller
 {
+
+    public function chapterPurchaseSuccess(Request $req)
+    {
+        $rules = [
+            'userId' => 'required|numeric|min:1',
+            'chapterId' => 'required|numeric|min:1',
+            'stripeTransactionId' => 'required|numeric|min:1',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            DB::beginTransaction();
+            try{
+                $chapter = Chapter::where('id',$req->chapterId)->first();
+                if($chapter){
+                    $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
+                    if($stripe){
+                        $purchaseCheck = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chapter->id)->first();
+                        if(!$purchaseCheck){
+                            $purchase = new ChapterPurchase();
+                                $purchase->userId = $req->userId;
+                                $purchase->chapterId = $req->chapterId;
+                                $purchase->stripeTransactionId = $req->stripeTransactionId;
+                            $purchase->save();
+                            DB::commit();
+                            $data = [
+                                'purchase' => $purchase,
+                                'chapter' => $chapter,
+                                'stripe' => $stripe,
+                                'subchapter' => $chapter->subChapter(),
+                            ];
+                            return sendResponse('Chapter Purchased Successfully',$data);
+                        }
+                        return errorResponse('This Chapter is already purchased');
+                    }
+                    return errorResponse('Invalid Stripe Transaction Id');
+                }
+            }catch(Exception $e){
+                DB::rollback();
+            }
+            return errorResponse('Something Went Wrong Please try after Some time');
+        }
+        return errorResponse($validator->errors()->first());
+    }
 
     public function getCategoryAndSubjectCategory(Request $req)
     {
