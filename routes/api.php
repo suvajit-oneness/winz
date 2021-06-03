@@ -52,6 +52,8 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 
 		Route::get('contact-us-data','Api\Apicontroller@getContactDataToShow');
 
+		Route::get('subscribed/user/chapter','Api\Apicontroller@subscribedUserChapter')->name('subscribed.user.chapter');
+
 		Route::get('testimonials','Api\Apicontroller@getTestimonials');
 		Route::get('blogs','Api\Apicontroller@getBlogs');
 		Route::get('settings','Api\Apicontroller@getSettings');

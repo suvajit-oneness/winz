@@ -442,6 +442,21 @@ class Apicontroller extends Controller
         return sendResponse('Chapter List',$chapter);
     }
 
+    public function subscribedUserChapter(Request $req)
+    {
+        $purchaseChapter = ChapterPurchase::select('*')->with('stripe_transaction');
+        if(!empty($req->userId)){
+            $purchaseChapter = $purchaseChapter->where('userId',$req->userId);
+        }
+        $purchaseChapter = $purchaseChapter->get();
+
+        foreach($purchaseChapter as $key => $getChapter){
+            $getChapter->chapter = Chapter::where('id',$getChapter->chapterId)->with('category')->with('subjectCategory')->with('subChapter')->first();
+        }
+        return sendResponse('Purchse Chapter List',$purchaseChapter);
+
+    }
+
     public function getQuestion(Request $req)
     {
         $question = Question::select('*')->with('chapter');
