@@ -454,7 +454,6 @@ class Apicontroller extends Controller
             $getChapter->chapter = Chapter::where('id',$getChapter->chapterId)->with('category')->with('subjectCategory')->with('subChapter')->first();
         }
         return sendResponse('Purchse Chapter List',$purchaseChapter);
-
     }
 
     public function getQuestion(Request $req)
