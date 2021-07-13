@@ -39,6 +39,19 @@
                             @error('subjectCategoryId') {{ $message }} @enderror
                         </div>
 
+
+
+
+                        <div class="form-group">
+                            <label class="control-label" for="courseId"> Courses <span class="m-l-5 text-danger"> *</span></label>
+                            <select class="form-control @error('courseId') is-invalid @enderror" name="courseId" id="courseId">
+                                <option value="">-- Select Courses --</option>
+                                @foreach($courses as $courserow)
+                                <option value="{{$courserow->id}}">{{$courserow->course_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
                             <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter'))}}">
