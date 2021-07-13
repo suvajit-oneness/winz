@@ -16,41 +16,27 @@
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.teacher.*']) }}"
                 href="{{ route('admin.teacher.index') }}">
-                <!--<i class="app-menu__icon fa fa-group"></i>-->
                 <span class="app-menu__label">Teacher Management</span>
             </a>
         </li>
 
         <li class="treeview">
             <a class="app-menu__item" href="#" data-toggle="treeview">
-                <!--<i class="app-menu__icon fa fa-buffer"></i>-->
                 <span class="app-menu__label">Question Module</span>
                 <i class="treeview-indicator fa fa-angle-right"></i>
             </a>
             <ul class="treeview-menu">
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.category.*']) }}"
-                    href="{{ route('admin.category.index') }}">
-                    Categories
-                    </a>
+                    <a class="treeview-item {{ sidebar_open(['admin.category.*']) }}" href="{{ route('admin.category.index') }}">Categories</a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.subject.category.*']) }}"
-                    href="{{ route('admin.subject.category.index') }}">
-                    Subject Categories
-                    </a>
+                    <a class="treeview-item {{ sidebar_open(['admin.subject.category.*']) }}" href="{{ route('admin.subject.category.index') }}"> Subject Categories</a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.chapters.*', 'admin.subject.chapter.*']) }}"
-                    href="{{ route('admin.chapters.index') }}">
-                    Chapters
-                    </a>
+                    <a class="treeview-item {{ sidebar_open(['admin.chapters.*', 'admin.subject.chapter.*']) }}" href="{{ route('admin.chapters.index') }}">Chapters</a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.question.*']) }}"
-                    href="{{ route('admin.question.index') }}">
-                    Questions
-                    </a>
+                    <a class="treeview-item {{ sidebar_open(['admin.question.*']) }}" href="{{ route('admin.question.index') }}">Questions</a>
                 </li>
             </ul>
         </li>
@@ -58,7 +44,6 @@
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
                 href="{{ route('admin.course') }}">
-                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
                 <span class="app-menu__label">Course Management</span>
             </a>
         </li>
@@ -66,21 +51,18 @@
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.tutor.*']) }}"
                 href="{{ route('admin.tutor.index') }}">
-                <!--<i class="app-menu__icon fa fa-chalkboard-teacher"></i>-->
                 <span class="app-menu__label">Tutors Management</span>
             </a>
         </li>
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.orders.*']) }}"
                 href="{{ route('admin.orders.index') }}">
-                <!--<i class="app-menu__icon fa fa-calendar-alt"></i>-->
                 <span class="app-menu__label">Booking</span>
             </a>
         </li>
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.couponcode.*']) }}"
                 href="{{ route('admin.couponcode.index') }}">
-                <!--<i class="app-menu__icon fa fa-tag"></i>-->
                 <span class="app-menu__label">Coupon Management</span>
             </a>
         </li>
