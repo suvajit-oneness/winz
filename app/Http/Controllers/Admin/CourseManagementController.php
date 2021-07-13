@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;use App\Models\Course;
 use App\Models\CourseLecture;use App\Models\CourseFeature;
+use App\Models\Category;
+use App\Models\SubjectCategory;
+
 use DB;
 
 class CourseManagementController extends BaseController
@@ -19,7 +22,10 @@ class CourseManagementController extends BaseController
 
     public function createCourse(Request $req)
     {
-    	return view('admin.course.create');
+        $category = Category::all();
+        $sub_category = SubjectCategory::all();
+        $teacher = DB::table('users')->where('userType','teacher')->where('is_active','1')->get();
+    	return view('admin.course.create',compact('sub_category', 'category','teacher'));
     }
 
     public function saveCourse(Request $req)
@@ -38,6 +44,10 @@ class CourseManagementController extends BaseController
             $imageurl = url('upload/course/'.$random.'.'.$image->getClientOriginalExtension());
             $course->course_image = $imageurl;
         }
+        $course->categoryId = $req->categoryId;
+        $course->subjectCategoryId = $req->subjectCategoryId;
+        $course->teacherId = $req->teacherId;
+
     	$course->course_name = $req->name;
     	$course->course_price = $req->price;
     	$course->course_description = $req->description;
@@ -68,8 +78,11 @@ class CourseManagementController extends BaseController
 
     public function editCourse(Request $req,$courseId)
     {
+        $category = Category::all();
+        $sub_category = SubjectCategory::all();
+        $teacher = DB::table('users')->where('userType','teacher')->where('is_active','1')->get();
     	$course = Course::where('id',$courseId)->withTrashed()->first();
-    	return view('admin.course.edit',compact('course'));
+    	return view('admin.course.edit',compact('course','category','sub_category','teacher'));
     }
 
     public function updateCourse(Request $req, $id)

@@ -24,7 +24,7 @@
         <li class="treeview">
             <a class="app-menu__item" href="#" data-toggle="treeview">
                 <!--<i class="app-menu__icon fa fa-buffer"></i>-->
-                <span class="app-menu__label">Question Module</span>
+                <span class="app-menu__label">Course Management</span>
                 <i class="treeview-indicator fa fa-angle-right"></i>
             </a>
             <ul class="treeview-menu">
@@ -38,6 +38,13 @@
                     <a class="treeview-item {{ sidebar_open(['admin.subject.category.*']) }}"
                     href="{{ route('admin.subject.category.index') }}">
                     Subject Categories
+                    </a>
+                </li>
+                <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.course']) }}"
+                        href="{{ route('admin.course') }}">
+                        <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
+                       Course
                     </a>
                 </li>
                 <li style="padding-left: 20px;">
@@ -55,13 +62,7 @@
             </ul>
         </li>
 
-        <li>
-            <a class="app-menu__item {{ sidebar_open(['admin.course']) }}"
-                href="{{ route('admin.course') }}">
-                <!--<i class="app-menu__icon fa fa-user-cog"></i>-->
-                <span class="app-menu__label">Course Management</span>
-            </a>
-        </li>
+        
 
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.tutor.*']) }}"

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Models\Chapter;use App\Models\Category;
+use App\Models\Chapter;
+use App\Models\Category;
 use App\Models\SubjectCategory;
-
+use DB;
 class ChaptersController extends BaseController
 {
     public function index()
@@ -18,21 +19,25 @@ class ChaptersController extends BaseController
     public function create()
     {
         $category = Category::all();
-        return view('admin.chapters.create', compact('category'));
+        $courses = DB::table('courses')->get();
+        return view('admin.chapters.create', compact('category','courses'));
     }
     public function store(Request $req)
     {
         $req->validate([
     		'chapter' => 'required|max:200|string',
     		'price' => 'required|numeric',
-    		'categoryId' => 'required|numeric|min:1',
+            'categoryId' => 'required|numeric|min:1',
     		'subjectCategoryId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
+            
     	]);
         $chapter = new Chapter();
         $chapter->chapter = $req->chapter;
         $chapter->price = $req->price;
         $chapter->categoryId = $req->categoryId;
         $chapter->subjectCategoryId = $req->subjectCategoryId;
+        $chapter->courseId = $req->courseId;
         $chapter->save();
         return $this->responseRedirect('admin.chapters.index', 'Chapter added successfully' ,'success',false, false);
     }
@@ -41,7 +46,9 @@ class ChaptersController extends BaseController
         $chapter = Chapter::find($id);
         $category = Category::all();
         $sub_category = SubjectCategory::all();
-        return view('admin.chapters.edit', compact('chapter','sub_category', 'category'));
+        $courses = DB::table('courses')->get();
+
+        return view('admin.chapters.edit', compact('chapter','sub_category', 'category','courses'));
     }
     public function update(Request $req)
     {
@@ -57,6 +64,7 @@ class ChaptersController extends BaseController
         $chapter->price = $req->price;
         $chapter->categoryId = $req->categoryId;
         $chapter->subjectCategoryId = $req->subjectCategoryId;
+        $chapter->courseId = $req->courseId;
         $chapter->save();
         return $this->responseRedirect('admin.chapters.index', 'Chapter Updated successfully' ,'success',false, false);
     }
