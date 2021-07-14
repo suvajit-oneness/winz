@@ -46,6 +46,7 @@ class Apicontroller extends Controller
             $course->similarCourses = Course::where('id','!=',$course->id)->with('teacher')->get();
             $course->features = CourseFeature::where('course_id',$course->id)->get();
             $course->chapter = Chapter::where('courseId',$course->id)->get();
+            $course->price = $course->chapter->sum('price');
         }else{
             $course = Course::where('is_verified',1)->with('teacher')->get();
         }
