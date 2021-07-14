@@ -49,6 +49,11 @@ if(!function_exists('activeclass')){
     }
 }
 
+function randomGenerator()
+    {
+        return uniqid().''.date('ymdhis').''.uniqid();
+    }
+
 function booleanorNumberToNumber($value)
 {
     $return = 0;

@@ -36,17 +36,28 @@ class Apicontroller extends Controller
     {
         if(!empty($req->courseId)){
             $course = Course::where('id',$req->courseId)->where('is_verified',1)->with('teacher')->first();
-            $course->isUserSubscribed = false;
+            $course->isUserCoursePurchased = false;
+            $course->chapter = Chapter::where('courseId',$course->id)->get();
+            $coursePrice = $course->chapter->sum('price');
             if(!empty($req->userId) && $req->userId > 0){
-                // $checkSubscription = SubscribedChapter::where('user_id',$req->userId)->where('course_id',$course->id)->first();
-                // if($checkSubscription){
-                //     $course->isUserSubscribed = true;
-                // }
+                $coursePrice = 0;
+                foreach ($course->chapter as $key => $chapter) {
+                    $chapter->userChapterPurchases = false;
+                    $purchase = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chapter->id)->where('courseId',$chapter->courseId)->first();
+                    if($purchase){
+                        $chapter->userChapterPurchases = true;
+                    }else{
+                        $coursePrice += $chapter->price;
+                    }
+                }
+                if($coursePrice == 0){
+                    $course->isUserCoursePurchased = true;
+                    $coursePrice = $course->chapter->sum('price');
+                }
             }
+            $course->coursePrice = $coursePrice;
             $course->similarCourses = Course::where('id','!=',$course->id)->with('teacher')->get();
             $course->features = CourseFeature::where('course_id',$course->id)->get();
-            $course->chapter = Chapter::where('courseId',$course->id)->get();
-            $course->price = $course->chapter->sum('price');
         }else{
             $course = Course::where('is_verified',1)->with('teacher')->get();
         }
@@ -63,6 +74,102 @@ class Apicontroller extends Controller
         }
         return sendResponse('Teacher List',$teacher);
     }
+
+    public function saveUserSubscribedCourses(Request $req)
+    {
+        $rules = [
+            'userId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
+            'whatPurchased' => 'required|in:chapter,course',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $user = User::where('id',$req->userId)->first();
+            if($user){
+                $course = Course::where('id',$req->courseId)->first();
+                if($course){
+                    DB::beginTransaction();
+                    $transaction = new StripeTransaction();
+                    $transaction->transactionId = randomGenerator();
+                    $transaction->balance_transaction = randomGenerator();
+                    $transaction->amount = 0;
+                    $transaction->payment_method = 'free';
+                    $transaction->save();
+                    if($req->whatPurchased == 'chapter'){
+                        $rules = [
+                            'chapterId' => 'required|numeric|min:1',
+                        ];
+                        $validator = validator()->make($req->all(),$rules);
+                        if(!$validator->fails()){
+                            $chapter = Chapter::where('id',$req->chapterId)->where('courseId',$course->id)->first();
+                            if($chapter){
+                                $checkSubscription = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chapter->id)->where('courseId',$course->id)->first();
+                                if(!$checkSubscription){
+                                    $newChapterPurchased = new ChapterPurchase();
+                                    $newChapterPurchased->userId = $user->id;
+                                    $newChapterPurchased->chapterId = $chapter->id;
+                                    $newChapterPurchased->courseId = $course->id;
+                                    $newChapterPurchased->stripeTransactionId = $transaction->id;
+                                    $newChapterPurchased->save();
+                                    DB::commit();
+                                    return sendResponse('Chapter Purchased Success',$newChapterPurchased);
+                                }
+                                return errorResponse('This Chapter is already Purchased by you');
+                            }
+                            return errorResponse('Invalid Chapter Id');
+                        }
+                        return errorResponse($validator->errors()->first());
+                    }else{
+                        $chapter = Chapter::where('courseId',$course->id)->get();
+                        foreach ($chapter as $key => $chap) {
+                            $checkSubscription = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chap->id)->where('courseId',$course->id)->first();
+                            if(!$checkSubscription){
+                                $newChapterPurchased = new ChapterPurchase();
+                                $newChapterPurchased->userId = $user->id;
+                                $newChapterPurchased->chapterId = $chap->id;
+                                $newChapterPurchased->courseId = $course->id;
+                                $newChapterPurchased->stripeTransactionId = $transaction->id;
+                                $newChapterPurchased->save();
+                            }
+                        }
+                        DB::commit();
+                        return sendResponse('Chapter Purchased Success',$newChapterPurchased);
+                    }
+                }
+                return errorResponse('Invalid Course Id');
+            }
+            return errorResponse('Invalid User Id');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function subscribedUserChapter(Request $req)
+    {
+        $purchaseChapter = ChapterPurchase::select('*')->with('transaction')->with('chapter')->with('course');
+        if(!empty($req->userId)){
+            $user = User::where('id',$req->userId)->first();
+            $purchaseChapter = $purchaseChapter->where('userId',$user->id);
+        }
+        $purchaseChapter = $purchaseChapter->get();
+        foreach($purchaseChapter as $key => $getCategoryAndTeacher){
+            $getCategoryAndTeacher->category = Category::where('id',$getCategoryAndTeacher->course->categoryId)->first();
+            $getCategoryAndTeacher->teacher = Teacher::where('id',$getCategoryAndTeacher->course->teacherId)->first();
+        }
+        return sendResponse('Purchse Chapter List',$purchaseChapter);
+    }
+
+    // public function getUserSubscribedCourses(Request $req,$subscribtionId = 0)
+    // {
+    //     if(!empty($req->userId)){
+    //       $user = User::where('id',$req->userId)->first();
+    //       if($user){
+    //         $chapter = ChapterPurchase::whare('userId',$user->id)->with('chapter')->with('course')->with('trasaction')->get();
+    //         return sendResponse('Subscribed Courses List',$subscribedCourse);
+    //       }
+    //       return errorResponse('Invalid User Id');
+    //     }
+    //     return errorResponse('userId is required');
+    // }
 
     public function getTeacherCourseList(Request $req)
     {
@@ -426,49 +533,6 @@ class Apicontroller extends Controller
         return errorResponse('userId is required');
     }
 
-    public function getUserSubscribedCourses(Request $req,$subscribtionId = 0)
-    {
-        if(!empty($req->userId)){
-          $user = User::where('id',$req->userId)->first();
-          if($user){
-            $subscribedCourse = SubscribedCourses::select('subscribed_courses.*')
-              ->where('subscribed_courses.user_id',$user->id)->with('courses')->with('features');
-            if($subscribtionId > 0){
-              $subscribedCourse = $subscribedCourse->where('subscribed_courses.id',$subscribtionId)->first();
-            }else{
-              $subscribedCourse = $subscribedCourse->get();
-            }
-            return sendResponse('Subscribed Courses List',$subscribedCourse);
-          }
-          return errorResponse('Invalid User Id');
-        }
-        return errorResponse('userId is required');
-    }
-
-    public function saveUserSubscribedCourses(Request $req)
-    {
-        if(!empty($req->userId) && !empty($req->courseId)){
-          $user = User::where('id',$req->userId)->first();
-          if($user){
-            $course = Course::where('id',$req->courseId)->first();
-            if($course){
-                $checkSubscription = SubscribedCourses::where('user_id',$user->id)->where('course_id',$course->id)->first();
-                if(!$checkSubscription){
-                    $newSubscription = new SubscribedCourses();
-                    $newSubscription->user_id = $user->id;
-                    $newSubscription->course_id = $course->id;
-                    $newSubscription->save();
-                    return sendResponse('Course Subscribed Success',$newSubscription);
-                }
-                return errorResponse('This course is already subscribed by you');
-            }
-            return errorResponse('Invalid User Id');
-          }
-          return errorResponse('Invalid User Id');
-        }
-        return errorResponse('userId and courseId is required');
-    }
-
     public function getSubjectCategory(Request $req)
     {
         $subjectCategory = SubjectCategory::select('*')->with('category');
@@ -503,20 +567,6 @@ class Apicontroller extends Controller
             }
         }
         return sendResponse('Chapter List',$chapter);
-    }
-
-    public function subscribedUserChapter(Request $req)
-    {
-        $purchaseChapter = ChapterPurchase::select('*')->with('stripe_transaction');
-        if(!empty($req->userId)){
-            $purchaseChapter = $purchaseChapter->where('userId',$req->userId);
-        }
-        $purchaseChapter = $purchaseChapter->get();
-
-        foreach($purchaseChapter as $key => $getChapter){
-            $getChapter->chapter = Chapter::where('id',$getChapter->chapterId)->with('category')->with('subjectCategory')->with('subChapter')->first();
-        }
-        return sendResponse('Purchse Chapter List',$purchaseChapter);
     }
 
     public function getQuestion(Request $req)

@@ -13,4 +13,19 @@ class ChapterPurchase extends Model
     {
         return $this->belongsTo('App\Models\StripeTransaction','stripeTransactionId','id');
     }
+
+    function chapter()
+    {
+        return $this->belongsTo('App\Models\Chapter','chapterId','id');
+    }
+
+    function course()
+    {
+        return $this->belongsTo('App\Models\Course','courseId','id');
+    }
+
+    function transaction()
+    {
+        return $this->belongsTo('App\Models\StripeTransaction','stripeTransactionId','id');
+    }
 }
