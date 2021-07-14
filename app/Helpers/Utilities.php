@@ -54,6 +54,14 @@ function randomGenerator()
         return uniqid().''.date('ymdhis').''.uniqid();
     }
 
+    function imageUpload($image,$folder='image')
+    {
+        $random = randomGenerator();
+        $image->move('upload/'.$folder.'/',$random.'.'.$image->getClientOriginalExtension());
+        $imageurl = url('upload/'.$folder.'/'.$random.'.'.$image->getClientOriginalExtension());
+        return $imageurl;
+    }
+
 function booleanorNumberToNumber($value)
 {
     $return = 0;

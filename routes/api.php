@@ -46,8 +46,8 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		});
 		Route::get('teacher/course/list','Api\Apicontroller@getTeacherCourseList')->name('api.course.list');
 		Route::post('teacher/course/delete','Api\Apicontroller@deleteTeacherCourse')->name('api.course.list');
-		Route::get('category_and_subjectCategory','Api\Apicontroller@getCategoryAndSubjectCategory')->name('api.category_and_subjectcategory');
-		Route::post('chapter/create','Api\Apicontroller@createNewChapter')->name('chapter.create');
+		Route::get('category/list','Api\Apicontroller@getCategoryList')->name('api.category.list');
+		Route::post('course/chapter/create','Api\Apicontroller@createNewChapter')->name('chapter.create');
 		Route::post('chapter/update','Api\Apicontroller@updateChapter')->name('chapter.update');
 		Route::post('chapter/delete','Api\Apicontroller@deleteChapter')->name('chapter.delete');
 		Route::post('chapter/purchase/success','Api\Apicontroller@chapterPurchaseSuccess')->name('chapter.purchase.success');
@@ -59,6 +59,11 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('testimonials','Api\Apicontroller@getTestimonials');
 		Route::get('blogs','Api\Apicontroller@getBlogs');
 		Route::get('settings','Api\Apicontroller@getSettings');
+
+		// new Routes
+		Route::post('teacher/course/create','Api\Apicontroller@saveTeacherCourse');
+		Route::get('teacher/course/edit','Api\Apicontroller@editTeacherCourse');
+		Route::get('chapter/subchapter','Api\Apicontroller@getSubChapters');
 
 	});
 

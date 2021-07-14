@@ -109,6 +109,7 @@ class Apicontroller extends Controller
                                     $newChapterPurchased->userId = $user->id;
                                     $newChapterPurchased->chapterId = $chapter->id;
                                     $newChapterPurchased->courseId = $course->id;
+                                    $newChapterPurchased->price = $chapter->price;
                                     $newChapterPurchased->stripeTransactionId = $transaction->id;
                                     $newChapterPurchased->save();
                                     DB::commit();
@@ -128,6 +129,7 @@ class Apicontroller extends Controller
                                 $newChapterPurchased->userId = $user->id;
                                 $newChapterPurchased->chapterId = $chap->id;
                                 $newChapterPurchased->courseId = $course->id;
+                                $newChapterPurchased->price = $chap->price;
                                 $newChapterPurchased->stripeTransactionId = $transaction->id;
                                 $newChapterPurchased->save();
                             }
@@ -158,6 +160,95 @@ class Apicontroller extends Controller
         return sendResponse('Purchse Chapter List',$purchaseChapter);
     }
 
+    public function getTeacherCourseList(Request $req)
+    {
+        $teacherCourse = Course::select('*')->with('chapter')->with('category')->with('feature');
+        if($req->teacherId){
+            $teacherCourse = $teacherCourse->where('teacherId',$req->teacherId);
+        }
+        $teacherCourse = $teacherCourse->get();
+        foreach ($teacherCourse as $key => $course) {
+            $chapterPrice = Chapter::where('courseId',$course->id)->sum('price');
+            $course->price = number_format($chapterPrice,2);
+        }
+        return sendResponse('Teacher Course List',$teacherCourse);
+    }
+
+    public function editTeacherCourse(Request $req)
+    {
+        $course = Course::where('id',$req->courseId)->with('chapter')->with('category')->first();
+        return sendResponse('Course',$course);
+    }
+
+    public function saveTeacherCourse(Request $req)
+    {
+        $rules = [
+            'formType' => 'required|in:add,edit',
+            'category' => 'required|numeric|min:1',
+            'description' => 'required|string',
+            'teacherId' => 'required|numeric|min:1',
+            'image' => '',
+            'name' => 'required|string|max:255',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            if($req->formType == 'add'){
+                $newCourse = new Course();
+                $newCourse->categoryId = $req->category;
+                $newCourse->teacherId = $req->teacherId;
+                $newCourse->course_name = $req->name;
+                if($req->hasFile('image')){
+                    $image = $req->file('image');
+                    $newCourse->course_image = imageUpload($image,'courses');
+                }
+                $newCourse->course_description = $req->description;
+                $newCourse->is_verified = 0;
+                $newCourse->save();
+                return sendResponse('Course Created Success',$newCourse);
+            }else{
+                $rules = [
+                    'courseId' => 'required|numeric|min:1',
+                ];
+                $validator = validator()->make($req->all(),$rules);
+                if(!$validator->fails()){
+                    $update = Course::where('categoryId',$req->category)->where('id',$req->courseId)->where('teacherId',$req->teacherId)->first();
+                    if($update){
+                        $update->categoryId = $req->category;
+                        $update->course_name = $req->name;
+                        if($req->hasFile('image')){
+                            $image = $req->file('image');
+                            $update->course_image = imageUpload($image,'courses');
+                        }
+                        $update->course_description = $req->description;
+                        $update->save();
+                        return sendResponse('Course Updated Success',$update);
+                    }
+                    return errorResponse('Invalid Request Found');
+                }
+            }
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function deleteTeacherCourse(Request $req)
+    {
+        $rules = [
+            'categoryId' => 'required|numeric|min:1',
+            'teacherId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->where('categoryId',$req->categoryId)->first();
+            if($course){
+                $course->delete();
+                return sendResponse('Chapter Deleted Successfully');
+            }
+            return errorResponse('Invalid Course Details');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
     // public function getUserSubscribedCourses(Request $req,$subscribtionId = 0)
     // {
     //     if(!empty($req->userId)){
@@ -171,121 +262,99 @@ class Apicontroller extends Controller
     //     return errorResponse('userId is required');
     // }
 
-    public function getTeacherCourseList(Request $req)
-    {
-        // $teacherCourse = Course::select('*')->with('chapter')->with('category')->with('subjectcategory')->with('teacher_details')->with('lecture')->with('feature');
-        // if($req->teacherId){
-        //     $teacherCourse = $teacherCourse->where('teacherId',$req->teacherId);
-        // }
-        // $teacherCourse = $teacherCourse->get();
-        // return sendResponse('Teacher Course List',$teacherCourse);
-    }
+    // public function chapterPurchaseSuccess(Request $req)
+    // {
+    //     $rules = [
+    //         'userId' => 'required|numeric|min:1',
+    //         'chapterId' => 'required|numeric|min:1',
+    //         'stripeTransactionId' => 'required|numeric|min:1',
+    //     ];
+    //     $validator = validator()->make($req->all(),$rules);
+    //     if(!$validator->fails()){
+    //         DB::beginTransaction();
+    //         try{
+    //             $chapter = Chapter::where('id',$req->chapterId)->with('subChapter')->first();
+    //             if($chapter){
+    //                 $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
+    //                 if($stripe){
+    //                     $purchaseCheck = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chapter->id)->first();
+    //                     if(!$purchaseCheck){
+    //                         $purchase = new ChapterPurchase();
+    //                             $purchase->userId = $req->userId;
+    //                             $purchase->chapterId = $req->chapterId;
+    //                             $purchase->stripeTransactionId = $req->stripeTransactionId;
+    //                         $purchase->save();
+    //                         DB::commit();
+    //                         $data = [
+    //                             'purchase' => $purchase,
+    //                             'chapter' => $chapter,
+    //                             'stripe' => $stripe,
+    //                         ];
+    //                         return sendResponse('Chapter Purchased Successfully',$data);
+    //                     }
+    //                     return errorResponse('This Chapter is already purchased');
+    //                 }
+    //                 return errorResponse('Invalid Stripe Transaction Id');
+    //             }
+    //         }catch(Exception $e){
+    //             DB::rollback();
+    //         }
+    //         return errorResponse('Something Went Wrong Please try after Some time');
+    //     }
+    //     return errorResponse($validator->errors()->first());
+    // }
 
-    public function deleteTeacherCourse(Request $req)
-    {
-        $rules = [
-            'categoryId' => 'required|numeric|min:1',
-            'subjectCategoryId' => 'required|numeric|min:1',
-            'teacherId' => 'required|numeric|min:1',
-            'courseId' => 'required|numeric|min:1',
-        ];
-        $validator = validator()->make($req->all(),$rules);
-        if(!$validator->fails()){
-            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->where('categoryId',$req->categoryId)->where('subjectCategoryId',$req->subjectCategoryId)->first();
-            if($course){
-                $course->delete();
-                return sendResponse('Chapter Deleted Successfully');
-            }
-            return errorResponse('Invalid Course Details');
-        }
-        return errorResponse($validator->errors()->first());
-    }
-
-    public function chapterPurchaseSuccess(Request $req)
-    {
-        $rules = [
-            'userId' => 'required|numeric|min:1',
-            'chapterId' => 'required|numeric|min:1',
-            'stripeTransactionId' => 'required|numeric|min:1',
-        ];
-        $validator = validator()->make($req->all(),$rules);
-        if(!$validator->fails()){
-            DB::beginTransaction();
-            try{
-                $chapter = Chapter::where('id',$req->chapterId)->with('subChapter')->first();
-                if($chapter){
-                    $stripe = StripeTransaction::where('id',$req->stripeTransactionId)->first();
-                    if($stripe){
-                        $purchaseCheck = ChapterPurchase::where('userId',$req->userId)->where('chapterId',$chapter->id)->first();
-                        if(!$purchaseCheck){
-                            $purchase = new ChapterPurchase();
-                                $purchase->userId = $req->userId;
-                                $purchase->chapterId = $req->chapterId;
-                                $purchase->stripeTransactionId = $req->stripeTransactionId;
-                            $purchase->save();
-                            DB::commit();
-                            $data = [
-                                'purchase' => $purchase,
-                                'chapter' => $chapter,
-                                'stripe' => $stripe,
-                            ];
-                            return sendResponse('Chapter Purchased Successfully',$data);
-                        }
-                        return errorResponse('This Chapter is already purchased');
-                    }
-                    return errorResponse('Invalid Stripe Transaction Id');
-                }
-            }catch(Exception $e){
-                DB::rollback();
-            }
-            return errorResponse('Something Went Wrong Please try after Some time');
-        }
-        return errorResponse($validator->errors()->first());
-    }
-
-    public function getCategoryAndSubjectCategory(Request $req)
+    public function getCategoryList(Request $req)
     {
         $data['category'] = Category::get();
-        $data['subjectCategory'] = SubjectCategory::get();
-        return sendResponse('Category and Subject Category',$data);
+        return sendResponse('Category List',$data);
     }
 
     public function createNewChapter(Request $req)
     {
         $rules = [
-            'teacherId' => 'nullable|numeric|min:1',
-            'category' => 'required|min:1|numeric',
-            'subcategory' => 'required|min:1|numeric',
-            'chapter' => 'required|string|max:200',
+            'formType' => 'required|in:add,edit',
+            'courseId' => 'required|numeric|min:1',
+            'teacherId' => 'required|numeric|min:1',
+            'name' => 'required|string|max:255',
             'price' => 'required|numeric|max:99999',
-            'title' => 'required|array',
-            'title.*' => 'required|string|max:200',
-            'topic' => 'required|array',
-            'topic.*' => 'required|string|max:200',
+            'description' => 'required|string',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
             DB::beginTransaction();
-            try{
-                $newChapter = new Chapter();
-                    $newChapter->categoryId = $req->category;
-                    $newChapter->subjectCategoryId = $req->subcategory;
-                    $newChapter->chapter = $req->chapter;
-                    $newChapter->price = $req->price;
-                $newChapter->save();
-                foreach($req->title as $key => $title){
-                    $newSubTopic = new SubChapter();
-                        $newSubTopic->chapterId = $newChapter->id;                        
-                        $newSubTopic->name = $title;                        
-                        $newSubTopic->topics = $req->topic[$key];
-                    $newSubTopic->save();
+            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->first();
+            if($course){
+                if($req->formType == 'add'){
+                    $newChapter = new Chapter();
+                        $newChapter->courseId = $course->id;
+                        $newChapter->name = $req->name;
+                        $newChapter->description = $req->description;
+                        $newChapter->price = $req->price;
+                    $newChapter->save();
+                    DB::commit();
+                    return sendResponse('Chapter Added Success',$newChapter);
+                }else{
+                    $rules = [
+                        'chapterId' => 'required|numeric|min:1',
+                    ];
+                    $validator = validator()->make($req->all(),$rules);
+                    if(!$validator->fails()){
+                        $chapter = Chapter::where('id',$req->chapterId)->where('courseId',$course->id)->first();
+                        if($chapter){
+                            $chapter->name = $req->name;
+                            $chapter->description = $req->description;
+                            $chapter->price = $req->price;
+                            $chapter->save();
+                            DB::commit();
+                            return sendResponse('Chapter Updated Success',$chapter);
+                        }
+                        return errorResponse('Invalid request Found');
+                    }
+                    return errorResponse($validator->errors()->first());
                 }
-                DB::commit();
-                return sendResponse('Chapter Saved Success');
-            }catch(Exception $e){
-                DB::rollback();
-                return errorResponse('Something Went Wrong Please try after Some time');
             }
+            return errorResponse('Invalid request Found');
         }
         return errorResponse($validator->errors()->first());
     }
@@ -339,15 +408,15 @@ class Apicontroller extends Controller
         $rules = [
             'teacherId' => 'nullable|numeric|min:1',
             'chapterId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
             DB::beginTransaction();
             try{
-                $chapter = Chapter::where('id',$req->chapterId)->first();
+                $chapter = Chapter::where('id',$req->chapterId)->where('courseId',$req->courseId)->first();
                 if($chapter){
-                    SubChapter::where('chapterId',$chapter->id)->delete();
-                    $chaper->delete();
+                    $chapter->delete();
                     DB::commit();
                     return sendResponse('Chapter Deleted Success');
                 }
@@ -359,6 +428,15 @@ class Apicontroller extends Controller
         return errorResponse($validator->errors()->first());
     }
 
+    public function getSubChapters(Request $req)
+    {
+        $subchapter = SubChapter::select('*')->with('chapter');
+        if(!empty($req->chapterId)){
+            $subchapter = $subchapter->where('chapterId',$req->chapterId);
+        }
+        $subchapter = $subchapter->get();
+        return sendResponse('Sub-Chapter List',$subchapter);
+    }
 
     public function getTestimonials(Request $req)
     {

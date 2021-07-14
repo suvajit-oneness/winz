@@ -11,6 +11,6 @@ class SubChapter extends Model
 
     function chapter()
     {
-    	return $this->hasOne('App\Models\Chapter','id','chapterId');
+    	return $this->belongsTo('App\Models\Chapter','chapterId','id');
     }
 }
