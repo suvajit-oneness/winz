@@ -22,20 +22,16 @@
                         <thead>
                         <tr>
                             <td>Id</td>
-                            <td>Title</td>
-                            <td>Full Name</td>
-                            <td>Subject Category</td>
-                            <td>Action</td>
+                            <td>Image</td>
+                            <td>Name</td>
                         </tr>
                         </thead>
                         <tbody>
                             @foreach($categories as $key => $category)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td>{{$category->title}}</td>
-                                    <td>{{$category->full_name}}</td>
-                                    <td><a href="{{route('admin.subject.category.index', $category->id)}}">{{count($category->subjectCategories)}}</a></td>
-                                    <th><a href="{{route('admin.category.edit',$category->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a></th>
+                                    <td><img src="{{asset($category->image)}}" height="200" width="200"></td>
+                                    <td>{{$category->name}}</td>
                                 </tr>
                             @endforeach
                         </tbody>

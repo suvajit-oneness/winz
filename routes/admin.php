@@ -299,12 +299,12 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::post('/delete','Admin\CourseManagementController@deleteCourse')->name('admin.course.delete');
 
 			// Lectures
-			Route::group(['prefix' => 'lecture'],function(){
-				Route::get('/{courseId}','Admin\CourseManagementController@lectures')->name('admin.course.lecture');
-				Route::post('save/{courseId}','Admin\CourseManagementController@saveLecture')->name('admin.course.lecture.save');
-				Route::post('update/{courseId}','Admin\CourseManagementController@updateLecture')->name('admin.course.lecture.update');
-				Route::post('/delete','Admin\CourseManagementController@deleteLectures')->name('admin.course.lecture.delete');
-			});
+			// Route::group(['prefix' => 'lecture'],function(){
+			// 	Route::get('/{courseId}','Admin\CourseManagementController@lectures')->name('admin.course.lecture');
+			// 	Route::post('save/{courseId}','Admin\CourseManagementController@saveLecture')->name('admin.course.lecture.save');
+			// 	Route::post('update/{courseId}','Admin\CourseManagementController@updateLecture')->name('admin.course.lecture.update');
+			// 	Route::post('/delete','Admin\CourseManagementController@deleteLectures')->name('admin.course.lecture.delete');
+			// });
 
 			// Features
 			Route::group(['prefix' => 'feature'],function(){
@@ -337,15 +337,15 @@ Route::group(['prefix' => 'admin'], function () {
 		});
 		
 		//question module - subject categories
-		Route::group(['prefix'  =>   'subject/categories'], function() {
-			Route::get('/{categoryId?}', 'Admin\SubjectCategoryController@index')->name('admin.subject.category.index');
-			Route::get('/create/new', 'Admin\SubjectCategoryController@create')->name('admin.subject.category.create');
-			Route::post('/new/store', 'Admin\SubjectCategoryController@store')->name('admin.subject.category.store');
-			Route::get('/{id}/edit', 'Admin\SubjectCategoryController@edit')->name('admin.subject.category.edit');
-			Route::post('/old/update', 'Admin\SubjectCategoryController@update')->name('admin.subject.category.update');
-			Route::get('/{id}/delete', 'Admin\SubjectCategoryController@delete')->name('admin.subject.category.delete');
-			Route::post('/get-subject-categories-data', 'Admin\SubjectCategoryController@getCategoryData')->name('get.subject.categories.data');
-		});
+		// Route::group(['prefix'  =>   'subject/categories'], function() {
+		// 	Route::get('/{categoryId?}', 'Admin\SubjectCategoryController@index')->name('admin.subject.category.index');
+		// 	Route::get('/create/new', 'Admin\SubjectCategoryController@create')->name('admin.subject.category.create');
+		// 	Route::post('/new/store', 'Admin\SubjectCategoryController@store')->name('admin.subject.category.store');
+		// 	Route::get('/{id}/edit', 'Admin\SubjectCategoryController@edit')->name('admin.subject.category.edit');
+		// 	Route::post('/old/update', 'Admin\SubjectCategoryController@update')->name('admin.subject.category.update');
+		// 	Route::get('/{id}/delete', 'Admin\SubjectCategoryController@delete')->name('admin.subject.category.delete');
+		// 	Route::post('/get-subject-categories-data', 'Admin\SubjectCategoryController@getCategoryData')->name('get.subject.categories.data');
+		// });
 		
 		//question module - chapters
 		Route::group(['prefix'  =>   'chapters'], function() {
