@@ -19,6 +19,68 @@ use App\Models\Blog;use App\Models\Setting;use App\Models\ChapterPurchase;
 
 class Apicontroller extends Controller
 {
+    public function getHomeContent(Request $req)
+    {
+        $HomeContent = HomeContent::get();
+        $data = [];
+        foreach ($HomeContent as $content) {
+            $data[$content->key][] = $content;
+        }
+        $data['category'] = Category::get();
+        $data['teacherList'] = Teacher::limit(4)->get();
+        $data['courseList'] = Course::where('is_verified',1)->with('teacher')->limit(4)->get();
+        return sendResponse('Home Content',$data);
+    }
+
+    public function getCourses(Request $req)
+    {
+        if(!empty($req->courseId)){
+            $course = Course::where('id',$req->courseId)->where('is_verified',1)->with('teacher')->first();
+            $course->isUserSubscribed = false;
+            if(!empty($req->userId) && $req->userId > 0){
+                $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
+                if($checkSubscription){
+                    $course->isUserSubscribed = true;
+                }
+            }
+            $course->similarCourses = Course::where('id','!=',$course->id)->with('teacher_details')->get();
+            $course->features = CourseFeature::where('course_id',$course->id)->get();
+            $course->lectures = CourseLecture::where('course_id',$course->id)->get();
+        }else{
+            $course = Course::where('is_verified',1)->with('teacher')->get();
+        }
+        return sendResponse('Course List',$course);
+    }
+
+    public function getTeacherCourseList(Request $req)
+    {
+        // $teacherCourse = Course::select('*')->with('chapter')->with('category')->with('subjectcategory')->with('teacher_details')->with('lecture')->with('feature');
+        // if($req->teacherId){
+        //     $teacherCourse = $teacherCourse->where('teacherId',$req->teacherId);
+        // }
+        // $teacherCourse = $teacherCourse->get();
+        // return sendResponse('Teacher Course List',$teacherCourse);
+    }
+
+    public function deleteTeacherCourse(Request $req)
+    {
+        $rules = [
+            'categoryId' => 'required|numeric|min:1',
+            'subjectCategoryId' => 'required|numeric|min:1',
+            'teacherId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->where('categoryId',$req->categoryId)->where('subjectCategoryId',$req->subjectCategoryId)->first();
+            if($course){
+                $course->delete();
+                return sendResponse('Chapter Deleted Successfully');
+            }
+            return errorResponse('Invalid Course Details');
+        }
+        return errorResponse($validator->errors()->first());
+    }
 
     public function chapterPurchaseSuccess(Request $req)
     {
@@ -395,17 +457,6 @@ class Apicontroller extends Controller
         return errorResponse('userId and courseId is required');
     }
 
-    public function getHomeContent(Request $req)
-    {
-        $HomeContent = HomeContent::get();
-        $data = [];
-        foreach ($HomeContent as $content) {
-            $data[$content->key][] = $content;
-        }
-        $data['category'] = Category::get();
-        return sendResponse('Home Content',$data);
-    }
-
     public function getSubjectCategory(Request $req)
     {
         $subjectCategory = SubjectCategory::select('*')->with('category');
@@ -475,7 +526,7 @@ class Apicontroller extends Controller
           $teacher = Teacher::select('*')->get();
         }else{
             $teacher = Teacher::where('id',$teacherId)->first();
-            $teacher->teacherCourses = Course::get();
+            $teacher->teacherCourses = Course::where('teacherId',$teacherId)->get();
         }
         return sendResponse('Teacher List',$teacher);
     }
@@ -489,27 +540,6 @@ class Apicontroller extends Controller
             $slots = '';
         }
         return errorResponse($validator->errors()->first());
-    }
-
-    public function get_course(Request $req,$courseId = 0)
-    {
-        if($courseId == 0){
-            $course = Course::with('teacher')->get();
-        }else{
-            $course = Course::where('id',$courseId)->with('teacher')->first();
-            $course->isUserSubscribed = false;
-            if(!empty($req->userId) && $req->userId > 0){
-              $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
-              if($checkSubscription){
-                $course->isUserSubscribed = true;
-              }
-            }
-            $course->similarCourses = Course::where('id','!=',$courseId)->with('teacher')->get();
-            $course->features = CourseFeature::where('course_id',$courseId)->get();
-            $course->lectures = CourseLecture::where('course_id',$courseId)->get();
-        }
-        return sendResponse('Course List',$course);
-        // return sendResponse('Course List',$req->all());
     }
 
     public function getMembership(Request $req)

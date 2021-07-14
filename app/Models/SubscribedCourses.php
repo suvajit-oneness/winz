@@ -9,11 +9,13 @@ class SubscribedCourses extends Model
 {
     use SoftDeletes;
 
-    function courses(){
-    	return $this->belongsTo('App\Models\Course','course_id','id');
+    function courses()
+    {
+    	return $this->belongsTo('App\Models\Course','course_id','id')->withTrashed();
     }
 
-    function features(){
+    function features()
+    {
     	return $this->hasMany('App\Models\CourseFeature','course_id','course_id');
     }
 }

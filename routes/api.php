@@ -16,6 +16,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 
 	Route::group(['prefix'=>'v1'],function(){
 		Route::get('home_page_content','Api\Apicontroller@getHomeContent');
+		Route::get('course/list','Api\Apicontroller@getCourses');
 		Route::post('login','Api\LoginController@UserLogin');
 		Route::post('signup','Api\LoginController@userSignUP');
 		Route::post('update_profile','Api\Apicontroller@updateProfile');
@@ -23,7 +24,6 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('subscribed/course/{subscribedId?}','Api\Apicontroller@getUserSubscribedCourses');
 		Route::post('subscribed/course','Api\Apicontroller@saveUserSubscribedCourses');
 		Route::get('teacher/{teacherId?}','Api\Apicontroller@get_teacher');
-		Route::get('course/{courseId?}','Api\Apicontroller@get_course');
 		Route::get('membership','Api\Apicontroller@getMembership');
 		Route::get('subject-category','Api\Apicontroller@getSubjectCategory');
 		Route::get('chapter','Api\Apicontroller@getChapter');
@@ -44,6 +44,8 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 			// Route::post('meeting','Api\ZoomMeetingController@createMeeting')->name('zoom.meeting.save');
 			// Route::post('meeting/delete','Api\ZoomMeetingController@deleteZoomMeeting')->name('zoom.meeting.delete');
 		});
+		Route::get('teacher/course/list','Api\Apicontroller@getTeacherCourseList')->name('api.course.list');
+		Route::post('teacher/course/delete','Api\Apicontroller@deleteTeacherCourse')->name('api.course.list');
 		Route::get('category_and_subjectCategory','Api\Apicontroller@getCategoryAndSubjectCategory')->name('api.category_and_subjectcategory');
 		Route::post('chapter/create','Api\Apicontroller@createNewChapter')->name('chapter.create');
 		Route::post('chapter/update','Api\Apicontroller@updateChapter')->name('chapter.update');

@@ -11,17 +11,30 @@ class Course extends Model
 
     function teacher()
     {
-    	return $this->hasMany('App\Models\TeacherCourse','course_id','id')
-    		->leftjoin('teachers','teacher_courses.teacher_id','teachers.id');
+    	return $this->belongsTo('App\Models\Teacher','teacherId','id');
     }
 
-    public function lecture()
+    function lecture()
     {
-    	return $this->hasMany('App\Models\CourseLecture','course_id','id')->withTrashed();
+    	return $this->hasMany('App\Models\CourseLecture','course_id','id');
     }
 
-    public function feature()
+    function feature()
     {
-    	return $this->hasMany('App\Models\CourseFeature','course_id','id')->withTrashed();
+    	return $this->hasMany('App\Models\CourseFeature','course_id','id');
+    }
+
+    function category()
+    {
+        return $this->belongsTo('App\Models\Category','categoryId','id')->withTrashed();
+    }
+
+    function chapter(){
+        return $this->hasMany('App\Models\Chapter','courseId','id');
+    }
+
+    function subjectcategory()
+    {
+        return $this->belongsTo('App\Models\SubjectCategory','subjectCategoryId','id')->withTrashed();
     }
 }
