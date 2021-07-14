@@ -38,18 +38,29 @@ class Apicontroller extends Controller
             $course = Course::where('id',$req->courseId)->where('is_verified',1)->with('teacher')->first();
             $course->isUserSubscribed = false;
             if(!empty($req->userId) && $req->userId > 0){
-                $checkSubscription = SubscribedCourses::where('user_id',$req->userId)->where('course_id',$course->id)->first();
-                if($checkSubscription){
-                    $course->isUserSubscribed = true;
-                }
+                // $checkSubscription = SubscribedChapter::where('user_id',$req->userId)->where('course_id',$course->id)->first();
+                // if($checkSubscription){
+                //     $course->isUserSubscribed = true;
+                // }
             }
-            $course->similarCourses = Course::where('id','!=',$course->id)->with('teacher_details')->get();
+            $course->similarCourses = Course::where('id','!=',$course->id)->with('teacher')->get();
             $course->features = CourseFeature::where('course_id',$course->id)->get();
-            $course->lectures = CourseLecture::where('course_id',$course->id)->get();
+            $course->chapter = Chapter::where('courseId',$course->id)->get();
         }else{
             $course = Course::where('is_verified',1)->with('teacher')->get();
         }
         return sendResponse('Course List',$course);
+    }
+
+    public function getTeacherDetails(Request $req)
+    {
+        if(!empty($req->teacherId)){
+            $teacher = Teacher::where('id',$req->teacherId)->first();
+            $teacher->teacherCourses = Course::where('teacherId',$teacher->id)->where('is_verified',1)->get();
+        }else{
+            $teacher = Teacher::select('*')->get();
+        }
+        return sendResponse('Teacher List',$teacher);
     }
 
     public function getTeacherCourseList(Request $req)
@@ -518,17 +529,6 @@ class Apicontroller extends Controller
         }
         $question = $question->get();
         return sendResponse('Question List',$question);
-    }
-
-    public function get_teacher(Request $req,$teacherId = 0)
-    {
-        if($teacherId == 0){
-          $teacher = Teacher::select('*')->get();
-        }else{
-            $teacher = Teacher::where('id',$teacherId)->first();
-            $teacher->teacherCourses = Course::where('teacherId',$teacherId)->get();
-        }
-        return sendResponse('Teacher List',$teacher);
     }
 
     public function getTeacherAvailableSlots(Request $req)

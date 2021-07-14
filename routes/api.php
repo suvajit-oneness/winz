@@ -23,7 +23,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::post('change/password','Api\Apicontroller@changeUserPassword');
 		Route::get('subscribed/course/{subscribedId?}','Api\Apicontroller@getUserSubscribedCourses');
 		Route::post('subscribed/course','Api\Apicontroller@saveUserSubscribedCourses');
-		Route::get('teacher/{teacherId?}','Api\Apicontroller@get_teacher');
+		Route::get('teacher/details','Api\Apicontroller@getTeacherDetails');
 		Route::get('membership','Api\Apicontroller@getMembership');
 		Route::get('subject-category','Api\Apicontroller@getSubjectCategory');
 		Route::get('chapter','Api\Apicontroller@getChapter');

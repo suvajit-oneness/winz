@@ -9,6 +9,8 @@ class Chapter extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'course_chapters';
+
     function subjectCategory()
     {
     	return $this->belongsTo('App\Models\SubjectCategory','subjectCategoryId','id');
