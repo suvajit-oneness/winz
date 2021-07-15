@@ -18,4 +18,9 @@ class SubChapter extends Model
     {
         return $this->belongsTo('App\Models\Category','categoryId','id');
     }
+
+    function question()
+    {
+    	return $this->belongsTo('App\Models\Question','subChapterId','id');
+    }
 }

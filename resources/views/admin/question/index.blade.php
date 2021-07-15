@@ -35,7 +35,7 @@
                             @foreach($questions as $question)
                                 <tr>
                                     <td><img src="{{asset($question->question)}}" height="100" width="200"></td>
-                                    <td>{{$question->subjectCategory->categoryId}} - {{$question->subjectCategory->title}}</td>
+                                    <td></td>
                                     <td>{{$question->chapter->chapter}}</td>
                                     <td>
                                         <ul>

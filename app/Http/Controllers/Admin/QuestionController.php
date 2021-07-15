@@ -10,12 +10,16 @@ use App\Models\SubjectCategory;
 
 class QuestionController extends BaseController
 {
-    public function index($chapterId = 0)
+    public function index($chapterId = 0, $subChapterId = 0)
     {
         $questions = Question::select('*');
         if($chapterId > 0){
             $questions = $questions->where('chapterId',$chapterId);
         }
+        if($subChapterId>0){
+            $questions  = $questions->where('subChapterId',$subChapterId);
+        }
+       
         $questions = $questions->orderBy('id')->get();
         return view('admin.question.index', compact('questions'));
     }
