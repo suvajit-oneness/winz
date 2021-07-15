@@ -26,7 +26,6 @@ class Apicontroller extends Controller
         foreach ($HomeContent as $content) {
             $data[$content->key][] = $content;
         }
-        $data['category'] = Category::get();
         $data['teacherList'] = Teacher::limit(4)->get();
         $data['courseList'] = Course::where('is_verified',1)->with('teacher')->limit(4)->get();
         return sendResponse('Home Content',$data);
@@ -430,7 +429,10 @@ class Apicontroller extends Controller
 
     public function getSubChapters(Request $req)
     {
-        $subchapter = SubChapter::select('*')->with('chapter');
+        $subchapter = SubChapter::select('*')->with('chapter')->with('category');
+        if(!empty($req->categoryId)){
+            $subchapter = $subchapter->where('categoryId',$req->categoryId);
+        }
         if(!empty($req->chapterId)){
             $subchapter = $subchapter->where('chapterId',$req->chapterId);
         }
