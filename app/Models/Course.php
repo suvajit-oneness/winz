@@ -19,11 +19,6 @@ class Course extends Model
     	return $this->hasMany('App\Models\CourseFeature','course_id','id');
     }
 
-    function category()
-    {
-        return $this->belongsTo('App\Models\Category','categoryId','id')->withTrashed();
-    }
-
     function chapter(){
         return $this->hasMany('App\Models\Chapter','courseId','id');
     }

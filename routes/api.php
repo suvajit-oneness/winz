@@ -27,7 +27,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('membership','Api\Apicontroller@getMembership');
 		Route::get('subject-category','Api\Apicontroller@getSubjectCategory');
 		Route::get('chapter','Api\Apicontroller@getChapter');
-		Route::get('question','Api\Apicontroller@getQuestion');
+		Route::get('question/list','Api\Apicontroller@getQuestionList');
 		Route::get('scheduled-teacher-data','Api\Apicontroller@getScheduledData');
 		Route::post('scheduled-teacher-data/save','Api\Apicontroller@saveTeacherSchedule');
 		Route::get('teacher-slots','Api\Apicontroller@getTeacherSlots');
