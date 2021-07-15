@@ -26,7 +26,6 @@ class Apicontroller extends Controller
         foreach ($HomeContent as $content) {
             $data[$content->key][] = $content;
         }
-        $data['category'] = Category::get();
         $data['teacherList'] = Teacher::limit(4)->get();
         $data['courseList'] = Course::where('is_verified',1)->with('teacher')->limit(4)->get();
         return sendResponse('Home Content',$data);
@@ -154,7 +153,7 @@ class Apicontroller extends Controller
         }
         $purchaseChapter = $purchaseChapter->get();
         foreach($purchaseChapter as $key => $getCategoryAndTeacher){
-            $getCategoryAndTeacher->category = Category::where('id',$getCategoryAndTeacher->course->categoryId)->first();
+            // $getCategoryAndTeacher->category = Category::where('id',$getCategoryAndTeacher->course->categoryId)->first();
             $getCategoryAndTeacher->teacher = Teacher::where('id',$getCategoryAndTeacher->course->teacherId)->first();
         }
         return sendResponse('Purchse Chapter List',$purchaseChapter);
@@ -176,7 +175,7 @@ class Apicontroller extends Controller
 
     public function editTeacherCourse(Request $req)
     {
-        $course = Course::where('id',$req->courseId)->with('chapter')->with('category')->first();
+        $course = Course::where('id',$req->courseId)->with('chapter')->first();
         return sendResponse('Course',$course);
     }
 
@@ -184,7 +183,6 @@ class Apicontroller extends Controller
     {
         $rules = [
             'formType' => 'required|in:add,edit',
-            'category' => 'required|numeric|min:1',
             'description' => 'required|string',
             'teacherId' => 'required|numeric|min:1',
             'image' => '',
@@ -194,7 +192,6 @@ class Apicontroller extends Controller
         if(!$validator->fails()){
             if($req->formType == 'add'){
                 $newCourse = new Course();
-                $newCourse->categoryId = $req->category;
                 $newCourse->teacherId = $req->teacherId;
                 $newCourse->course_name = $req->name;
                 if($req->hasFile('image')){
@@ -211,9 +208,8 @@ class Apicontroller extends Controller
                 ];
                 $validator = validator()->make($req->all(),$rules);
                 if(!$validator->fails()){
-                    $update = Course::where('categoryId',$req->category)->where('id',$req->courseId)->where('teacherId',$req->teacherId)->first();
+                    $update = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->first();
                     if($update){
-                        $update->categoryId = $req->category;
                         $update->course_name = $req->name;
                         if($req->hasFile('image')){
                             $image = $req->file('image');
@@ -233,13 +229,12 @@ class Apicontroller extends Controller
     public function deleteTeacherCourse(Request $req)
     {
         $rules = [
-            'categoryId' => 'required|numeric|min:1',
             'teacherId' => 'required|numeric|min:1',
             'courseId' => 'required|numeric|min:1',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->where('categoryId',$req->categoryId)->first();
+            $course = Course::where('id',$req->courseId)->where('teacherId',$req->teacherId)->first();
             if($course){
                 $course->delete();
                 return sendResponse('Chapter Deleted Successfully');
@@ -430,7 +425,10 @@ class Apicontroller extends Controller
 
     public function getSubChapters(Request $req)
     {
-        $subchapter = SubChapter::select('*')->with('chapter');
+        $subchapter = SubChapter::select('*')->with('chapter')->with('category');
+        if(!empty($req->categoryId)){
+            $subchapter = $subchapter->where('categoryId',$req->categoryId);
+        }
         if(!empty($req->chapterId)){
             $subchapter = $subchapter->where('chapterId',$req->chapterId);
         }
@@ -647,17 +645,31 @@ class Apicontroller extends Controller
         return sendResponse('Chapter List',$chapter);
     }
 
-    public function getQuestion(Request $req)
+    public function getQuestionList(Request $req)
     {
-        $question = Question::select('*')->with('chapter');
-        if(!empty($req->subjectCategoryId)){
-          $question = $question->where('subjectCategoryId',$req->subjectCategoryId);  
+        $rules = [
+            'chapterId' => 'required|min:1|numeric',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $chapter = Chapter::where('id',$req->chapterId)->first();
+            if($chapter){
+                $question = Question::select('*')->with('chapter')->with('category')->with('subchapter');
+                if(!empty($req->categoryId)){
+                    $question = $question->where('categoryId',$req->categoryId);
+                }
+                if(!empty($req->chapterId)){
+                    $question = $question->where('chapterId',$req->chapterId);
+                }
+                if(!empty($req->subChapterId)){
+                    $question = $question->where('subChapterId',$req->subChapterId);
+                }
+                $question = $question->orderBy('difficulty')->get();
+                return sendResponse('Question List',$question);
+            }
+            return errorResponse('Invalid Request Found');
         }
-        if(!empty($req->chapterId)){
-          $question = $question->where('chapterId',$req->chapterId);
-        }
-        $question = $question->get();
-        return sendResponse('Question List',$question);
+        return errorResponse($validator->errors()->first());
     }
 
     public function getTeacherAvailableSlots(Request $req)
