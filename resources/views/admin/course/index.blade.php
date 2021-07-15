@@ -10,7 +10,6 @@
         <a href="{{ route('admin.course.create') }}" class="btn btn-primary pull-right">Add New</a>
     </div>
     </div>
-    @include('admin.partials.flash')
     <div class="alert alert-success" id="success-msg" style="display: none;">
         <span id="success-text"></span>
     </div>
@@ -25,11 +24,12 @@
                         <thead>
                             <tr>
                                 <th> Image</th>
+                                
                                 <th> Name</th>
                                 <th> Description</th>
                                 <th> Price</th>
-                                <th> Lectures</th>
                                 <th> Features</th>
+                                <th> Chapters</th>
                                 <th> Status</th>
                                 <th> Action</th>
                             </tr>
@@ -40,9 +40,9 @@
                                     <td><img src="{{asset($cou->course_image)}}" height="100" width="100"></td>
                                     <td>{{$cou->course_name}}</td>
                                     <td>{!! $cou->course_description !!}</td>
-                                    <td>{{$cou->course_price}}</td>
-                                    <th><a href="{{route('admin.course.lecture',$cou->id)}}">{{count($cou->lecture)}}</a></th>
+                                    <td>{{$cou->overallcourseprice($cou->id)}}</td>
                                     <th><a href="{{route('admin.course.feature',$cou->id)}}">{{count($cou->feature)}}</a></th>
+                                    <th><a href="{{route('admin.course.chapters.index',$cou->id)}}">{{count($cou->overallchapter)}}</a></th>
                                     <th>
                                         <div class="toggle-button-cover margin-auto">
                                             <div class="button-cover">

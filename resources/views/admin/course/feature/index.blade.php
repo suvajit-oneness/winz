@@ -160,7 +160,7 @@
             $.ajax({
                 type:'POST',
                 dataType:'JSON',
-                url:"{{route('admin.course.feature.delete')}}",
+                url:"{{route('admin.course.feature.delete',$course->id)}}",
                 data:{ _token: CSRF_TOKEN, id:featureId,courseId:'{{$course->id}}', status:is_active},
                 success:function(response)
                 {

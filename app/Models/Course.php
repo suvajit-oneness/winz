@@ -27,4 +27,18 @@ class Course extends Model
     function chapter(){
         return $this->hasMany('App\Models\Chapter','courseId','id');
     }
+
+    public function overallcourseprice($courseId)
+    {
+        $chapterprice = \App\Models\Chapter::where('courseId',$courseId)->sum('price');
+        return '$ '.number_format($chapterprice,2);
+    }
+
+    public function overallchapter()
+    {
+        return $this->hasMany('App\Models\Chapter','courseId','id');
+
+        /*$chaptercount = \App\Model\Chapter::where('courseId',$courseId)->get();
+        return $chaptercount;*/
+    }
 }

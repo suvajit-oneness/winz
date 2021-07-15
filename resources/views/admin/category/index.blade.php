@@ -30,7 +30,7 @@
                             @foreach($categories as $key => $category)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td><img src="{{asset($category->image)}}" height="200" width="200"></td>
+                                    <td><img src="{{asset($category->image)}}" height="150" width="150"></td>
                                     <td>{{$category->name}}</td>
                                 </tr>
                             @endforeach

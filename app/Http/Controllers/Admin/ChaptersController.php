@@ -11,12 +11,16 @@ use App\Models\SubjectCategory;
 use DB;
 class ChaptersController extends BaseController
 {
-    public function index()
+    public function index($courseId)
     {
-        $chapters = Chapter::orderBy('id')->get();
-        return view('admin.chapters.index', compact('chapters'));
+        $chapters = Chapter::select('*');
+        if($courseId > 0){
+            $chapters = $chapters->where('courseId',$courseId);
+        }
+        $chapters = $chapters->get();
+        return view('admin.chapters.index', compact('chapters','courseId'));
     }
-    public function create()
+    public function create($courseId)
     {
         $category = Category::all();
         $courses = DB::table('courses')->get();
@@ -28,45 +32,39 @@ class ChaptersController extends BaseController
     		'chapter' => 'required|max:200|string',
     		'price' => 'required|numeric',
             'categoryId' => 'required|numeric|min:1',
-    		'subjectCategoryId' => 'required|numeric|min:1',
-            'courseId' => 'required|numeric|min:1',
             
     	]);
         $chapter = new Chapter();
-        $chapter->chapter = $req->chapter;
-        $chapter->price = $req->price;
-        $chapter->categoryId = $req->categoryId;
-        $chapter->subjectCategoryId = $req->subjectCategoryId;
         $chapter->courseId = $req->courseId;
+        $chapter->name = $req->name;
+        $chapter->price = $req->price;
         $chapter->save();
-        return $this->responseRedirect('admin.chapters.index', 'Chapter added successfully' ,'success',false, false);
+        return redirect(route('admin.course.chapters.index',$chapter->courseId))->with('success','Chapter Updated successfully');
+
+        //return $this->responseRedirect('admin.course.chapters.index', 'Chapter added successfully' ,'success',false, false);
     }
-    public function edit($id)
+    public function edit($courseId,$chapterId)
     {
-        $chapter = Chapter::find($id);
-        $category = Category::all();
-        $sub_category = SubjectCategory::all();
+        $chapter = Chapter::find($chapterId);
         $courses = DB::table('courses')->get();
 
-        return view('admin.chapters.edit', compact('chapter','sub_category', 'category','courses'));
+        return view('admin.chapters.edit', compact('chapter','courses'));
     }
     public function update(Request $req)
     {
         $req->validate([
             'chapter_id' => 'required|numeric|min:1',
-    		'chapter' => 'required|max:200|string',
-    		'price' => 'required|numeric',
-    		'categoryId' => 'required|numeric|min:1',
-    		'subjectCategoryId' => 'required|numeric|min:1',
+    		'name' => 'required|max:200|string',
+    		'price' => 'required|numeric'
+    		
     	]);
         $chapter = Chapter::find($req->chapter_id);
-        $chapter->chapter = $req->chapter;
+        $chapter->name = $req->name;
         $chapter->price = $req->price;
-        $chapter->categoryId = $req->categoryId;
-        $chapter->subjectCategoryId = $req->subjectCategoryId;
         $chapter->courseId = $req->courseId;
         $chapter->save();
-        return $this->responseRedirect('admin.chapters.index', 'Chapter Updated successfully' ,'success',false, false);
+        return redirect(route('admin.course.chapters.index',$chapter->courseId))->with('success','Chapter Updated successfully');
+        // return $this->responseRedirect('admin.course.chapters.index', 'Chapter Updated successfully' ,'success',false, false);
     }
     public function delete($id)
     {
@@ -74,7 +72,8 @@ class ChaptersController extends BaseController
         if (!$response) {
             return $this->responseRedirectBack('Error occurred while deleting.', 'error', true, true);
         }
-        return $this->responseRedirect('admin.chapters.index', 'Chapter deleted successfully' ,'success',false, false);
+        return redirect(route('admin.course.chapters.index',$chapter->courseId))->with('success','Chapter deleted successfully');
+        // return $this->responseRedirect('admin.course.chapters.index', 'Chapter  successfully' ,'success',false, false);
     }
     public function getChapterData(Request $req)
     {

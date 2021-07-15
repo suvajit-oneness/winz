@@ -7,7 +7,7 @@
                 <h1><i class="fa fa-file-text"></i> Chapters</h1>
                 <p>list of Chapter</p>
             </div>
-            <a href="{{ route('admin.chapters.create') }}" class="btn btn-primary pull-right">Add New</a>
+            <a href="{{ route('admin.course.chapters.create',$courseId) }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
     @include('admin.partials.flash')
@@ -25,8 +25,6 @@
                         <thead>
                             <tr>
                                 <td width="5%">Id</td>
-                                <td>Category</td>
-                                <td>Subject Category</td>
                                 <td>Chapter</td>
                                 <td width="5%">Price</td>
                                 <td width="5%">Subject Chapters</td>
@@ -38,13 +36,11 @@
                             @foreach($chapters as $key => $item)
                                 <tr>
                                     <td width="5%">{{$key+1}}</td>
-                                    <td>{{$item->category->title}}</td>
-                                    <td>{{$item->subjectCategory->title}}</td>
-                                    <td>{{$item->chapter}}</td>
+                                    <td>{{$item->name}}</td>
                                     <td>&dollar;{{$item->price}}</td>
                                     <td><a href="{{route('admin.subject.chapter.index', $item->id)}}">{{count($item->subChapter)}}</a></td>
                                     <td><a href="{{route('admin.question.index', $item->id)}}">{{count($item->questions)}}</a></td>
-                                    <th><a href="{{route('admin.chapters.edit',$item->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$item->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
+                                    <th><a href="{{route('admin.course.chapters.edit',[$item->courseId,$item->id])}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$item->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;use App\Models\Course;
-use App\Models\CourseLecture;use App\Models\CourseFeature;
+use App\Models\CourseFeature;
 use App\Models\Category;
-use App\Models\SubjectCategory;
-
+use App\Models\Chapter;
 use DB;
 
 class CourseManagementController extends BaseController
@@ -16,7 +15,7 @@ class CourseManagementController extends BaseController
 	// Course Details
     public function index(Request $req)
     {
-    	$course = Course::with('lecture')->with('feature')->withTrashed()->get();
+    	$course = Course::get();
     	return view('admin.course.index',compact('course'));
     }
 
@@ -183,18 +182,34 @@ class CourseManagementController extends BaseController
     		$deleted_at = date('Y-m-d h:i:s');
     		if($req->status == 1){
     			$deleted_at = null;
-    			Course::where('id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
+    			Course::where('id',$req->courseId)->update(['deleted_at'=>$deleted_at]);
     		}
-    		CourseLecture::where('id',$req->id)->where('course_id',$req->courseId)->withTrashed()->update(['deleted_at'=>$deleted_at]);
+    		CourseLecture::where('id',$req->id)->where('course_id',$req->courseId)->update(['deleted_at'=>$deleted_at]);
     		return response()->json(['error'=>false,'message'=>'Lecture Status Updated successfully']);
     	}
     	return response()->json(['error'=>true,'message'=>$validate->errors()->first()]);
     }
 
+
+    // Course Chapter detials start //
+    public function chapters(Request $req, $courseId)
+    {
+        $chapters = Chapter::where('courseId',$courseId)->get();
+        return view('admin.course.chapter.index',compact('chapters'));
+    }
+
+    public function editCourseChapter($id,$courseId)
+    {
+        echo "hi";
+    }
+
+
+    // Course Chapter Details End //
+
     // Course Features Details
     public function features(Request $req, $courseId)
     {
-    	$course = Course::where('id',$courseId)->with('feature')->withTrashed()->first();
+    	$course = Course::where('id',$courseId)->with('feature')->first();
     	return view('admin.course.feature.index',compact('course'));
     }
 

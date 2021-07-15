@@ -31,13 +31,10 @@
                     <a class="treeview-item {{ sidebar_open(['admin.category.*']) }}" href="{{ route('admin.category.index') }}">Categories</a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.subject.category.*']) }}" href="{{ route('admin.subject.category.index') }}"> Subject Categories</a>
-                </li>
-                <li style="padding-left: 20px;">
                     <a class="treeview-item {{ sidebar_open(['admin.course']) }}" href="{{ route('admin.course') }}">Course</a>
                 </li>
                 <li style="padding-left: 20px;">
-                    <a class="treeview-item {{ sidebar_open(['admin.chapters.*', 'admin.subject.chapter.*']) }}" href="{{ route('admin.chapters.index') }}">Chapters</a>
+                    <a class="treeview-item {{ sidebar_open(['admin.course.chapters.*', 'admin.subject.chapter.*']) }}" href="{{ route('admin.course.chapters.index',0) }}">Chapters</a>
                 </li>
                 <li style="padding-left: 20px;">
                     <a class="treeview-item {{ sidebar_open(['admin.question.*']) }}" href="{{ route('admin.question.index') }}">Questions</a>

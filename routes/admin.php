@@ -307,12 +307,26 @@ Route::group(['prefix' => 'admin'], function () {
 			// });
 
 			// Features
-			Route::group(['prefix' => 'feature'],function(){
-				Route::get('/{courseId}','Admin\CourseManagementController@features')->name('admin.course.feature');
-				Route::post('save/{courseId}','Admin\CourseManagementController@saveFeature')->name('admin.feature.save');
-				Route::post('update/{courseId}','Admin\CourseManagementController@updateFeature')->name('admin.feature.update');
+			Route::group(['prefix' => '{courseId}/feature'],function(){
+				Route::get('/','Admin\CourseManagementController@features')->name('admin.course.feature');
+				Route::post('save','Admin\CourseManagementController@saveFeature')->name('admin.feature.save');
+				Route::post('update','Admin\CourseManagementController@updateFeature')->name('admin.feature.update');
 				Route::post('/delete','Admin\CourseManagementController@deleteFeatures')->name('admin.course.feature.delete');
 			});
+
+
+			 // new dev //
+			Route::group(['prefix' => '{courseId?}/chapter'],function(){
+				Route::get('/', 'Admin\ChaptersController@index')->name('admin.course.chapters.index');
+				Route::get('/create', 'Admin\ChaptersController@create')->name('admin.course.chapters.create');
+				Route::post('/store', 'Admin\ChaptersController@store')->name('admin.course.chapters.store');
+				Route::get('/{id}/edit', 'Admin\ChaptersController@edit')->name('admin.course.chapters.edit');
+				Route::post('/update', 'Admin\ChaptersController@update')->name('admin.course.chapters.update');
+				Route::get('/{id}/delete', 'Admin\ChaptersController@delete')->name('admin.course.chapters.delete');
+				Route::post('/get-chapters-data', 'Admin\ChaptersController@getChapterData')->name('admin.course.get.chapters.data');
+			});
+
+
 		});
 
 		// Zoom Meetings
@@ -348,15 +362,15 @@ Route::group(['prefix' => 'admin'], function () {
 		// });
 		
 		//question module - chapters
-		Route::group(['prefix'  =>   'chapters'], function() {
-			Route::get('/', 'Admin\ChaptersController@index')->name('admin.chapters.index');
-			Route::get('/create', 'Admin\ChaptersController@create')->name('admin.chapters.create');
-			Route::post('/store', 'Admin\ChaptersController@store')->name('admin.chapters.store');
-			Route::get('/{id}/edit', 'Admin\ChaptersController@edit')->name('admin.chapters.edit');
-			Route::post('/update', 'Admin\ChaptersController@update')->name('admin.chapters.update');
-			Route::get('/{id}/delete', 'Admin\ChaptersController@delete')->name('admin.chapters.delete');
-			Route::post('/get-chapters-data', 'Admin\ChaptersController@getChapterData')->name('get.chapters.data');
-		});
+		// Route::group(['prefix'  =>   'chapters'], function() {
+		// 	Route::get('/', 'Admin\ChaptersController@index')->name('admin.chapters.index');
+		// 	Route::get('/create', 'Admin\ChaptersController@create')->name('admin.chapters.create');
+		// 	Route::post('/store', 'Admin\ChaptersController@store')->name('admin.chapters.store');
+		// 	Route::get('/{id}/edit', 'Admin\ChaptersController@edit')->name('admin.chapters.edit');
+		// 	Route::post('/update', 'Admin\ChaptersController@update')->name('admin.chapters.update');
+		// 	Route::get('/{id}/delete', 'Admin\ChaptersController@delete')->name('admin.chapters.delete');
+		// 	Route::post('/get-chapters-data', 'Admin\ChaptersController@getChapterData')->name('get.chapters.data');
+		// });
 
 		//question module - subject chapters
 		Route::group(['prefix'  =>   'subject-chapters'], function() {

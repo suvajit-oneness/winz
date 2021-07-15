@@ -12,40 +12,17 @@
             <div class="tile">
                 <h3 class="tile-title">{{ 'Update Chapter' }}
                     <span class="top-form-btn">
-                        <a class="btn btn-secondary" href="{{ route('admin.chapters.index') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                        <a class="btn btn-secondary" href="{{ route('admin.course.chapters.index',$chapter->courseId) }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                     </span>
                 </h3>
                 <hr>
-                <form action="{{ route('admin.chapters.update') }}" method="POST" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.course.chapters.update',$chapter->courseId) }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="chapter_id" value="{{$chapter->id}}">
                     <input type="hidden" id="sub_cat_id" value="{{$chapter->subjectCategoryId}}">
                     <div class="tile-body">
 
-                        <div class="form-group">
-                            <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
-                                <option value="">-- Select Category --</option>
-                                @foreach($category as $item)
-                                <option value="{{$item->id}}" {{($item->id == $chapter->categoryId)? 'selected' : ''}}>{{$item->title}}</option>
-                                @endforeach
-                            </select>
-                            @error('categoryId') {{ $message }} @enderror
-                        </div>
-
-
-
-
-
-                        <div class="form-group">
-                            <label class="control-label" for="subjectCategoryId"> Subject Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('subjectCategoryId') is-invalid @enderror" name="subjectCategoryId" id="subjectCategoryId">
-                                <option value="">-- Select Subject Category --</option>
-                            </select>
-                            @error('subjectCategoryId') {{ $message }} @enderror
-                        </div>
-
-
+           
 
 
                         <div class="form-group">
@@ -53,7 +30,7 @@
                             <select class="form-control @error('courseId') is-invalid @enderror" name="courseId" id="courseId">
                                 <option value="">-- Select Courses --</option>
                                 @foreach($courses as $courserow)
-                                <option value="{{$courserow->id}}" <?php if($chapter->courseId==$courserow->id){echo "selected"; } ?> >{{$courserow->course_name}}</option>
+                                <option value="{{$courserow->id}}" @if($chapter->courseId==$courserow->id){{('selected')}}@endif >{{$courserow->course_name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,7 +41,7 @@
 
                         <div class="form-group">
                             <label class="control-label" for="chapter"> Chapter <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="chapter" id="chapter" placeholder="Chapter Name" value="{{(old('chapter')) ? old('chapter') : $chapter->chapter }}">
+                            <input class="form-control" type="text" name="name" id="name" placeholder="Chapter Name" value="{{(old('chapter')) ? old('chapter') : $chapter->name }}">
                             @error('chapter') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
                         
@@ -78,67 +55,10 @@
                     <div class="tile-footer">
                         <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update Chapter</button>
                         &nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-secondary" href="{{ route('admin.chapters.index') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                        <a class="btn btn-secondary" href="{{ route('admin.course.chapters.index',$chapter->courseId) }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-
-<script>
-$(document).ready(function() {
-    var categoryId = $('#categoryId').val();
-    $('#subjectCategoryId').empty();
-    $.ajax({
-        url: "{{route('get.subject.categories.data')}}",
-        type: "POST",
-        data: {
-            '_token': "{{csrf_token()}}",
-            'categoryId': categoryId
-        },
-        success:function(data){
-            var sucCategory = '';
-            $.each(data.data, function(i, val) {
-                if ($('#sub_cat_id').val() == val.id) {
-                    console.log('selected');
-                    selected = 'selected';
-                } else {
-                    selected = '';
-                }
-                sucCategory += "<option value='"+val.id+"'"+selected+">"+val.title+"</option>";
-            });
-            $('#subjectCategoryId').append(sucCategory);
-        }
-    });
-})
-$('#categoryId').change(function() {
-    var categoryId = $('#categoryId').val();
-    $('#subjectCategoryId').empty();
-    $.ajax({
-        url: "{{route('get.subject.categories.data')}}",
-        type: "POST",
-        data: {
-            '_token': "{{csrf_token()}}",
-            'categoryId': categoryId
-        },
-        success:function(data){
-            var sucCategory = '';
-            $.each(data.data, function(i, val) {
-                if ($('#sub_cat_id').val() == val.id) {
-                    console.log('selected');
-                    selected = 'selected';
-                } else {
-                    selected = '';
-                }
-                sucCategory += "<option value='"+val.id+"'"+selected+">"+val.title+"</option>";
-            });
-            $('#subjectCategoryId').append(sucCategory);
-        }
-    });
-})
-</script>
-
-@endpush
