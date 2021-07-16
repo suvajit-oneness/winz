@@ -30,4 +30,9 @@ class Chapter extends Model
     {
     	return $this->hasMany('App\Models\Question','chapterId','id');
     }
+
+    function course()
+    {
+        return $this->belongsTo('App\Models\Course','courseId','id');
+    }
 }

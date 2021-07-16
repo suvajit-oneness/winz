@@ -25,8 +25,8 @@
                         <thead>
                         <tr>
                             <td width="5%">Id</td>
-                            <td>Chapter</td>
                             <td>Name</td>
+                            <td>Questions</td>
                             <td>Action</td>
                         </tr>
                         </thead>
@@ -34,8 +34,10 @@
                             @foreach($sub_chapters as $key => $sub_chapter)
                                 <tr>
                                     <td width="5%">{{$key+1}}</td>
-                                    <td>{{$sub_chapter->chapter->chapter}}</td>
                                     <td>{{$sub_chapter->name}}</td>
+                                    <td>
+                                        <a href="{{route('admin.question.index',[$sub_chapter->chapterId,$sub_chapter->id])}}">{{$countquestion}}</a>
+                                    </td>
                                     <th><a href="{{route('admin.subject.chapter.edit',$sub_chapter->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$sub_chapter->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
                                 </tr>
                             @endforeach

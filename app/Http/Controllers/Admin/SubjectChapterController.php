@@ -7,7 +7,7 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\SubChapter;
 use App\Models\Chapter;
-
+use DB;
 class SubjectChapterController extends BaseController
 {
     public function index($chapterId = 0)
@@ -15,9 +15,13 @@ class SubjectChapterController extends BaseController
         $sub_chapters = SubChapter::select('*');
         if($chapterId > 0){
             $sub_chapters = $sub_chapters->where('chapterId',$chapterId);
+
         }
         $sub_chapters = $sub_chapters->orderBy('id')->get();
-        return view('admin.subject-chapter.index', compact('sub_chapters'));
+
+        $countquestion = DB::table('questions')->where('subChapterId',$chapterId)->count();
+
+        return view('admin.subject-chapter.index', compact('sub_chapters','countquestion'));
     }
     public function create()
     {

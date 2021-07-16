@@ -19,8 +19,8 @@ class SubChapter extends Model
         return $this->belongsTo('App\Models\Category','categoryId','id');
     }
 
-    public function course()
+    function question()
     {
-        return $this->belongsToMany('App\Models\Course','courseId','id','chapterId');
+    	return $this->belongsTo('App\Models\Question','subChapterId','id');
     }
 }

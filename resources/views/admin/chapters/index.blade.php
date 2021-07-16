@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <td width="5%">Id</td>
+                                <td>Course</td>
                                 <td>Chapter</td>
                                 <td width="5%">Price</td>
                                 <td width="5%">Subject Chapters</td>
@@ -36,6 +37,7 @@
                             @foreach($chapters as $key => $item)
                                 <tr>
                                     <td width="5%">{{$key+1}}</td>
+                                    <td>{{$item->course->course_name}}</td>
                                     <td>{{$item->name}}</td>
                                     <td>&dollar;{{$item->price}}</td>
                                     <td><a href="{{route('admin.subject.chapter.index', $item->id)}}">{{count($item->subChapter)}}</a></td>
