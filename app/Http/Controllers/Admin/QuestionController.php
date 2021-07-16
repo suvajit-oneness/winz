@@ -7,6 +7,10 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\SubjectCategory;
+use App\Models\Category;
+use App\Models\Chapter;
+use App\Models\SubChapter;
+use DB;
 
 class QuestionController extends BaseController
 {
@@ -15,24 +19,42 @@ class QuestionController extends BaseController
         $questions = Question::select('*');
         if($chapterId > 0){
             $questions = $questions->where('chapterId',$chapterId);
+        }else{
+            $chapterId =0;
         }
         if($subChapterId>0){
             $questions  = $questions->where('subChapterId',$subChapterId);
+        }else{
+            $subChapterId = 0;
         }
        
         $questions = $questions->orderBy('id')->get();
-        return view('admin.question.index', compact('questions'));
+        return view('admin.question.index', compact('questions','chapterId','subChapterId'));
     }
-    public function create()
+    public function create($chapterId=0,$subChapterId=0)
     {
-        $sub_category = SubjectCategory::all();
-        return view('admin.question.create', compact('sub_category'));
+       // $sub_category = SubjectCategory::all();
+        if($chapterId>0)
+        {
+            $chapterId = $chapterId;
+        }else{
+            $chapterId=0;
+        }
+
+        if($subChapterId>0)
+        {
+            $subChapterId = $subChapterId;
+        }else{
+            $subChapterId = 0;
+        }
+
+        $categories = Category::all();
+        $chapters = Chapter::all();
+        return view('admin.question.create',compact('categories','chapters','chapterId','subChapterId'));
     }
     public function store(Request $req)
     {
         $req->validate([
-            'subjectCategoryId' => 'required|numeric|min:1',
-            'chapterId' => 'required|numeric|min:1',
     		'description' => 'required|max:500|string',
     		'difficulty' => 'required|numeric|min:1',
             'answer1' => 'required|string',
@@ -55,8 +77,15 @@ class QuestionController extends BaseController
             $mark_scheme_url = url('upload/questions/markScheme/'.$random.'.'.$mark_scheme->getClientOriginalExtension());
             $question->mark_scheme = $mark_scheme_url;
         }
-        $question->subjectCategoryId = $req->subjectCategoryId;
+
+        $subChapterId = $req->subChapterId;
+        $categoryId = DB::table('sub_chapters')->where('id',$subChapterId)->first();
+        $chapterId =  $req->chapterId;
+        $categoryId =  $categoryId->categoryId;
+
+        $question->categoryId = $categoryId;
         $question->chapterId = $req->chapterId;
+        $question->subChapterId = $req->subChapterId;
         $question->description = $req->description;
         $question->difficulty = $req->difficulty;
         $question->answer1 = $req->answer1;
@@ -64,7 +93,9 @@ class QuestionController extends BaseController
         $question->answer3 = $req->answer3;
         $question->answer4 = $req->answer4;
         $question->save();
-        return $this->responseRedirect('admin.question.index', 'Question Added successfully' ,'success',false, false);
+        
+        return redirect()->route('admin.question.index',['chapterId'=>$chapterId,'subChapterId'=>$subChapterId]);
+       // return $this->responseRedirect('admin.questions.index', 'Question Added successfully' ,'success',false, false);
     }
     public function edit($id)
     {

@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="tile">
-                <h3 class="tile-title">{{ 'Create Question' }}
+                <h3 class="tile-title">{{ 'Create Question' }} 
                     <span class="top-form-btn">
                         <a class="btn btn-secondary" href="{{ route('admin.question.index') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                     </span>
@@ -18,26 +18,11 @@
                 <hr>
                 <form action="{{ route('admin.question.store') }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
+
+                    <input type="hidden" name="chapterId" value="{{$chapterId}}">
+                    <input type="hidden" name="subChapterId" value="{{$subChapterId}}">
                     <div class="tile-body">
 
-                        <div class="form-group">
-                            <label class="control-label" for="subjectCategoryId"> Subject Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('subjectCategoryId') is-invalid @enderror" name="subjectCategoryId" id="subjectCategoryId">
-                                <option value="">-- Select Subject Category --</option>
-                                @foreach($sub_category as $item)
-                                <option value="{{$item->id}}">{{$item->categoryId}} - {{$item->title}}</option>
-                                @endforeach
-                            </select>
-                            @error('subjectCategoryId') {{ $message }} @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="chapterId"> Chapter <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('chapterId') is-invalid @enderror" name="chapterId" id="chapterId">
-                                <option value="">-- Select Chapter --</option>
-                            </select>
-                            @error('chapterId') {{ $message }} @enderror
-                        </div>
 
                         <div class="form-group">
                             <label class="control-label" for="question"> Question <span class="m-l-5 text-danger"> *</span></label>
@@ -103,27 +88,5 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script type="text/javascript" src="{{ asset('backend/js/plugins/ckeditor/ckeditor.js') }}"></script>
-    <script>
-        $('#subjectCategoryId').change(function() {
-            var subjectCategoryId = $('#subjectCategoryId').val();
-            $('#chapterId').empty();
-            $.ajax({
-                url: "{{route('get.chapters.data')}}",
-                type: "POST",
-                data: {
-                    '_token': "{{csrf_token()}}",
-                    'subjectCategoryId': subjectCategoryId
-                },
-                success:function(data){
-                    var chapterId = '';
-                    $.each(data.data, function(i, val) {
-                        chapterId += "<option value='"+val.id+"'>"+val.chapter+"</option>";
-                    });
-                    $('#chapterId').append(chapterId);
-                }
-            });
-        });
-    </script>
-@endpush
+
+

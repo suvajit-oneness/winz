@@ -7,7 +7,8 @@
                 <h1><i class="fa fa-file-text"></i> Questions</h1>
                 <p>list of Questions</p>
             </div>
-            <a href="{{ route('admin.question.create') }}" class="btn btn-primary pull-right">Add New</a>
+            
+            <a href="{{ route('admin.question.create',[$chapterId,$subChapterId]) }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
     @include('admin.partials.flash')
@@ -26,7 +27,7 @@
                         <tr>
                             <td width="15%">Question</td>
                             <td>Subject Category</td>
-                            <td>Chapter</td>
+                            <td>Sub Chapter</td>
                             <td>Answers</td>
                             <td>Action</td>
                         </tr>
@@ -35,8 +36,8 @@
                             @foreach($questions as $question)
                                 <tr>
                                     <td><img src="{{asset($question->question)}}" height="100" width="200"></td>
-                                    <td></td>
-                                    <td>{{$question->chapter->chapter}}</td>
+                                    <td>{{$question->chapter->id}}</td>
+                                    <td>{{$question->subchapter->id}}</td>
                                     <td>
                                         <ul>
                                             <li><a href="{{($question->answer1 != '')? $question->answer1 : 'javascript:void(0);'}}" >Answer 1</a></li>
