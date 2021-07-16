@@ -64,6 +64,9 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::post('teacher/course/create','Api\Apicontroller@saveTeacherCourse');
 		Route::get('teacher/course/edit','Api\Apicontroller@editTeacherCourse');
 		Route::get('chapter/subchapter','Api\Apicontroller@getSubChapters');
+		Route::post('subchapter/delete','Api\Apicontroller@deleteSubChapters');
+		Route::get('sub-chapter/create','Api\Apicontroller@createSubChapterForm');
+		Route::post('chapter/subchapter/create','Api\Apicontroller@saveOrUpdateSubChapterForm');
 
 	});
 

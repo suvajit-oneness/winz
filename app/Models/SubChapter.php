@@ -18,4 +18,9 @@ class SubChapter extends Model
     {
         return $this->belongsTo('App\Models\Category','categoryId','id');
     }
+
+    public function course()
+    {
+        return $this->belongsToMany('App\Models\Course','courseId','id','chapterId');
+    }
 }
