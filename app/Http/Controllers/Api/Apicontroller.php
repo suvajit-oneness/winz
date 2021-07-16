@@ -131,12 +131,34 @@ class Apicontroller extends Controller
         return sendResponse('Teacher List',$teacher);
     }
 
+    public function deleteQuestionAPI(Request $req)
+    {
+        $rules = [
+            'teacherId' => 'required|numeric|min:1',
+            'subChapterId' => 'required|numeric|min:1',
+            'chapterId' => 'required|numeric|min:1',
+            'courseId' => 'required|numeric|min:1',
+            'questionId' => 'required|numeric|min:1',
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $question = Question::where('id',$req->questionId)->where('chapterId',$req->chapterId)->where('subChapterId',$req->subChapterId)->first();
+            if($question){
+                $question->delete();
+                return sendResponse('Question Deleted Successfully');
+            }
+            return errorResponse('Invalid Details Provided');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
     public function saveUserSubscribedCourses(Request $req)
     {
         $rules = [
             'userId' => 'required|numeric|min:1',
             'courseId' => 'required|numeric|min:1',
             'whatPurchased' => 'required|in:chapter,course',
+            'stripeTransactionId' => 'required|numeric|min:1',
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
@@ -145,12 +167,7 @@ class Apicontroller extends Controller
                 $course = Course::where('id',$req->courseId)->first();
                 if($course){
                     DB::beginTransaction();
-                    $transaction = new StripeTransaction();
-                    $transaction->transactionId = randomGenerator();
-                    $transaction->balance_transaction = randomGenerator();
-                    $transaction->amount = 0;
-                    $transaction->payment_method = 'free';
-                    $transaction->save();
+                    $transaction = StripeTransaction::where('id',$req->stripeTransactionId)->first();
                     if($req->whatPurchased == 'chapter'){
                         $rules = [
                             'chapterId' => 'required|numeric|min:1',
@@ -863,7 +880,6 @@ class Apicontroller extends Controller
         ];
         $validator = validator()->make($req->all(),$rules);
         if(!$validator->fails()){
-            // \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             \Stripe\Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
             $payment = \Stripe\Charge::create ([
                 "amount" => 100 * $req->amount,

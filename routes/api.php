@@ -67,6 +67,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::post('subchapter/delete','Api\Apicontroller@deleteSubChapters');
 		Route::get('sub-chapter/create','Api\Apicontroller@createSubChapterForm');
 		Route::post('chapter/subchapter/create','Api\Apicontroller@saveOrUpdateSubChapterForm');
+		Route::post('delete_question_api','Api\Apicontroller@deleteQuestionAPI');
 
 	});
 
