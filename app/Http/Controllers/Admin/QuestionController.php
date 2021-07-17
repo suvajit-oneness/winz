@@ -97,26 +97,40 @@ class QuestionController extends BaseController
         return redirect()->route('admin.question.index',['chapterId'=>$chapterId,'subChapterId'=>$subChapterId]);
        // return $this->responseRedirect('admin.questions.index', 'Question Added successfully' ,'success',false, false);
     }
-    public function edit($id)
+    public function edit($chapterId=0, $subChapterId=0, $id)
     {
-        $sub_category = SubjectCategory::all();
+        //$sub_category = SubjectCategory::all();
+         if($chapterId>0)
+        {
+            $chapterId = $chapterId;
+        }else{
+            $chapterId=0;
+        }
+
+        if($subChapterId>0)
+        {
+            $subChapterId = $subChapterId;
+        }else{
+            $subChapterId = 0;
+        }
         $question = Question::find($id);
-        return view('admin.question.edit', compact('sub_category','question'));
+        return view('admin.question.edit', compact('question','chapterId','subChapterId'));
     }
+    
     public function update(Request $req)
     {
         // dd($req->all());
         $req->validate([
             'question_id' => 'required|numeric|min:1',
-            'subjectCategoryId' => 'required|numeric|min:1',
             'chapterId' => 'required|numeric|min:1',
-    		'description' => 'required|max:500|string',
-    		'difficulty' => 'required|numeric|min:1',
+            'subChapterId' => 'required|numeric|min:1',
+            'description' => 'required|max:500|string',
+            'difficulty' => 'required|numeric|min:1',
             'answer1' => 'required|string',
             'answer2' => 'required|string',
             'answer3' => 'required|string',
             'answer4' => 'required|string',
-    	]);
+        ]);
         $question = Question::find($req->question_id);
         if($req->hasFile('question')){
             $question_img = $req->file('question');
@@ -132,8 +146,10 @@ class QuestionController extends BaseController
             $mark_scheme_url = url('upload/questions/markScheme/'.$random.'.'.$mark_scheme->getClientOriginalExtension());
             $question->mark_scheme = $mark_scheme_url;
         }
-        $question->subjectCategoryId = $req->subjectCategoryId;
+        $subChapterId = $req->subChapterId;
+        $chapterId =  $req->chapterId;
         $question->chapterId = $req->chapterId;
+        $question->subChapterId = $req->subChapterId;
         $question->description = $req->description;
         $question->difficulty = $req->difficulty;
         $question->answer1 = $req->answer1;
@@ -141,8 +157,11 @@ class QuestionController extends BaseController
         $question->answer3 = $req->answer3;
         $question->answer4 = $req->answer4;
         $question->save();
-        return $this->responseRedirect('admin.question.index', 'Question Updated successfully' ,'success',false, false);
+        return redirect()->route('admin.question.index',['chapterId'=>$chapterId,'subChapterId'=>$subChapterId]);
+
+        //return $this->responseRedirect('admin.question.index', 'Question Updated successfully' ,'success',false, false);
     }
+
     public function delete($id)
     {
         $response = Question::find($id)->delete();

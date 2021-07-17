@@ -18,28 +18,15 @@
                 <hr>
                 <form action="{{ route('admin.question.update') }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="chapterId" value="{{$chapterId}}">
+                    <input type="hidden" name="subChapterId" value="{{$subChapterId}}">
+                    
                     <input type="hidden" name="question_id" value="{{$question->id}}">
                     <input type="hidden" id="chapter_id" value="{{$question->chapterId}}">
                     <div class="tile-body">
 
-                        <div class="form-group">
-                            <label class="control-label" for="subjectCategoryId"> Subject Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('subjectCategoryId') is-invalid @enderror" name="subjectCategoryId" id="subjectCategoryId">
-                                <option value="">-- Select Subject Category --</option>
-                                @foreach($sub_category as $item)
-                                <option value="{{$item->id}}" {{($item->id == $question->subjectCategoryId)? 'selected' : ''}}>{{$item->categoryId}} - {{$item->title}}</option>
-                                @endforeach
-                            </select>
-                            @error('subjectCategoryId') {{ $message }} @enderror
-                        </div>
+                       
 
-                        <div class="form-group">
-                            <label class="control-label" for="chapterId"> Chapter <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('chapterId') is-invalid @enderror" name="chapterId" id="chapterId">
-                                <option value="">-- Select Chapter --</option>
-                            </select>
-                            @error('chapterId') {{ $message }} @enderror
-                        </div>
 
                         <img src="{{asset($question->question)}}" height="100" width="200">
                         <div class="form-group">
@@ -107,59 +94,4 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script type="text/javascript" src="{{ asset('backend/js/plugins/ckeditor/ckeditor.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            var subjectCategoryId = $('#subjectCategoryId').val();
-            $('#chapterId').empty();
-            $.ajax({
-                url: "{{route('get.chapters.data')}}",
-                type: "POST",
-                data: {
-                    '_token': "{{csrf_token()}}",
-                    'subjectCategoryId': subjectCategoryId
-                },
-                success:function(data){
-                    console.log(data.data);
-                    var chapterId = '';
-                    $.each(data.data, function(i, val) {
-                        if ($('#chapter_id').val() == val.id) {
-                            console.log('selected');
-                            selected = 'selected';
-                        } else {
-                            selected = '';
-                        }
-                        chapterId += "<option value='"+val.id+"'"+selected+">"+val.chapter+"</option>";
-                    });
-                    $('#chapterId').append(chapterId);
-                }
-            });
-        });
-        $('#subjectCategoryId').change(function() {
-            var subjectCategoryId = $('#subjectCategoryId').val();
-            $('#chapterId').empty();
-            $.ajax({
-                url: "{{route('get.chapters.data')}}",
-                type: "POST",
-                data: {
-                    '_token': "{{csrf_token()}}",
-                    'subjectCategoryId': subjectCategoryId
-                },
-                success:function(data){
-                    var chapterId = '';
-                    $.each(data.data, function(i, val) {
-                        if ($('#chapter_id').val() == val.id) {
-                            console.log('selected');
-                            selected = 'selected';
-                        } else {
-                            selected = '';
-                        }
-                        chapterId += "<option value='"+val.id+"'"+selected+">"+val.chapter+"</option>";
-                    });
-                    $('#chapterId').append(chapterId);
-                }
-            });
-        });
-    </script>
-@endpush
+

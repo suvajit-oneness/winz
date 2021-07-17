@@ -387,7 +387,7 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::get('/list/{chapterId?}/{subChapterId?}', 'Admin\QuestionController@index')->name('admin.question.index');
 			Route::get('/create/{chapterId?}/{subChapterId?}', 'Admin\QuestionController@create')->name('admin.question.create');
 			Route::post('/store', 'Admin\QuestionController@store')->name('admin.question.store');
-			Route::get('/{id}/edit', 'Admin\QuestionController@edit')->name('admin.question.edit');
+			Route::get('/{id}/{chapterId?}/{subChapterId?}/edit', 'Admin\QuestionController@edit')->name('admin.question.edit');
 			Route::post('/update', 'Admin\QuestionController@update')->name('admin.question.update');
 			Route::get('/{id}/delete', 'Admin\QuestionController@delete')->name('admin.question.delete');
 		});

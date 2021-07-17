@@ -46,7 +46,8 @@
                                             <li><a href="{{($question->answer4 != '')? $question->answer4 : 'javascript:void(0);'}}" >Answer 4</a></li>
                                         </ul>
                                     </td>
-                                    <th><a href="{{route('admin.question.edit',$question->id)}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$question->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
+                                    <th><a href="{{route('admin.question.edit',[$question->chapter->id,$question->subchapter->id,$question->id])}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a>
+                                        <a href="javascript:void(0)" data-id="{{$question->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
                                 </tr>
                             @endforeach
                         </tbody>

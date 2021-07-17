@@ -29,7 +29,6 @@
                                 <td>Chapter</td>
                                 <td width="5%">Price</td>
                                 <td width="5%">Subject Chapters</td>
-                                <td width="5%">Questions</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
@@ -41,7 +40,6 @@
                                     <td>{{$item->name}}</td>
                                     <td>&dollar;{{$item->price}}</td>
                                     <td><a href="{{route('admin.subject.chapter.index', $item->id)}}">{{count($item->subChapter)}}</a></td>
-                                    <td><a href="{{route('admin.question.index', $item->id)}}">{{count($item->questions)}}</a></td>
                                     <th><a href="{{route('admin.course.chapters.edit',[$item->courseId,$item->id])}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" data-id="{{$item->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
                                 </tr>
                             @endforeach
