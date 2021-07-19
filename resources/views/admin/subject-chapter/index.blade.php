@@ -17,11 +17,11 @@
     <div class="alert alert-danger" id="error-msg" style="display: none;">
         <span id="error-text"></span>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top: 50px;">
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
-                    <table class="table table-hover custom-data-table-style table-striped" id="sampleTable">
+                    <table class="table table-hover custom-data-table-style table-striped" id="">
                         <thead>
                         <tr>
                             <td width="5%">Id</td>
@@ -43,6 +43,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                     {!! $sub_chapters->links() !!}
                 </div>
             </div>
         </div>

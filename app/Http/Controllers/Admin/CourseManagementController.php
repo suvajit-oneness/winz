@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
-use Illuminate\Http\Request;use App\Models\Course;
+use Illuminate\Http\Request;
+use App\Models\Course;
 use App\Models\CourseFeature;
 use App\Models\Category;
 use App\Models\Chapter;
+use App\Models\Teacher;
 use DB;
 
 class CourseManagementController extends BaseController
@@ -15,16 +17,17 @@ class CourseManagementController extends BaseController
 	// Course Details
     public function index(Request $req)
     {
-    	$course = Course::get();
-    	return view('admin.course.index',compact('course'));
+        $teacher = DB::table('users')->where('userType','teacher')->where('is_active','1')->get();
+    	$course = Course::paginate(10);
+    	return view('admin.course.index',compact('course','teacher'));
     }
 
     public function createCourse(Request $req)
     {
         $category = Category::all();
-        $sub_category = SubjectCategory::all();
+        //$sub_category = SubjectCategory::all();
         $teacher = DB::table('users')->where('userType','teacher')->where('is_active','1')->get();
-    	return view('admin.course.create',compact('sub_category', 'category','teacher'));
+    	return view('admin.course.create',compact('category','teacher'));
     }
 
     public function saveCourse(Request $req)
@@ -32,7 +35,7 @@ class CourseManagementController extends BaseController
     	$req->validate([
     		'image' => 'required',
     		'name' => 'required|max:200|string|unique:courses,course_name',
-    		'price' => 'required|numeric|min:1|max:99999',
+    		//'price' => 'required|numeric|min:1|max:99999',
     		'description' => 'required',
     	]);
     	$course = new Course;
@@ -43,12 +46,9 @@ class CourseManagementController extends BaseController
             $imageurl = url('upload/course/'.$random.'.'.$image->getClientOriginalExtension());
             $course->course_image = $imageurl;
         }
-        $course->categoryId = $req->categoryId;
-        $course->subjectCategoryId = $req->subjectCategoryId;
         $course->teacherId = $req->teacherId;
-
     	$course->course_name = $req->name;
-    	$course->course_price = $req->price;
+    	//$course->course_price = $req->price;
     	$course->course_description = $req->description;
     	$course->save();
     	return $this->responseRedirect('admin.course', 'Course added successfully' ,'success',false, false);
@@ -78,17 +78,16 @@ class CourseManagementController extends BaseController
     public function editCourse(Request $req,$courseId)
     {
         $category = Category::all();
-        $sub_category = SubjectCategory::all();
         $teacher = DB::table('users')->where('userType','teacher')->where('is_active','1')->get();
     	$course = Course::where('id',$courseId)->withTrashed()->first();
-    	return view('admin.course.edit',compact('course','category','sub_category','teacher'));
+    	return view('admin.course.edit',compact('course','category','teacher'));
     }
 
     public function updateCourse(Request $req, $id)
     {
     	$req->validate([
     		'name' => 'required|max:200|string',
-    		'price' => 'required|numeric|min:1|max:99999',
+    		//'price' => 'required|numeric|min:1|max:99999',
     		'description' => 'required',
     	]);
     	$check = Course::where('id','!=',$id)->where('course_name',$req->name)->withTrashed()->first();
@@ -102,7 +101,9 @@ class CourseManagementController extends BaseController
 	            $course->course_image = $imageurl;
 	        }
 	    	$course->course_name = $req->name;
-	    	$course->course_price = $req->price;
+            $course->teacherId = $req->teacherId;
+
+	    	//$course->course_price = $req->price;
 	    	$course->course_description = $req->description;
 	    	$course->save();
 	    	return $this->responseRedirect('admin.course', 'Course Updated successfully' ,'success',false, false);

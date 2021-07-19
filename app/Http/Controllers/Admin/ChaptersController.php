@@ -17,7 +17,7 @@ class ChaptersController extends BaseController
         if($courseId > 0){
             $chapters = $chapters->where('courseId',$courseId);
         }
-        $chapters = $chapters->get();
+        $chapters = $chapters->paginate(10);
         return view('admin.chapters.index', compact('chapters','courseId'));
     }
     public function create($courseId)

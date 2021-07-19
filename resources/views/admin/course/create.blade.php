@@ -21,24 +21,7 @@
                     <div class="tile-body">
 
 
-                        <div class="form-group">
-                            <label class="control-label" for="categoryId"> Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('categoryId') is-invalid @enderror" name="categoryId" id="categoryId">
-                                <option value="">-- Select Category --</option>
-                                @foreach($category as $item)
-                                <option value="{{$item->id}}">{{$item->title}}</option>
-                                @endforeach
-                            </select>
-                            @error('categoryId') {{ $message }} @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="subjectCategoryId"> Subject Category <span class="m-l-5 text-danger"> *</span></label>
-                            <select class="form-control @error('subjectCategoryId') is-invalid @enderror" name="subjectCategoryId" id="subjectCategoryId">
-                                <option value="">-- Select Subject Category --</option>
-                            </select>
-                            @error('subjectCategoryId') {{ $message }} @enderror
-                        </div>
+                      
 
                         <div class="form-group">
                             <label class="control-label" for="teacherId"> Teacher <span class="m-l-5 text-danger"> *</span></label>
@@ -66,12 +49,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="price"> Price <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control @error('price') is-invalid @enderror" type="text" name="price" id="price" value="{{ old('price') }}" placeholder="Course Price in Doller ($)" onkeypress="return isNumberKey(event)" maxlength="5">
-                            @error('price') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
-                        </div>
-
-                        <div class="form-group">
                             <label class="control-label" for="price"> Description <span class="m-l-5 text-danger"> *</span></label>
                             <textarea class="form-control ckeditor" name="description" id="description">{{old('description')}}</textarea>
                             @error('description') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
@@ -90,31 +67,5 @@
 @endsection
 @push('scripts')
     <script type="text/javascript" src="{{ asset('backend/js/plugins/ckeditor/ckeditor.js') }}"></script>
-    <script>
-$('#categoryId').change(function() {
-    var categoryId = $('#categoryId').val();
-    $('#subjectCategoryId').empty();
-    $.ajax({
-        url: "{{route('get.subject.categories.data')}}",
-        type: "POST",
-        data: {
-            '_token': "{{csrf_token()}}",
-            'categoryId': categoryId
-        },
-        success:function(data){
-            var sucCategory = '';
-            $.each(data.data, function(i, val) {
-                if ($('#sub_cat_id').val() == val.id) {
-                    console.log('selected');
-                    selected = 'selected';
-                } else {
-                    selected = '';
-                }
-                sucCategory += "<option value='"+val.id+"'"+selected+">"+val.title+"</option>";
-            });
-            $('#subjectCategoryId').append(sucCategory);
-        }
-    });
-})
-</script>
+   
 @endpush

@@ -17,7 +17,7 @@ class SubjectChapterController extends BaseController
             $sub_chapters = $sub_chapters->where('chapterId',$chapterId);
 
         }
-        $sub_chapters = $sub_chapters->orderBy('id')->get();
+        $sub_chapters = $sub_chapters->orderBy('id')->paginate(10);
 
         $countquestion = DB::table('questions')->where('subChapterId',$chapterId)->count();
 

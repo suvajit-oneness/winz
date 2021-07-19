@@ -16,23 +16,19 @@
                     </span>
                 </h3>
                 <hr>
-                <form action="{{ route('admin.course.update',$course->id) }}" method="POST" role="form" enctype="multipart/form-data">
+                <form action="{{ route('admin.course.store') }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
                     <div class="tile-body">
 
 
-
-                   
-
-
-
+                      
 
                         <div class="form-group">
-                            <label class="control-label" for="teacherId"> Teacher  <span class="m-l-5 text-danger"> *</span></label>
+                            <label class="control-label" for="teacherId"> Teacher <span class="m-l-5 text-danger"> *</span></label>
                             <select class="form-control @error('teacherId') is-invalid @enderror" name="teacherId" id="teacherId">
                                 <option value="">-- Select Teacher --</option>
                                 @foreach($teacher as $teacherow)
-                                <option value="{{$teacherow->id}}" {{ ( $teacherow->id == $course->teacherId) ? 'selected' : '' }}>{{$teacherow->name}}</option>
+                                <option value="{{$teacherow->id}}">{{$teacherow->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,8 +36,6 @@
 
 
 
-
-                        <img src="{{asset($course->course_image)}}" height="200" width="200">
                         <div class="form-group">
                             <label class="control-label" for="image"> Image <span class="m-l-5 text-danger"> *</span></label>
                             <input class="form-control" type="file" name="image" id="image">
@@ -50,21 +44,25 @@
 
                         <div class="form-group">
                             <label class="control-label" for="name"> Name <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control @error('name') is-invalid @enderror" type="text" name="name" id="name" value="{{(old('name')) ? old('name') : $course->course_name }}" placeholder="Course Name">
+                            <input class="form-control @error('name') is-invalid @enderror" type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Course Name">
                             @error('name') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
-           
+                        <div class="form-group">
+                            <label class="control-label" for="price"> Price <span class="m-l-5 text-danger"> *</span></label>
+                            <input class="form-control @error('price') is-invalid @enderror" type="text" name="price" id="price" value="{{ old('price') }}" placeholder="Course Price in Doller ($)" onkeypress="return isNumberKey(event)" maxlength="5">
+                            @error('price') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label" for="price"> Description <span class="m-l-5 text-danger"> *</span></label>
-                            <textarea class="form-control ckeditor" name="description" id="description">{{(old('description')) ? old('description') : $course->course_description }}</textarea>
+                            <textarea class="form-control ckeditor" name="description" id="description">{{old('description')}}</textarea>
                             @error('description') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                     </div>
                     <div class="tile-footer">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update Course</button>
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save Course</button>
                         &nbsp;&nbsp;&nbsp;
                         <a class="btn btn-secondary" href="{{ route('admin.course') }}"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                     </div>
@@ -73,9 +71,7 @@
         </div>
     </div>
 @endsection
-
-
 @push('scripts')
     <script type="text/javascript" src="{{ asset('backend/js/plugins/ckeditor/ckeditor.js') }}"></script>
-
+   
 @endpush
