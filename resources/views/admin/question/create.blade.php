@@ -49,25 +49,25 @@
 
                         <div class="form-group">
                             <label class="control-label" for="answer1"> Answer 1 <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="answer1" id="answer1" placeholder="Answer 1" value="{{(old('answer1'))}}">
+                            <input class="form-control" type="url" required name="answer1" id="answer1" placeholder="Answer 1" value="{{(old('answer1'))}}">
                             @error('answer1') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label class="control-label" for="answer2"> Answer 2 <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="answer2" id="answer2" placeholder="Answer 2" value="{{(old('answer2'))}}">
+                            <input class="form-control" type="url" name="answer2" id="answer2" placeholder="Answer 2" value="{{(old('answer2'))}}">
                             @error('answer2') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label class="control-label" for="answer3"> Answer 3 <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="answer3" id="answer3" placeholder="Answer 3" value="{{(old('answer3'))}}">
+                            <input class="form-control" type="url" name="answer3" id="answer3" placeholder="Answer 3" value="{{(old('answer3'))}}">
                             @error('answer3') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
                         
                         <div class="form-group">
                             <label class="control-label" for="answer4"> Answer 4 <span class="m-l-5 text-danger"> *</span></label>
-                            <input class="form-control" type="text" name="answer4" id="answer4" placeholder="Answer 4" value="{{(old('answer4'))}}">
+                            <input class="form-control" type="url" name="answer4" id="answer4" placeholder="Answer 4" value="{{(old('answer4'))}}">
                             @error('answer4') <span class="text-danger">{{ $message ?? '' }}</span> @enderror
                         </div>
 

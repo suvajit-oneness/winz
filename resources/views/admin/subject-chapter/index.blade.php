@@ -7,7 +7,7 @@
                 <h1><i class="fa fa-file-text"></i> Subject Chapters</h1>
                 <p>list of Subject Chapter</p>
             </div>
-            <a href="{{ route('admin.subject.chapter.create') }}" class="btn btn-primary pull-right">Add New</a>
+            <a href="{{ route('admin.subject.chapter.create',$chapterId) }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
     @include('admin.partials.flash')

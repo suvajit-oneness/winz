@@ -19,6 +19,8 @@
                 <form action="{{ route('admin.subject.chapter.store') }}" method="POST" role="form" enctype="multipart/form-data">
                     @csrf
 
+
+                    <input type="hidden" name="chapterId" value="{{$chapterId}}">
                         <div class="form-group">
                             <label class="control-label" for="name"> name <span class="m-l-5 text-danger"> *</span></label>
                             <input class="form-control" type="text" name="name" id="name" placeholder="Subject chapter name" value="{{(old('name'))}}">
@@ -30,7 +32,7 @@
                             <select class="form-control @error('chapterId') is-invalid @enderror" name="chapterId" id="chapterId">
                                 <option value="">-- Select Chapter --</option>
                                 @foreach($chapter as $item)
-                                <option value="{{$item->id}}">{{$item->chapter}}</option>
+                                <option value="{{$item->id}}">{{$item->name}}</option>
                                 @endforeach
                             </select>
                             @error('chapterId') {{ $message }} @enderror

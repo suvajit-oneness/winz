@@ -39,7 +39,7 @@ class ChaptersController extends BaseController
         $chapter->name = $req->name;
         $chapter->price = $req->price;
         $chapter->save();
-        return redirect(route('admin.course.chapters.index',$chapter->courseId))->with('success','Chapter Updated successfully');
+        return redirect(route('admin.course.chapters.index',$chapter->courseId));
 
         //return $this->responseRedirect('admin.course.chapters.index', 'Chapter added successfully' ,'success',false, false);
     }

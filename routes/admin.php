@@ -375,7 +375,7 @@ Route::group(['prefix' => 'admin'], function () {
 		//question module - subject chapters
 		Route::group(['prefix'  =>   'subject-chapters'], function() {
 			Route::get('/list/{chapterId?}', 'Admin\SubjectChapterController@index')->name('admin.subject.chapter.index');
-			Route::get('/create', 'Admin\SubjectChapterController@create')->name('admin.subject.chapter.create');
+			Route::get('/create/{chapterId?}', 'Admin\SubjectChapterController@create')->name('admin.subject.chapter.create');
 			Route::post('/store', 'Admin\SubjectChapterController@store')->name('admin.subject.chapter.store');
 			Route::get('/{id}/edit', 'Admin\SubjectChapterController@edit')->name('admin.subject.chapter.edit');
 			Route::post('/update', 'Admin\SubjectChapterController@update')->name('admin.subject.chapter.update');

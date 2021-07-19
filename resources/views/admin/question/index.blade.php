@@ -21,14 +21,17 @@
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
-                <div class="tile-body">
-                    <table class="table table-hover custom-data-table-style table-striped" id="sampleTable">
+                <div class="tile-body" style="margin-top: 55px;">
+                    <table class="table table-hover custom-data-table-style table-striped" id="">
                         <thead>
                         <tr>
                             <td width="15%">Question</td>
                             <td>Subject Category</td>
                             <td>Sub Chapter</td>
-                            <td>Answers</td>
+                            <td>Answers1</td>
+                            <td>Answers1</td>
+                            <td>Answers1</td>
+                            <td>Answers1</td>
                             <td>Action</td>
                         </tr>
                         </thead>
@@ -36,15 +39,23 @@
                             @foreach($questions as $question)
                                 <tr>
                                     <td><img src="{{asset($question->question)}}" height="100" width="200"></td>
-                                    <td>{{$question->chapter->id}}</td>
-                                    <td>{{$question->subchapter->id}}</td>
+                                    <td>{{$question->chapter->name}}</td>
+                                    <td>{{$question->subChapter->name}}</td>
                                     <td>
-                                        <ul>
-                                            <li><a href="{{($question->answer1 != '')? $question->answer1 : 'javascript:void(0);'}}" >Answer 1</a></li>
-                                            <li><a href="{{($question->answer2 != '')? $question->answer2 : 'javascript:void(0);'}}" >Answer 2</a></li>
-                                            <li><a href="{{($question->answer3 != '')? $question->answer3 : 'javascript:void(0);'}}" >Answer 3</a></li>
-                                            <li><a href="{{($question->answer4 != '')? $question->answer4 : 'javascript:void(0);'}}" >Answer 4</a></li>
-                                        </ul>
+                                        @if($question->answer1 != '')
+                                        <a href="{{$question->answer1}}" target="_blank">Answer 1</a>
+                                        @else
+                                        {{('N/A')}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{($question->answer1 ? !!'<a href="$question->answer1" target="_blank">Answer 1</a>' : 'N/A')}}
+                                    </td>
+                                    <td>
+                                        {{($question->answer1 ? !!'<a href="$question->answer1" target="_blank">Answer 1</a>' : 'N/A')}}
+                                    </td>
+                                   <td>
+                                        {{($question->answer1 ? !!'<a href="$question->answer1" target="_blank">Answer 1</a>' : 'N/A')}}
                                     </td>
                                     <th><a href="{{route('admin.question.edit',[$question->chapter->id,$question->subchapter->id,$question->id])}}" class="btn btn-sm btn-primary edit-btn"><i class="fa fa-pencil"></i></a>
                                         <a href="javascript:void(0)" data-id="{{$question->id}}" class="sa-remove btn btn-sm btn-danger edit-btn"><i class="fa fa-trash"></i></a></div></th>
@@ -52,6 +63,10 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    {!! $questions->links() !!}
+  
+
                 </div>
             </div>
         </div>

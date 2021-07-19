@@ -21,12 +21,13 @@ class SubjectChapterController extends BaseController
 
         $countquestion = DB::table('questions')->where('subChapterId',$chapterId)->count();
 
-        return view('admin.subject-chapter.index', compact('sub_chapters','countquestion'));
+        return view('admin.subject-chapter.index', compact('sub_chapters','chapterId','countquestion'));
     }
-    public function create()
+    public function create($chapterId=0)
     {
+
         $chapter = Chapter::all();
-        return view('admin.subject-chapter.create', compact('chapter'));
+        return view('admin.subject-chapter.create', compact('chapter','chapterId'));
     }
     public function store(Request $req)
     {
@@ -36,11 +37,13 @@ class SubjectChapterController extends BaseController
             'topics' => 'required|max:500|string',
     	]);
         $sub_chapter = new SubChapter();
+        $chapterId = $req->chapterId;
         $sub_chapter->name = $req->name;
         $sub_chapter->chapterId = $req->chapterId;
         $sub_chapter->topics = $req->topics;
         $sub_chapter->save();
-        return $this->responseRedirect('admin.subject.chapter.index', 'Subject chapter added successfully' ,'success',false, false);
+        return redirect()->route('admin.subject.chapter.index',['chapterId'=>$chapterId]);
+       // return $this->responseRedirect('admin.subject.chapter.index',$chapterId, 'Subject chapter added successfully' ,'success',false, false);
     }
     public function edit($id)
     {

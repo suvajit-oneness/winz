@@ -20,11 +20,11 @@
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
-                    <table class="table table-hover custom-data-table-style table-striped" id="sampleTable">
+                    <table class="table table-hover custom-data-table-style table-striped" id="sampleTable" style="width: 100%!important;">
                         <thead>
                             <tr>
                                 <th> Image</th>
-                                
+                                <th> Created By</th>
                                 <th> Name</th>
                                 <th> Description</th>
                                 <th> Price</th>
@@ -38,6 +38,11 @@
                             @foreach($course as $key => $cou)
                                 <tr>
                                     <td><img src="{{asset($cou->course_image)}}" height="100" width="100"></td>
+                                    <td><ul>
+                                        @php $teacher = $cou->teacher @endphp
+                                        <li>Name : {{$teacher->name}}</li>
+                                        <li>Email : {{$teacher->email}}</li>
+                                    </ul></td>
                                     <td>{{$cou->course_name}}</td>
                                     <td>{!! $cou->course_description !!}</td>
                                     <td>{{$cou->overallcourseprice($cou->id)}}</td>

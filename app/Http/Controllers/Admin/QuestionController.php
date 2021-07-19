@@ -28,7 +28,7 @@ class QuestionController extends BaseController
             $subChapterId = 0;
         }
        
-        $questions = $questions->orderBy('id')->get();
+        $questions = $questions->orderBy('id')->paginate(10);
         return view('admin.question.index', compact('questions','chapterId','subChapterId'));
     }
     public function create($chapterId=0,$subChapterId=0)
@@ -55,6 +55,8 @@ class QuestionController extends BaseController
     public function store(Request $req)
     {
         $req->validate([
+            'question' => 'mimes:jpeg,jpg,png,gif|required', // max 10000kb
+            'mark_scheme' => 'mimes:jpeg,jpg,png,gif|required', // max 10000kb
     		'description' => 'required|max:500|string',
     		'difficulty' => 'required|numeric|min:1',
             'answer1' => 'required|string',
