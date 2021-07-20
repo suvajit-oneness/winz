@@ -20,7 +20,6 @@ class SubjectChapterController extends BaseController
         $sub_chapters = $sub_chapters->orderBy('id')->paginate(10);
 
         $countquestion = DB::table('questions')->where('subChapterId',$chapterId)->count();
-
         return view('admin.subject-chapter.index', compact('sub_chapters','chapterId','countquestion'));
     }
     public function create($chapterId=0)

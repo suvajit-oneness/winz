@@ -36,6 +36,9 @@
                 <li style="padding-left: 20px;">
                     <a class="treeview-item {{ sidebar_open(['admin.course.chapters.*', 'admin.subject.chapter.*']) }}" href="{{ route('admin.course.chapters.index',0) }}">Chapters</a>
                 </li>
+                 <li style="padding-left: 20px;">
+                    <a class="treeview-item {{ sidebar_open(['admin.course.sub_chapters.*', 'admin.subject.chapter.*']) }}" href="{{ route('admin.subject.chapter.index',0) }}">Sub Chapters</a>
+                </li>
                 <li style="padding-left: 20px;">
                     <a class="treeview-item {{ sidebar_open(['admin.question.*']) }}" href="{{ route('admin.question.index') }}">Questions</a>
                 </li>

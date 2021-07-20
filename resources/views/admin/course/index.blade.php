@@ -40,7 +40,9 @@
                                     <td><img src="{{asset($cou->course_image)}}" height="100" width="100"></td>
                                     <td>
                                     <ul>
-                                        
+                                        @php $teacher = $cou->teacher; @endphp
+                                        <li>Name : {{$teacher->name}}</li>
+                                        <li>Email : {{$teacher->email}}</li>
                                     </ul>
                                 </td>
                                     <td>{{$cou->course_name}}</td>
