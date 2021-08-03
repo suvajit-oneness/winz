@@ -19,14 +19,14 @@
                     <ul class="nav nav-tabs user-tabs">
                         <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
                         
-                        <li class="nav-item"><a class="nav-link" href="#home-seo" data-toggle="tab">Home SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#about-seo" data-toggle="tab">About SEO</a></li>
-                        <!-- <li class="nav-item"><a class="nav-link" href="#contact-seo" data-toggle="tab">Contact SEO</a></li> -->
-                        <li class="nav-item"><a class="nav-link" href="#faq-seo" data-toggle="tab">Faq SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#terms-seo" data-toggle="tab">Terms & Conditions SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#shipping-seo" data-toggle="tab">Privacy Policy SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#cancellation-seo" data-toggle="tab">Cancellation Policy SEO</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#replacement-seo" data-toggle="tab">Replacement Policy SEO</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#home-seo" data-toggle="tab">Home Page</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about-seo" data-toggle="tab">About Page</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link" href="#contact-seo" data-toggle="tab">Contact Page</a></li> -->
+                        <li class="nav-item"><a class="nav-link" href="#faq-seo" data-toggle="tab">Faq Page</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#terms-seo" data-toggle="tab">Terms & Conditions Page</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#shipping-seo" data-toggle="tab">Privacy Policy Page</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#cancellation-seo" data-toggle="tab">Cancellation Policy Page</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#replacement-seo" data-toggle="tab">Replacement Policy Page</a></li>
                         {{-- <li class="nav-item"><a class="nav-link" href="#social-links" data-toggle="tab">Social Links</a></li> --}}
                     </ul>
                 </div>

@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
-                <div class="tile-body">
+                <div class="tile-body table-responsive">
                     <table class="table table-hover custom-data-table-style table-striped" id="sampleTable">
                         <thead>
                         <tr>

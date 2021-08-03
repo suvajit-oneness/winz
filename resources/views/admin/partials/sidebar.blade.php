@@ -44,17 +44,37 @@
                 </li>
             </ul>
         </li>
-
+        
         <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.allBooking.*']) }}" href="{{ route('admin.allBooking.index') }}">
+                <span class="app-menu__label">All Bookings</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.membershipBooking.*']) }}" href="{{ route('admin.membershipBooking.index') }}">
+                <span class="app-menu__label">Membership Bookings</span>
+            </a>
+        </li>
+        
+        <li>
+            {{-- <a class="app-menu__item {{ sidebar_open(['admin.tutor.*']) }}" href="{{ route('admin.tutor.index') }}">
+                <span class="app-menu__label">Membership Bookings</span>
+            </a> --}}
+            <a class="app-menu__item {{ sidebar_open(['admin.zoom.*']) }}" href="{{ route('admin.zoom.index') }}">
+                Zoom Meeting
+            </a>
+        </li>
+        {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.tutor.*']) }}" href="{{ route('admin.tutor.index') }}">
                 <span class="app-menu__label">Tutors Management</span>
             </a>
-        </li>
-        <li>
+        </li> --}}
+        {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.orders.*']) }}" href="{{ route('admin.orders.index') }}">
                 <span class="app-menu__label">Booking</span>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.couponcode.*']) }}" href="{{ route('admin.couponcode.index') }}">
                 <span class="app-menu__label">Coupon Management</span>
@@ -108,24 +128,24 @@
                 </li>
             </ul>
         </li>
-        <li>
+        {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.questionpaper.*']) }}"
                 href="{{ route('admin.questionpaper.index') }}">
                 <span class="app-menu__label">Question Papers</span>
             </a>
-        </li>
+        </li> --}}
         {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.keyconcept.*']) }}"
                 href="{{ route('admin.keyconcept.index') }}">
                 <span class="app-menu__label">Key Concepts</span>
             </a>
         </li> --}}
-        <li>
+        {{-- <li>
             <a class="app-menu__item {{ sidebar_open(['admin.quiz.*']) }}"
                 href="{{ route('admin.quiz.index') }}">
                 <span class="app-menu__label">Quiz Management</span>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.membership.*']) }}"
                 href="{{ route('admin.membership.index') }}">
@@ -184,11 +204,11 @@
                     Contact Us
                     </a>
                 </li>
-                <li style="padding-left: 20px;">
+                {{-- <li style="padding-left: 20px;">
                     <a class="app-menu__item {{ sidebar_open(['admin.zoom.*']) }}" href="{{ route('admin.zoom.index') }}">
                     Zoom Meeting
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 

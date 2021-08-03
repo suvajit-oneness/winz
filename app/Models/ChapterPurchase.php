@@ -28,4 +28,9 @@ class ChapterPurchase extends Model
     {
         return $this->belongsTo('App\Models\StripeTransaction','stripeTransactionId','id');
     }
+
+    function userDetail()
+    {
+        return $this->belongsTo('App\Models\User','userId','id');
+    }
 }

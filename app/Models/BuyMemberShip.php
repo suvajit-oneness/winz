@@ -18,4 +18,9 @@ class BuyMemberShip extends Model
     {
     	return $this->belongsTo('App\Models\Membership','membershipId','id');
     }
+
+    function userDetail()
+    {
+        return $this->belongsTo('App\Models\User','userId','id');
+    }
 }

@@ -391,6 +391,12 @@ Route::group(['prefix' => 'admin'], function () {
 			Route::post('/update', 'Admin\QuestionController@update')->name('admin.question.update');
 			Route::get('/{id}/delete', 'Admin\QuestionController@delete')->name('admin.question.delete');
 		});
+		
+		//question module - questions
+		Route::group(['prefix'  =>   'bookings'], function() {
+			Route::get('all', 'Admin\BookingController@allBookings')->name('admin.allBooking.index');
+			Route::get('membership-bookings', 'Admin\BookingController@membershipBookings')->name('admin.membershipBooking.index');
+		});
 	});
 });
 ?>

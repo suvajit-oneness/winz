@@ -1,11 +1,11 @@
 <div class="tile">
     <form action="{{ route('admin.settings.update') }}" method="POST" role="form" id="about-seo-form">
         @csrf
-        <h3 class="tile-title">About Page Seo</h3>
+        <h3 class="tile-title">About Page</h3>
         <hr>
         <div class="tile-body">
             <div class="form-group">
-                <label class="control-label" for="about_meta_title">India Meta Title</label>
+                <label class="control-label" for="about_meta_title">Title</label>
                 <input
                     class="form-control"
                     type="text"
@@ -16,7 +16,7 @@
                 />
             </div>
             <div class="form-group">
-                <label class="control-label" for="about_meta_keywords">India Meta Keywords</label>
+                <label class="control-label" for="about_meta_keywords">Keywords</label>
                 <input
                     class="form-control"
                     type="text"
@@ -28,7 +28,7 @@
             </div>
             
             <div class="form-group">
-                <label class="control-label" for="about_meta_description">India Meta Description</label>
+                <label class="control-label" for="about_meta_description">Description</label>
                 <textarea class="form-control ckeditor" name="about_meta_description" id="about_meta_description">{{ $setting::get('about_meta_description') }}</textarea>
             </div>
             
