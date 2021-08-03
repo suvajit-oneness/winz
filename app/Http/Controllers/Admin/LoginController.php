@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Course;
+use App\Models\ChapterPurchase;
+use App\Models\BuyMemberShip;
 
 class LoginController extends Controller
 {
@@ -73,7 +77,18 @@ class LoginController extends Controller
     }
 
     public function index(){
-        $data = [];
+        $data = (object)[];
+        $data->userCount = User::where('userType', 'user')->get()->count();
+        $data->teacherCount = User::where('userType', 'teacher')->get()->count();
+        $data->courseCount = Course::get()->count();
+        $bookingData = ChapterPurchase::select('*');
+        $data->bookingCount = $bookingData->get()->count();
+        $data->latestBookingCount = $bookingData->where('created_at' , '>=', date('Y-m-d', strtotime("-1 month")))->get()->count();
+        $data->lastTenBookings = $bookingData->with('userDetail', 'course', 'chapter', 'transaction')->orderBy('id', 'DESC')->limit(10)->get();
+        $memberShipBookingData = BuyMemberShip::select('*');
+        $data->memberShipBookingCount = $memberShipBookingData->get()->count();
+        $data->lastTenMemberShipBookings = $memberShipBookingData->with('transactionDetails', 'membership', 'userDetail')->orderBy('id', 'DESC')->limit(10)->get();
+        // dd($data);
         return view('admin.dashboard.index',compact('data'));
     }
 }

@@ -192,7 +192,7 @@
             </a>
         </li>
 
-        <li class="treeview">
+        {{-- <li class="treeview">
             <a class="app-menu__item" href="#" data-toggle="treeview">
                 <!--<i class="app-menu__icon fa fa-buffer"></i>-->
                 <span class="app-menu__label">Report</span>
@@ -204,14 +204,18 @@
                     Contact Us
                     </a>
                 </li>
-                {{-- <li style="padding-left: 20px;">
+                <li style="padding-left: 20px;">
                     <a class="app-menu__item {{ sidebar_open(['admin.zoom.*']) }}" href="{{ route('admin.zoom.index') }}">
                     Zoom Meeting
                     </a>
-                </li> --}}
+                </li>
             </ul>
+        </li> --}}
+        <li>
+            <a class="app-menu__item {{ sidebar_open(['admin.contactus.list']) }}" href="{{ route('admin.contactus.list') }}">
+            Contact Enqueries
+            </a>
         </li>
-
         
         <!--<li class="treeview">-->
         <!--    <a class="app-menu__item" href="#" data-toggle="treeview">-->
