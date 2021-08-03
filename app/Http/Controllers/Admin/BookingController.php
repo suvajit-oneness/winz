@@ -14,7 +14,7 @@ class BookingController extends BaseController
     {
         $bookings = ChapterPurchase::with('userDetail', 'course', 'chapter', 'transaction')->paginate(10);
         // dd($bookings);
-        $this->setPageTitle('Booking', 'List of all bookings');
+        $this->setPageTitle('All Bookings', 'List of all bookings');
         return view('admin.bookings.all', compact('bookings'));
     }
     
@@ -22,7 +22,7 @@ class BookingController extends BaseController
     {
         $bookings = BuyMemberShip::with('transactionDetails', 'membership', 'userDetail')->paginate(10);
         // dd($bookings);
-        $this->setPageTitle('Booking', 'List of membership bookings');
+        $this->setPageTitle('Membership Bookings', 'List of membership bookings');
         return view('admin.bookings.membership', compact('bookings'));
     }
 }
