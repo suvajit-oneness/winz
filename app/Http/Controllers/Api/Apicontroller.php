@@ -16,6 +16,7 @@ use App\Models\BuyMemberShip;use App\Models\ContactUs;use App\Models\Testimonial
 use App\Models\Blog;use App\Models\Setting;use App\Models\ChapterPurchase;
 // header('Access-Control-Allow-Origin: *');
 // header('Content-Type:application/json');
+use Illuminate\Support\Facades\File; 
 
 class Apicontroller extends Controller
 {
@@ -751,6 +752,98 @@ class Apicontroller extends Controller
             }
         }
         return sendResponse('Chapter List',$chapter);
+    }
+
+    public function getParticularQuestion(Request $req,$questionId)
+    {
+        $rules = [
+            'questionId' => 'required|min:1|numeric|in:'.$questionId,
+        ];
+        $validator = validator()->make($req->all(),$rules);
+        if(!$validator->fails()){
+            $question = Question::where('id',$questionId)->first();
+            if($question){
+                return sendResponse('Question Data ',$question);
+            }
+            return errorResponse('Invalid Question id');
+        }
+        return errorResponse($validator->errors()->first());
+    }
+
+    public function createAndUpdateQuestion(Request $req)
+    {
+        $rules = [
+          'categoryId' => 'required|numeric|min:1',
+          'chapterId' => 'required|numeric|min:1',
+          'subChapterId' => 'required|numeric|min:1',
+          'question' => 'required|image|mimes:jpg,gif,png',
+          'answer1' => 'required|string|max:255',
+          'difficulty' => 'required|numeric|min:1|max:3',
+          'formType' => 'required|string'
+        ];
+        $validator = validator()->make($req->all(),$rules);
+         if(!$validator->fails()){
+           if (!Category::where('id',$req->categoryId)->first()) {
+               return errorResponse('Invalid Category id');
+           } 
+           if (!Chapter::where('id',$req->chapterId)->first()) {
+               return errorResponse('Invalid Chapter id');
+           } 
+           if (!SubChapter::where('id',$req->categoryId)->first()) {
+               return errorResponse('Invalid SubChapter id');
+           }
+           if($req->formType === "addForm") {
+                $question = new Question();
+                $question->categoryId = $req->categoryId;
+                $question->chapterId = $req->chapterId;
+                $question->subChapterId = $req->subChapterId;
+                if($req->hasFile('question')){
+                    $questionImage = $req->file('question');
+                    $question->question = imageUpload($questionImage,'question');
+                }
+                $question->description = ($req->description) ? $req->description : '';
+                $question->difficulty = $req->difficulty;
+                $question->mark_scheme = ($req->mark_scheme) ? $req->mark_scheme : '';
+                $question->answer1 = $req->answer1;
+                $question->answer2 = ($req->answer2) ? $req->answer2 : '';
+                $question->answer3 = ($req->answer3) ? $req->answer3 : '';
+                $question->answer4 = ($req->answer4) ? $req->answer4 : '';
+                $question->save();
+                return sendResponse('Your question is successfully saved', $question);
+           }
+           else if($req->formType === "editForm"){
+            $question_details= Question::where('id',$req->questionId)->first();
+            if ($question_details) {
+               $question_details->categoryId = $req->categoryId;
+               $question_details->chapterId = $req->chapterId;
+               $question_details->subChapterId = $req->subChapterId;
+               if($req->hasFile('question')){
+
+                    if ($question_details->question) {
+                        $image_name = explode('/', $question_details->question)[5];
+                        if(File::exists('upload/question/'.$image_name)) {
+                            File::delete('upload/question/'.$image_name);
+                        }
+                    }
+                    $questionImage = $req->file('question');
+                    $question_details->question = imageUpload($questionImage,'question');
+                }
+                $question_details->description = ($req->description) ? $req->description : '';
+                $question_details->difficulty = $req->difficulty;
+                $question_details->mark_scheme = ($req->mark_scheme) ? $req->mark_scheme : '';
+                $question_details->answer1 = $req->answer1;
+                $question_details->answer2 = ($req->answer2) ? $req->answer2 : '';
+                $question_details->answer3 = ($req->answer3) ? $req->answer3 : '';
+                $question_details->answer4 = ($req->answer4) ? $req->answer4 : '';
+                $question_details->save();
+                return sendResponse('Your question is updated',$question_details);
+            }else{
+                return errorResponse('Invalid question id');
+            }
+           }
+        }
+        return errorResponse($validator->errors()->first());
+
     }
 
     public function getQuestionList(Request $req)
