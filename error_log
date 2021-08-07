@@ -1,0 +1,1 @@
+[07-Aug-2021 08:02:24 UTC] PHP Fatal error:  Out of memory (allocated 367534080) (tried to allocate 8192 bytes) in phar:///opt/cpanel/composer/bin/composer/src/Composer/DependencyResolver/GenericRule.php on line 35
