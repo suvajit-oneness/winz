@@ -28,7 +28,7 @@ Route::group(['middleware'=>'cors'],function(){ // Cors Middleware
 		Route::get('subject-category','Api\Apicontroller@getSubjectCategory');
 		Route::get('chapter','Api\Apicontroller@getChapter');
 
-		Route::get('question/{questionId}','Api\Apicontroller@getParticularQuestion');
+		Route::get('question/edit/{questionId}','Api\Apicontroller@getParticularQuestion');
 		Route::get('question/list','Api\Apicontroller@getQuestionList');
 		Route::post('create-and-update-question','Api\Apicontroller@createAndUpdateQuestion');
 
