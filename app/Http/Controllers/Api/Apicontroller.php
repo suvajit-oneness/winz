@@ -756,28 +756,28 @@ class Apicontroller extends Controller
 
     public function getParticularQuestion(Request $req,$questionId)
     {
-        $rules = [
-            'questionId' => 'required|min:1|numeric|in:'.$questionId,
-        ];
-        $validator = validator()->make($req->all(),$rules);
-        if(!$validator->fails()){
+        // $rules = [
+        //     'questionId' => 'required|min:1|numeric|in:'.$questionId,
+        // ];
+        // $validator = validator()->make($req->all(),$rules);
+        // if(!$validator->fails()){
             $question = Question::where('id',$questionId)->first();
             if($question){
                 return sendResponse('Question Data ',$question);
             }
             return errorResponse('Invalid Question id');
-        }
-        return errorResponse($validator->errors()->first());
+        // }
+        // return errorResponse($validator->errors()->first());
     }
 
     public function createAndUpdateQuestion(Request $req)
     {
         $rules = [
-            'categoryId' => 'required|numeric|min:1',
+            'categoryId' => 'required|numeric',
             'chapterId' => 'required|numeric|min:1',
-            'subChapterId' => 'required|numeric|min:1',
-            'question' => 'required|image|mimes:jpg,gif,png',
-            'answer1' => 'required|string|max:255',
+            'subChapterId' => 'required|numeric',
+            'question' => 'mimes:jpg,gif,png',
+            'answer1' => 'required|string',
             'difficulty' => 'required|numeric|min:1|max:3',
             'formType' => 'required|string'
         ];
@@ -802,7 +802,7 @@ class Apicontroller extends Controller
                 if($category){
                     $chapter = Chapter::where('id',$req->chapterId)->first();
                     if($chapter){
-                        $subchapter = SubChapter::where('id',$req->categoryId)->first();
+                        $subchapter = SubChapter::where('id',$req->subChapterId)->first();
                         if($subchapter){
                             $question->categoryId = $category->id;
                             $question->chapterId = $chapter->id;
