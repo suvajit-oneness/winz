@@ -12,22 +12,16 @@ class BookingController extends BaseController
 {
     public function allBookings(Request $req)
     {
-        $bookings = ChapterPurchase::with('userDetail', 'course', 'chapter', 'transaction')->orderBy('id', 'DESC')->paginate(10);
-        // dd($bookings);
-        if($req->ajax()) {
-            dd('hi 1');
-        }
+        $bookings = ChapterPurchase::with('userDetail', 'course', 'chapter', 'transaction')->latest()->paginate(10);
+        if($req->ajax()) {}
         $this->setPageTitle('All Bookings', 'List of all bookings');
         return view('admin.bookings.all', compact('bookings'));
     }
     
     public function membershipBookings(Request $req)
     {
-        $bookings = BuyMemberShip::with('transactionDetails', 'membership', 'userDetail')->orderBy('id', 'DESC')->paginate(10);
-        // dd($bookings);
-        if($req->ajax()) {
-            dd('hi 2');
-        }
+        $bookings = BuyMemberShip::with('transactionDetails', 'membership', 'userDetail')->latest()->paginate(10);
+        if($req->ajax()) {}
         $this->setPageTitle('Membership Bookings', 'List of membership bookings');
         return view('admin.bookings.membership', compact('bookings'));
     }

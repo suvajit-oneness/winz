@@ -47,7 +47,7 @@
         
         <li>
             <a class="app-menu__item {{ sidebar_open(['admin.allBooking.*']) }}" href="{{ route('admin.allBooking.index') }}">
-                <span class="app-menu__label">All Bookings</span>
+                <span class="app-menu__label">Course Bookings</span>
             </a>
         </li>
         

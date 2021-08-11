@@ -10,14 +10,18 @@ class ZoomController extends Controller
 {
     public function index(Request $req)
     {
-    	$zoom = ZoomMeeting::select('*')->with('userData')->with('teacherData');
-        $zoom = $zoom->orderBy('id')->get();
-    	return view('admin.zoom.index',compact('zoom'));
+    	$zoom = ZoomMeeting::select('*');
+    	if(!empty($req->teacherId)){
+    		$zoom = $zoom->where('teacherId',$req->teacherId);
+    	}
+        $zoom = $zoom->latest()->get();
+        $teacherList = Teacher::select('*')->get();
+    	return view('admin.zoom.index',compact('zoom','teacherList','req'));
     }
 
     public function createMeeting(Request $req)
     {
-    	$teachers = Teacher::select('*')->get();
+    	$teachers = Teacher::select('*')->latest()->get();
     	$users = User::select('*')->where('userType','user')->where('is_active',1)->get();
     	return view('admin.zoom.create',compact('teachers','users'));
     }

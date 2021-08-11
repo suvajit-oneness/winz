@@ -13,6 +13,18 @@
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body table-responsive">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Select Teacher</label>
+                            <select class="form-control" onchange="getUpdatedTeacherZoom(this.value)">
+                                <option value="">All</option>
+                                @foreach($teacherList as $teacher)
+                                    <option value="{{$teacher->id}}" @if(!empty($req->teacherId) && $req->teacherId == $teacher->id) {{('selected')}} @endif>{{$teacher->name}} ({{$teacher->email}})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
                     <table class="table table-hover custom-data-table-style table-striped" id="sampleTable">
                         <thead>
                         <tr>
@@ -63,6 +75,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
     <script type="text/javascript">
         $('#sampleTable').DataTable({"ordering": false});
+
+        function getUpdatedTeacherZoom(teacherId) {
+            var URL = "{{url('admin/zoom/meeting')}}?teacherId="+teacherId;
+            window.location.href = URL;
+        }
 
         $(document).on('click','.deleteMeeting',function(){
             var Id = $(this).attr('data-id'),meetingId = $(this).attr('data-meeting_id');

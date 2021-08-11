@@ -21,7 +21,7 @@
                                 <th>Chapter</th>
                                 <th>Price</th>
                                 <th>Transaction Id</th>
-                                {{-- <th>Action</th> --}}
+                                <th>Booking Date & Time</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,9 +43,7 @@
                                     <td>
                                         {{$booking->transaction->transactionId}}
                                     </td>
-                                    {{-- <td>
-                                        <div class="btn-group" role="group" aria-label="Second group"><a href="#" class="btn btn-sm btn-primary">Details <i class="fa fa-eye"></i></a>
-                                    </td> --}}
+                                    <td>{{date('d M, Y H:i:A',strtotime($booking->created_at))}}</td>
                                 </tr>
                             @endforeach
                         </tbody>
