@@ -12,10 +12,13 @@ use Illuminate\Http\Request;
 */
 
 // Auth::routes();
-Route::get('command', function () {
-/* php artisan migrate:fresh --seed */
-\Artisan::call('migrate:fresh --seed');
-	dd("Done");
+Route::get('cache-clear',function(){
+	Artisan::call('config:cache');
+	Artisan::call('config:clear');
+	Artisan::call('view:clear');
+	Artisan::call('route:clear');
+	Artisan::call('key:generate');
+	dd('Done');
 });
 
 Route::get('/',function(){
